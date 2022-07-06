@@ -7,6 +7,13 @@
 
 The premier dog meetup application for dog parents.
 
+## Design
+
+*[API Design](docs/apis.md)
+*[Data Model](docs/data-model.md)
+*[GHI](docs/ghi.md)
+*[Intergrations](docs/intergrations.md)
+
 ## Intended market
 
 The people that we expect to use this are dog parents, dog lovers, and singles that own dogs

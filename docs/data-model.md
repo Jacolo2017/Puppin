@@ -9,7 +9,7 @@ User (Person/Owner and Dog will be associated with this data/login)
 | Password | string | yes | no |
 | DOB | DateFeild | no | no |
 
-Person/Owner Data
+Person/Owner(OneToMany with Dog)
 
 | Name | Type | Unique | Optional |
 |------|------|--------|----------|
@@ -21,7 +21,7 @@ Person/Owner Data
 | Photo | string | no | no |
 | About | textarea | no | no |
 
-Dog 
+Dog(ManyToOne with Person/Owner) 
 
 | Name | Type | Unique | Optional |
 |------|------|--------|----------|
@@ -37,7 +37,7 @@ Dog
 | Spayed/Neutered | string(select) | no | no |
 | Vacinated/Medical History | string(select)/boolean | no | no |
 
-Event 
+Event(Will pull information from Location Model) 
 
 | Name | Type | Unique | Optional |
 |------|------|--------|----------|
@@ -58,7 +58,7 @@ Location
 | Add(State) | string | no | no |
 | Add(Zip) | string | no | no |
 
-Review 
+Review(Will be associated withthe event and person/owner) 
 
 | Name | Type | Unique | Optional |
 |------|------|--------|----------|

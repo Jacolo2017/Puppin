@@ -14,7 +14,7 @@ The premier dog meetup application for dog parents.
 *[GHI](docs/ghi.md)
 *[Intergrations](docs/intergrations.md)
 
-Please view the design drawing - puppin/Puppin Design.png
+Please view the design drawing ![Project Design](wireframs/Pupping Design.png)
 
 ## Intended market
 

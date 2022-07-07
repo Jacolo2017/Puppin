@@ -92,7 +92,7 @@ output:
     "date": int,
 }
 ```
-```
+
 
 ## Specific Events
 * **Method**: "GET"

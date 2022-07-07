@@ -23,6 +23,8 @@ The people that we expect to use this are dog parents, dog lovers, and singles t
 
 ## Functionality
 
+
+* Non-Registered User land on the "events" page, which shows a random assortment of events. However, the they cannot see event details or interact with the event without registering.
 * Owners can create events which others can sign up for and make public/private.
 * Creator of events can set meetup rules such as dog size, age, activity, etc.
 * Filter system for events that apply to your registered dog.

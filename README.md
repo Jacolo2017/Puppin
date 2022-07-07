@@ -14,6 +14,8 @@ The premier dog meetup application for dog parents.
 *[GHI](docs/ghi.md)
 *[Intergrations](docs/intergrations.md)
 
+Please view the design drawing - puppin/Puppin Design.png
+
 ## Intended market
 
 The people that we expect to use this are dog parents, dog lovers, and singles that own dogs

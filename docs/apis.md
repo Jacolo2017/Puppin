@@ -1,8 +1,11 @@
-User 
-Method:"POST"
-path : /api/user
+# APIs
+
+## User 
+* **Method**:'POST'
+* **path** : /api/user
 
 input:
+```json
 {
     "Person" : str,
     "Dog" : str,
@@ -11,8 +14,9 @@ input:
     "Password" : str,
     "DOB" : int(DateField)
 }
-
+```
 output:
+```json
 {
     "id": int,
     "Person" : str,
@@ -22,12 +26,13 @@ output:
     "Password" : str,
     "DOB" : int,
 }
-
-Update User
-Method: "PUT"
-path: /api/user/int:pk
+```
+## Update User
+* **Method**: 'PUT'
+* **path**: /api/user/int:pk
 
 input:
+```json
 {
     "Person" : str,
     "Dog" : str,
@@ -36,8 +41,9 @@ input:
     "Password" : str,
     "DOB" : int(DateField)
 }
-
+```
 output:
+```json
 {
     "Person" : str,
     "Dog" : str,
@@ -46,25 +52,28 @@ output:
     "Password" : str,
     "DOB" : int,
 }
+```
 
-Delete User
-Method: "DELETE"
-path: /api/user/int:pk
+## Delete User
+* **Method**: "DELETE"
+* **path**: /api/user/int:pk
 
  output:
+ ```json
  {
     "response": str,
  }
-
-List Users
-Method: "GET"
-path: /api/users
+```
+## List Users
+* **Method**: "GET"
+* **path**: /api/users
 
 output:
+ ```json
 {
     "id": int,
     "Username" : str,
     "Person" : str,
     "Dog" : str,
 }
-
+```

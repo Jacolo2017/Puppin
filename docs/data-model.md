@@ -3,11 +3,12 @@ User (Person/Owner and Dog will be associated with this data/login)
 | Name | Type | Unique | Optional |
 |------|------|--------|----------|
 | Person | string | yes | no |
-| Dog | string | yes | no |
+| Dog | Foreign Key | yes | no |
 | Email | string/email | yes | no |
 | Username | string | yes | no |
 | Password | string | yes | no |
 | DOB | DateFeild | no | no |
+| events | Foreign Key | yes | no |
 
 Person/Owner(OneToMany with Dog)
 

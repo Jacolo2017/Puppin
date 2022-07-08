@@ -13,6 +13,7 @@ input:
     "Username" : str(EmailField),
     "Password" : str,
     "DOB" : int(DateField)
+    "events: dict
 }
 ```
 output:

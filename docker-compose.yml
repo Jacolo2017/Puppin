@@ -29,6 +29,22 @@ services:
         HOST_OS: ${OS}
         NODE_ENV: development
         HOST: "0.0.0.0"
+  accounts-api:
+    build:
+      context: ./accounts/api
+      dockerfile: ./Dockerfile.dev
+    ports: 
+    - "6969:6969"
+    volumes:
+      - ./accounts/api:/app
+    depends_on:
+      - postgres
+    environment:
+      PGHOST: databases
+      PGDATABASE: accounts
+      PGUSER: accounts
+      PGPASSWORD: accounts
+
   postgres:
       build:
           context: ./relational-data
@@ -40,4 +56,5 @@ services:
           - POSTGRES_PASSWORD=test-databases
       ports:
           - 15432:5432
+
     

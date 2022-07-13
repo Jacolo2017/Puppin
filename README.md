@@ -14,7 +14,7 @@ The premier dog meetup application for dog parents.
 *[GHI](docs/ghi.md)
 *[Intergrations](docs/intergrations.md)
 
-Please view the design drawing ![Project Design](wireframs/Pupping Design.png)
+Please view the design drawing ![Project Design](wireframes/Pupping Design.png)
 
 ## Intended market
 
@@ -30,10 +30,10 @@ The people that we expect to use this are dog parents, dog lovers, and singles t
 * Owners can create events which others can sign up for and make public/private.
 * Creator of events can set meetup rules such as dog size, age, activity, etc.
 * Filter system for events that apply to your registered dog.
-* Dog/Owner Meetups are rated as an event after they occur. Rating the events is indeirectly tied to the dog/owners profile. Ratings are based on the honestly of the owner inputted dog profile.
-* App will link accounts within a specified geological radius for potential meetups. Hide exact location until user is apporved by event host.
-* Owners can rate dog meetup location and tag the locations with dog amenties like water, fenced area, etc.
-* Instagram like feed of past events or events in owner's area whcih has event details and pictures of the events.
+* Dog/Owner Meetups are rated as an event after they occur. Rating the events is indirectly tied to the dog/owners profile. Ratings are based on the honestly of the owner inputted dog profile.
+* App will link accounts within a specified geological radius for potential meetups. Hide exact location until user is approved by event host.
+* Owners can rate dog meetup location and tag the locations with dog amenities like water, fenced area, etc.
+* Instagram like feed of past events or events in owner's area which has event details and pictures of the events.
 
 
  ## Stretch Goals

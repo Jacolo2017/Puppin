@@ -7,7 +7,7 @@ User (Person/Owner and Dog will be associated with this data/login)
 | Email | string/email | yes | no |
 | Username | string | yes | no |
 | Password | string | yes | no |
-| DOB | DateFeild | no | no |
+| DOB | DateField | no | no |
 | events | Foreign Key | yes | no |
 
 Person/Owner(OneToMany with Dog)
@@ -17,7 +17,7 @@ Person/Owner(OneToMany with Dog)
 | Owner_name | string | no | no   |
 | City | string | no | no |
 | State | string | no | no |
-| Age | interger | no | no |
+| Age | integer | no | no |
 | Gender | string | no | no |
 | Photo | string | no | no |
 | About | textarea | no | no |
@@ -28,15 +28,15 @@ Dog(ManyToOne with Person/Owner)
 |------|------|--------|----------|
 | Name | string | no | no |
 | Breed | string(select) | no | no |
-| Age | interger | no | no |
+| Age | integer | no | no |
 | Gender | string(select) | no | no |
 | Photo | string | no | no |
 | Temperament | textarea | no | no |
 | About | textarea | no | no |
 | Size | string(select) | no | no |
-| Weight | interger | no | no |
+| Weight | integer | no | no |
 | Spayed/Neutered | string(select) | no | no |
-| Vacinated/Medical History | string(select)/boolean | no | no |
+| Vaccinated/Medical History | string(select)/boolean | no | no |
 
 Event(Will pull information from Location Model) 
 
@@ -65,5 +65,5 @@ Review(Will be associated with the event and person/owner)
 |------|------|--------|----------|
 | Reviewer | ForeignKey | yes | no |
 | Event | ForeignKey | yes | no |
-| Attendee_Rating | interger | no | no |
+| Attendee_Rating | integer | no | no |
 | Description | textarea | no | no |

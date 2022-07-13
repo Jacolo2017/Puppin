@@ -1,0 +1,3 @@
+July 12
+
+We are currently thinking of shrinking our microservices from 3 to 2 and changing from django rest framework to FastAPI. Pros and cons are still being weighted but shrinking the microservices seems for the best. A monolith is also under consideration as well. Today I also got the docker container for events to work and created data models for events (even if we switch to fastapi, it won't be too much of a drawback).

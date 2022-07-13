@@ -34,7 +34,7 @@ services:
       context: ./accounts/api
       dockerfile: ./Dockerfile.dev
     ports: 
-    - "6969:6969"
+    - "8001:8000"
     volumes:
       - ./accounts/api:/app
     depends_on:

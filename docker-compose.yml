@@ -50,6 +50,7 @@ services:
           context: ./relational-data
           dockerfile: ./Dockerfile.dev
       volumes:
+          - ./data/postgres/init:/docker-entrypoint-initdb.d
           - postgres-data:/var/lib/postgresql/data
       environment:
           - POSTGRES_MULTIPLE_DATABASES= accounts, events

@@ -62,3 +62,6 @@ Review(Will be associated with the event and person/owner)
 | Event | ForeignKey | yes | no |
 | Attendee_Rating | integer | no | no |
 | Description | textarea | no | no |
+
+    location_id serial,
+    FOREIGN KEY (location_id) REFERENCES public.locations(location_id) ON DELETE CASCADE,

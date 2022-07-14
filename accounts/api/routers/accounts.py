@@ -22,10 +22,8 @@ def row_to_account(row):
     }
 
 @router.get(
-    "api/post"
+    "api/puppin/accounts",
+    response_model=AccountsList,
 )
-
-
-
-
-
+def get_accounts(query=Depends(AccountQueries)):
+    rows = get.

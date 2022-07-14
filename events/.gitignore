@@ -11,6 +11,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+./api/__pycache__
 cover/
 
 # Translations

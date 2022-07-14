@@ -6,7 +6,12 @@ class AccountCreateIn(BaseModel):
     last_name: str
     email: str
     username: str
-    date_of_birth = date 
+    date_of_birth = date
+    city: str
+    state: str
+    gender: str
+    photo_url: str
+    about: str
 
 class AccountUpdateOut(BaseModel):
     first_name: str
@@ -14,7 +19,11 @@ class AccountUpdateOut(BaseModel):
     email: str
     username: str
     date_of_birth = date
-
+    city: str
+    state: str
+    gender: str
+    photo_url: str
+    about: str
 
 
 

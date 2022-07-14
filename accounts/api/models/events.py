@@ -9,12 +9,15 @@ class EventCreate(BaseModel):
     event_time: time
 
 class EventOut(BaseModel):
+    event_id: int
     event_name: str
     events_location: str
     event_date: date
     event_time: time
+    event_accounts: list[ProfileOut]
 
-class EventUpdate()
+class EventUpdate():
+    event_id: int
     event_name: str
     events_location: str
     event_date: date

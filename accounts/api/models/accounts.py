@@ -1,11 +1,34 @@
-from multiprocessing.reduction import steal_handle
-from pydantic import BaseModel
-from typing import Union
+from pydantic import BaseModel,
+from datetime import date
 
-class AccountCreate(BaseModel):
+class AccountCreateIn(BaseModel):
     first_name: str
     last_name: str
     email: str
     username: str
-    date_of_birth = date | None
+    date_of_birth = date 
+
+class AccountUpdateOut(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+    username: str
+    date_of_birth = date
+
+class ProfileOut(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+    username: str
+    date_of_birth = date
+
+
+class ProfileList(BaseModel):
+    page_count: int
+    profiles: list[ProfileOut]
+
+
+
+
+
     

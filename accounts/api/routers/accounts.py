@@ -22,7 +22,7 @@ def row_to_account(row):
     }
 
 @router.get(
-    
+    "api/post"
 )
 
 

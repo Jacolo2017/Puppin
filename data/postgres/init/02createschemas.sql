@@ -69,6 +69,10 @@ CREATE TABLE public.reviews(
     FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE CASCADE,
     attendee_rating BOOLEAN NOT NULL,
     review_description character varying(750) NOT NULL
+    location_zip int NOT NULL,
+    location_rating int NOT NULL
 );
 
+
+    
 

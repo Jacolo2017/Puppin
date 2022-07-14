@@ -21,3 +21,5 @@ class ProfileOut(BaseModel):
 class ProfileList(BaseModel):
     page_count: int
     profiles: list[ProfileOut]
+
+    

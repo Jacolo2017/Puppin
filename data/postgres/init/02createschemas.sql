@@ -63,4 +63,5 @@ CREATE TABLE public.location(
     location_city character varying(30) NOT NULL,
     location_state character varying(12),
     location_zip int NOT NULL,
+    location_rating int NOT NULL,
 )

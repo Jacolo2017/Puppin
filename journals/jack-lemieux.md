@@ -14,3 +14,16 @@ I think puppin has a lot of potential, especially with Mark, Cooper, and Roger w
 
 ## July 12, 2022
 
+Today we talked more about the database and app design. We looked into an researched fast api more just to see how we will communicate between apps. I ended up only doing a little bit of work and I will try to cary more of my weight and the others.
+
+## July 13, 2022
+
+We decided to test out fast api in our app. Now as we have finished initializing the docker we are setting up our back end and creating schemas. 
+
+A few of us have looked into how the api will have to communicate between apps. It looks really difficult and I am questioning if we will be able to implement callbacks and two databases.
+
+We found out that each app doesn't have to have it's own database so we might not have to use callbacks! We have decided that we will each research tonight, and come class tomorrow morning, will decide between Django or FastAPI. I hope we do fast api!
+
+## July 14, 2022
+
+We decided to do fast api for our app and are finally creating our schemas. Cooper is setting up our front end so we have a visual and the swagger data is accessible. Mark is building our pedantic functions, which to be honest I am reading up on now... oops. 

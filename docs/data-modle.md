@@ -9,11 +9,6 @@ User (Person/Owner and Dog will be associated with this data/login)
 | Password | string | yes | no |
 | DOB | DateField | no | no |
 | events | Foreign Key | yes | no |
-
-Person/Owner(OneToMany with Dog)
-
-| Name | Type | Unique | Optional |
-|------|------|--------|----------|
 | Owner_name | string | no | no   |
 | City | string | no | no |
 | State | string | no | no |

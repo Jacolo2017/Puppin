@@ -13,3 +13,4 @@ Events, well that's the project we made for last module so it would be the easie
 I think puppin has a lot of potential, especially with Mark, Cooper, and Roger working on it as well. We have already had philosophical discussions about the rating of humans and how the systems will be sharing and accessing each others data. I have electric butterflies in my stomach!
 
 ## July 12, 2022
+

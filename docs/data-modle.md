@@ -15,7 +15,7 @@ User (Person/Owner and Dog will be associated with this data/login)
 | Age | integer | no | no |
 | Gender | string | no | no |
 | Photo | string | no | no |
-| About | textarea | no | no |
+| About | textarea | no | yes |
 
 Dog(ManyToOne with Person/Owner) 
 

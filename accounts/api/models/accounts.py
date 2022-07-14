@@ -1,4 +1,4 @@
-from pydantic import BaseModel,
+from pydantic import BaseModel
 from datetime import date
 
 class AccountCreateIn(BaseModel):
@@ -15,17 +15,7 @@ class AccountUpdateOut(BaseModel):
     username: str
     date_of_birth = date
 
-class ProfileOut(BaseModel):
-    first_name: str
-    last_name: str
-    email: str
-    username: str
-    date_of_birth = date
 
-
-class ProfileList(BaseModel):
-    page_count: int
-    profiles: list[ProfileOut]
 
 
 

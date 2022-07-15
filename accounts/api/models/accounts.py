@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import date
 
+
 class AccountCreateIn(BaseModel):
     first_name: str
     last_name: str
@@ -14,6 +15,7 @@ class AccountCreateIn(BaseModel):
     photo_url: str
     about: str
 
+
 class AccountOut(BaseModel):
     first_name: str
     last_name: str
@@ -26,13 +28,6 @@ class AccountOut(BaseModel):
     photo_url: str
     about: str
 
+
 class AccountsList(BaseModel):
-
-
-
-
-
-
-
-
-    
+    pass

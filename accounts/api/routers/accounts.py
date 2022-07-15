@@ -9,7 +9,7 @@ router = APIRouter()
 # def createAccount(user_id: int, username: str, password: str):
 #     with psycopg.connect() as conn:
 #         with conn.cursor() as cur:
-            
+
 def row_to_account(row):
     return {
         "account_id": row[0],

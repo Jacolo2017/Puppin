@@ -1,5 +1,8 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
+from ..models.accounts import AccountCreateIn, AccountOut
+from ..models.common import ErrorMessage
+from typing import Union
 import psycopg
 
 router = APIRouter()
@@ -21,9 +24,22 @@ def row_to_account(row):
         "date_of_birth": row[6],
     }
 
-@router.get(
-    "api/puppin/accounts",
-    response_model=AccountsList,
+
+# Create new Account
+@router.post(
+    "/api/accounts/create",
+    response_model=Union[AccountOut, ErrorMessage],
+    responses={
+        200: {"model": AccountOut},
+        404: {"model": ErrorMessage},
+        409: {"model": ErrorMessage},
+    },
 )
-def get_accounts(query=Depends(AccountQueries)):
-    rows = get.
+
+def create_account(account = AccountCreateIn, response = Response):
+    try:
+        
+
+
+
+

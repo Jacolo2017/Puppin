@@ -55,7 +55,5 @@ def create_account(
             account.about,
         )
         return row_to_account(row)
-
-        pass
     except DuplicateUsername:
-        return {"message": f"{account.username} username taken, be more clever next time!"}
+        return {"message": f"{account.username} taken, be more clever next time!"}

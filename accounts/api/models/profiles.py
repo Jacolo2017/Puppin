@@ -5,7 +5,7 @@ from datetime import date
 class ProfileOut(BaseModel):
     first_name: str
     last_name: str
-    date_of_birth = date 
+    date_of_birth = date
     dog_name: str
     dog_breed: str
     dog_age: str
@@ -18,8 +18,7 @@ class ProfileOut(BaseModel):
     spayed_neutered: bool
     vaccination_history: str
 
+
 class ProfileList(BaseModel):
     page_count: int
     profiles: list[ProfileOut]
-
-    

@@ -1,5 +1,10 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
+from accounts.api.db.accounts import DuplicateUsername
+from models.accounts import AccountCreateIn, AccountOut
+from models.common import ErrorMessage
+from db.accounts import AccountQueries
+from typing import Union
 import psycopg
 
 router = APIRouter()
@@ -21,9 +26,36 @@ def row_to_account(row):
         "date_of_birth": row[6],
     }
 
-@router.get(
-    "api/puppin/accounts",
-    response_model=AccountsList,
+
+# Create new Account
+@router.post(
+    "/api/accounts/create",
+    response_model=Union[AccountOut, ErrorMessage],
+    responses={
+        200: {"model": AccountOut},
+        404: {"model": ErrorMessage},
+        409: {"model": ErrorMessage},
+    },
 )
-def get_accounts(query=Depends(AccountQueries)):
-    rows = get.
+def create_account(
+    account: AccountCreateIn, response: Response, query=Depends(AccountQueries)
+):
+    try:
+        row = query.insert_account(
+            account.first_name,
+            account.last_name,
+            account.username,
+            account.email,
+            account.account_password,
+            account.date_of_birth,
+            account.city,
+            account.state,
+            account.gender,
+            account.photo_url,
+            account.about,
+        )
+        return row_to_account(row)
+
+        pass
+    except DuplicateUsername:
+        return {"message": f"{account.username} username taken, be more clever next time!"}

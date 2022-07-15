@@ -13,8 +13,7 @@ The premier dog meetup application for dog parents.
 *[Data Model](docs/data-model.md)
 *[GHI](docs/ghi.md)
 *[Intergrations](docs/intergrations.md)
-
-Please view the design drawing ![Project Design](wireframes/Pupping Design.png)
+*![Project Design](docs/wireframe/Puppin Design.png)
 
 ## Intended market
 

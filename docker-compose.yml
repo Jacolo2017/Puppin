@@ -13,10 +13,10 @@ services:
     depends_on:
       - postgres
     environment:
-      PGHOST: databases
-      PGDATABASE: events
-      PGUSER: events
-      PGPASSWORD: events
+      PGHOST: postgres
+      PGDATABASE: puppin
+      PGUSER: puppin
+      PGPASSWORD: puppin
   react:
     image: node:lts-bullseye
     command: /bin/bash run.sh

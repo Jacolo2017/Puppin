@@ -90,7 +90,7 @@ def get_account(account_id: int, response: Response):
                         date_of_birth, city, state, gender,
                             photo_url, about
                         FROM accounts
-                        WHERE account_id = %s
+                        WHERE account_id = %s;
                         """, [account_id],
                     )
                 row = cur.fetchone()

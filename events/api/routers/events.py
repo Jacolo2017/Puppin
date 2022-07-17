@@ -4,26 +4,92 @@ import psycopg
 
 router = APIRouter()
 
-def row_to_event(row):
-    event = {
-        "id": row[0],
-        "event_name": row[1],
-        "event_location": row[2],
-        "event_accounts": row[3],
-        "event_date": row[4],
-        "event_time": row[5],
-    }
-    return event
+
+class EventIn(BaseModel):
+    event_name: str
+    event_location: str
+    event_date: str
+    event_time: str
+
+@router.post("/api/events")
+def create_event(event: EventIn, response: Response, leader_id: int):
+    print("at least we started")
+    with psycopg.connect() as conn:
+        print("we got to psyco connect")
+        with conn.cursor() as cur:
+            print("now we got to cur")
+            print("gothere")
+            cur.execute(
+                """INSERT INTO events (account_id, event_name, event_location,
+                    event_date, event_time)
+                    VALUES (%s, %s, %s, %s, %s)
+                    RETURNING event_id;""",
+                        [leader_id,
+                            event.event_name,
+                            event.event_location,
+                            event.event_date,
+                            event.event_time]
+            )
+            row = cur.fetchone()
+            print(row)
+            record = {}
+            cur.execute(
+                """INSERT INTO eventsusersjunction (event_id, account_id)
+                    SELECT events.event_id, accounts.account_id
+                    FROM events
+                    JOIN accounts
+                    ON
+                    events.account_id = accounts.account_id"""
+            )
+            # for i, column in enumerate(cur.description):
+            #     record[column.name] = row[i]
+            return row
+
+@router.get("/api/events/{event_id}")
+def get_event(event_id: int, response: Response):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT event_name, event_location, event_date, event_time
+                    FROM events
+                    WHERE event_id = %s;
+                    """, [event_id]
+                )
+                row = cur.fetchone()
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Event not found"}
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                return record
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
 
 
-@router.post(
-    "api/postgres/event/create",
-    response_model=Union[EventOut, ErrorMessage],
-    responses ={
-        200: {"model": EventOut},
-        409: {"model": ErrorMessage},
-    }
-)
+
+# def row_to_event(row):
+#     event = {
+#         "id": row[0],
+#         "event_name": row[1],
+#         "event_location": row[2],
+#         "event_accounts": row[3],
+#         "event_date": row[4],
+#         "event_time": row[5],
+#     }
+#     return event
+
+
+# @router.post(
+#     "api/postgres/event/create",
+#     response_model=Union[EventOut, ErrorMessage],
+#     responses ={
+#         200: {"model": EventOut},
+#         409: {"model": ErrorMessage},
+#     }
+# )
 
 # def createEvent(
 #     event: EventIn,
@@ -51,4 +117,4 @@ def row_to_event(row):
 #                 """,
 #                     [account_id, event_id],
 #             )
-            
+

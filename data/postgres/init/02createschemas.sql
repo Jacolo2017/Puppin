@@ -54,9 +54,10 @@ CREATE TABLE public.events(
     -- location_id serial,
     -- FOREIGN KEY (location_id) REFERENCES public.locations(location_id) ON DELETE CASCADE,
     event_location character varying(100) NOT NULL,
-    event_accounts character varying(30) NOT NULL,
     event_date DATE NOT NULL,
-    event_time TIME NOT NULL
+    event_time TIME NOT NULL,
+    account_id serial,
+    FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE
     -- UNIQUE(location_id)
 );
 

@@ -3,7 +3,6 @@ from pydantic import BaseModel
 from models.common import ErrorMessage
 from typing import Union
 import psycopg
-
 router = APIRouter()
 
 
@@ -81,25 +80,30 @@ def create_account(account: AccountIn, response: Response):
 
 @router.get("/api/accounts/{account_id}")
 def get_account(account_id: int, response: Response):
-    with psycopg.connect() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT first_name, last_name, email, username,
-                date_of_birth, city, state, gender,
-                    photo_url, about
-                FROM accounts
-                WHERE account_id = %s
-                """, [account_id],
-            )
-        row = cur.fetchone()
-        if row is None:
-            response.status_code = status.HTTP_404_NOT_FOUND
-            return {"message": "Category not found"}
-        record = {}
-        for i, column in enumerate(cur.description):
-            record[column.name] = row[i]
-        return record
+    try:
+        print("okay we tried")
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                        """
+                        SELECT first_name, last_name, email, username,
+                        date_of_birth, city, state, gender,
+                            photo_url, about
+                        FROM accounts
+                        WHERE account_id = %s
+                        """, [account_id],
+                    )
+                row = cur.fetchone()
+                print("lookhere", (cur.description))
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Account not found"}
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                return record
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
 
 @router.get("/api/accounts")
 def accounts_list(page: int = 0):

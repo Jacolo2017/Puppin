@@ -37,26 +37,26 @@ CREATE TABLE public.dogs(
 
 DROP TABLE if exists public.events;
 DROP TABLE if exists public.reviews;
-DROP TABLE if exists public.locations;
-CREATE TABLE public.locations(
-    location_id serial NOT NULL PRIMARY KEY,
-    location_nickname character varying(30) NULL,
-    location_address character varying(100) NOT NULL,
-    location_street character varying(40) NOT NULL,
-    location_city character varying(30) NOT NULL,
-    location_state character varying(12),
-    location_zip int NOT NULL
-);
+-- DROP TABLE if exists public.locations;
+-- CREATE TABLE public.locations(
+--     location_id serial NOT NULL PRIMARY KEY,
+--     location_nickname character varying(30) NULL,
+--     location_address character varying(100) NOT NULL,
+--     location_street character varying(40) NOT NULL,
+--     location_city character varying(30) NOT NULL,
+--     location_state character varying(12),
+--     location_zip int NOT NULL
+-- );
 CREATE TABLE public.events(
     event_id serial NOT NULL PRIMARY KEY,
     event_name character varying(100) NOT NULL,
-    location_id serial,
-    FOREIGN KEY (location_id) REFERENCES public.locations(location_id) ON DELETE CASCADE,
+    -- location_id serial,
+    -- FOREIGN KEY (location_id) REFERENCES public.locations(location_id) ON DELETE CASCADE,
     event_location character varying(100) NOT NULL,
     event_accounts character varying(30) NOT NULL,
     event_date DATE NOT NULL,
-    event_time TIME NOT NULL,
-    UNIQUE(location_id)
+    event_time TIME NOT NULL
+    -- UNIQUE(location_id)
 );
 
 CREATE TABLE public.reviews(
@@ -68,10 +68,19 @@ CREATE TABLE public.reviews(
     event_id serial,
     FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE CASCADE,
     attendee_rating BOOLEAN NOT NULL,
-    review_description character varying(750) NOT NULL
+    review_description character varying(750) NOT NULL,
     location_zip int NOT NULL,
     location_rating int NOT NULL
 );
+
+CREATE TABLE public.eventsusersjunction(
+    relationship_id serial NOT NULL PRIMARY KEY,
+    event_id serial,
+    FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE CASCADE,
+    account_id serial,
+    FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE,
+    UNIQUE(account_id, event_id)
+)
 
 
     

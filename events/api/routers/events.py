@@ -36,3 +36,19 @@ def createEvent(
     except DuplicateName:
         response.status_code = status.HTTP_409_CONFLICT
         return {"message": f"Event already named {event.event_name}!"}
+
+
+
+@router.put("/api/events/{event_id}")
+def addAttendee(account_id: int, event_id: int response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                f"""
+                UPDATE events
+                SET attendees = %s
+                WHERE events_id = %s
+                """,
+                    [account_id, event_id],
+            )
+            

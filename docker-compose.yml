@@ -40,10 +40,10 @@ services:
     depends_on:
       - postgres
     environment:
-      PGHOST: databases
-      PGDATABASE: accounts
-      PGUSER: accounts
-      PGPASSWORD: accounts
+      PGHOST: postgres
+      PGDATABASE: puppin
+      PGUSER: puppin
+      PGPASSWORD: puppin
 
   postgres:
       build:
@@ -53,8 +53,9 @@ services:
           - ./data/postgres/init:/docker-entrypoint-initdb.d
           - postgres-data:/var/lib/postgresql/data
       environment:
-          - POSTGRES_MULTIPLE_DATABASES= accounts, events
-          - POSTGRES_PASSWORD=test-databases
+        POSTGRES_PASSWORD: puppin
+        POSTGRES_USER: puppin
+        POSTGRES_DB: puppin
       ports:
           - 15432:5432
 

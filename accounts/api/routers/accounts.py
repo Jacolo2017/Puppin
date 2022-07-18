@@ -170,7 +170,7 @@ def accounts_list(page: int = 0):
 
 
 @router.post("/api/dog")
-def create_dog(dog: DogIn, response: Response, dog_account_id: int):
+def create_dog(dog: DogIn, response: Response, account_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             try:
@@ -220,4 +220,8 @@ def get_dog(dog_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
+
+
+@router.get("/api/accounts/{account_id}/dogs")
+def get_account_dogs()
 # This is a new line that ends the file.

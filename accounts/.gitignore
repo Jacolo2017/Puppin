@@ -1,4 +1,4 @@
-./api/routers/__pycache__
+./api/__pycache__
 
 # Unit test / coverage reports
 htmlcov/

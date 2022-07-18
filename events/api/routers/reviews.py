@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
-from models.common import ErrorMessage
 from typing import Union
 import psycopg
 router = APIRouter()

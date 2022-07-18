@@ -81,7 +81,7 @@ CREATE TABLE public.eventsusersjunction(
     FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE CASCADE,
     account_id serial,
     FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE,
-    UNIQUE(account_id, event_id)
+    UNIQUE(event_id, account_id)
 )
 
 

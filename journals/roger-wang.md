@@ -24,3 +24,6 @@ Wrote the api for accoutns (get specific, get list, create one). I don't like th
 I think keeping things on one file and then separating them later is the best move. (that is, models)
 
 Heres a big one as well, I went ahead and removed the initializer table for locations. As of right now it doesn't make much sense to have a dependency on location since we need to figure out pulling data from an api but how we are doign that. It will slow down the dev process. 
+
+
+

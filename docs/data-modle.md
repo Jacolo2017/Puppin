@@ -9,18 +9,13 @@ User (Person/Owner and Dog will be associated with this data/login)
 | Password | string | yes | no |
 | DOB | DateField | no | no |
 | events | Foreign Key | yes | no |
-
-Person/Owner(OneToMany with Dog)
-
-| Name | Type | Unique | Optional |
-|------|------|--------|----------|
 | Owner_name | string | no | no   |
 | City | string | no | no |
 | State | string | no | no |
 | Age | integer | no | no |
 | Gender | string | no | no |
 | Photo | string | no | no |
-| About | textarea | no | no |
+| About | textarea | no | yes |
 
 Dog(ManyToOne with Person/Owner) 
 
@@ -67,3 +62,6 @@ Review(Will be associated with the event and person/owner)
 | Event | ForeignKey | yes | no |
 | Attendee_Rating | integer | no | no |
 | Description | textarea | no | no |
+
+    location_id serial,
+    FOREIGN KEY (location_id) REFERENCES public.locations(location_id) ON DELETE CASCADE,

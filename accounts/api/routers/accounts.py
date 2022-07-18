@@ -10,4 +10,22 @@ router = APIRouter()
 #     with psycopg.connect() as conn:
 #         with conn.cursor() as cur:
             
+def row_to_account(row):
+    return {
+        "account_id": row[0],
+        "first_name": row[1],
+        "last_name": row[2],
+        "email": row[3],
+        "username": row[4],
+        "password": row[5],
+        "date_of_birth": row[6],
+    }
+
+@router.get(
+    "api/post"
+)
+
+
+
+
 

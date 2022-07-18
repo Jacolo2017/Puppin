@@ -1,3 +1,4 @@
+from sqlite3 import connect
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from models.common import ErrorMessage
@@ -168,6 +169,18 @@ def accounts_list(page: int = 0):
             # return Accounts(page_count=page_count, accounts=results)
             return results
 
+@router.get("/api/accounts/{account_id}/events")
+def get_associated_events_of_user(account_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT events.id FROM events
+                FROM eventsusersjunction
+                """
+            )
+
+# This is a new line that ends the file.
 
 @router.post("/api/dog")
 def create_dog(dog: DogIn, response: Response, account_id: int):
@@ -223,5 +236,25 @@ def get_dog(dog_id: int, response: Response):
 
 
 @router.get("/api/accounts/{account_id}/dogs")
-def get_account_dogs()
+def get_account_dogs(account_id: int, response: Response):
+    with psycopg.connection() as conn:
+        with conn.cursor() as curr:
+            try:
+                curr.exectue("""
+                    SELECT d.dog_id, d.dog_name, d.dog_about
+                    FROM public.dogs AS d
+                    LEFT JOIN public.accounts AS a
+                        ON(d.account_id = a.account_id)
+                """, [account_id])
+                row = curr.fetchone()
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "No dogs registered yet"}
+                record = {}
+                for i, column in enumerate(curr.description):
+                    record[column.name] = row[i]
+                return record
+            except psycopg.InterfaceError as exc:
+                print(exc.message)
+
 # This is a new line that ends the file.

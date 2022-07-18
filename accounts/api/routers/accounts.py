@@ -174,11 +174,23 @@ def get_associated_events_of_user(account_id: int, response: Response):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT events.id FROM events
-                FROM eventsusersjunction
-                """
-            )
+                SELECT events.event_id, events.event_name
+                FROM events
+                WHERE
+                events.account_id = %s
 
+                """, [account_id]
+            )
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(cur.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
 # This is a new line that ends the file.
 
 @router.post("/api/dog")

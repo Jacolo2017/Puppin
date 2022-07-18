@@ -188,7 +188,7 @@ def create_dog(dog: DogIn, response: Response, account_id: int):
         with conn.cursor() as curr:
             try:
                 curr.execute(
-                    """INSERT INTO dogs (dog_name, dog_breed, dog_age, dog_gender,
+                    """INSERT INTO public.dogs (dog_name, dog_breed, dog_age, dog_gender,
                                         dog_photo, dog_temperament, dog_about,
                                         dog_size, dog_weight,
                                         dog_medical_history, account_id)
@@ -218,7 +218,7 @@ def get_dog(dog_id: int, response: Response):
                                 dog_photo, dog_temperament, dog_about,
                                 dog_size, dog_weight, dog_medical_history,
                                 account_id
-                        FROM dogs
+                        FROM public.dogs
                         WHERE dog_id = %d;""",
                         [dog_id],
                 )

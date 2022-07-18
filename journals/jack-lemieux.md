@@ -27,3 +27,9 @@ We found out that each app doesn't have to have it's own database so we might no
 ## July 14, 2022
 
 We decided to do fast api for our app and are finally creating our schemas. Cooper is setting up our front end so we have a visual and the swagger data is accessible. Mark is building our pedantic functions, which to be honest I am reading up on now... oops. 
+
+## July 18, 2022
+
+Today was very productive. We revamped out fastAPI. Instead of numbering rows we just now use enumerate which Roger is a genius for thinking of! I personally implemented the create, get dog_id, and view all of an accounts dogs. It was quite easy now that I am getting better and more comfortable with how to make a fastAPI. It was interesting actually using a join in our app, and being more comfortable with SQL, to associate dogs based on account_id. I'm still a bit uncomfortable with with fastAPI, but tomorrow will be a good day to clean up that code and keep push through the project!
+
+## July 19, 2022

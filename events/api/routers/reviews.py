@@ -58,7 +58,7 @@ def get_account(review_id: int, response: Response):
                         """, [review_id],
                     )
                 row = cur.fetchone()
-                print("lookhere", (cur.description))
+                print(cur.description)
                 if row is None:
                     response.status_code = status.HTTP_404_NOT_FOUND
                     return {"message": "Account not found"}

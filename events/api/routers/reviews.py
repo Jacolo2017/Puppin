@@ -13,19 +13,8 @@ class EventReviewIn(BaseModel):
     review_description: str
 
 
-class EventReviewOut(BaseModel):
-    review_id: int
-    reviewer_username: int
-    review_event_id: int
-    review_description: str
 
-
-# @router.post("/api/create-user/{user_id}")
-# def createAccount(user_id: int, username: str, password: str):
-#     with psycopg.connect() as conn:
-#         with conn.cursor() as cur:
-
-@router.post("/api/reviews")
+@router.post("/api/reviews/create")
 def create_event_review(review: EventReviewIn, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
@@ -44,7 +33,7 @@ def create_event_review(review: EventReviewIn, response: Response):
                 # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
                 response.status_code = status.HTTP_409_CONFLICT
                 return {
-                    "message": "That usernames taken dawg",
+                    "message": "Already reviewed"
                 }
             row = cur.fetchone()
             record = {}
@@ -55,20 +44,19 @@ def create_event_review(review: EventReviewIn, response: Response):
 
 
 
-@router.get("/api/accounts/{account_id}")
-def get_account(account_id: int, response: Response):
+@router.get("/api/reviews/{review_id}")
+def get_account(review_id: int, response: Response):
     try:
-        print("okay we tried")
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                         """
-                        SELECT first_name, last_name, email, username,
-                        date_of_birth, city, state, gender,
-                            photo_url, about
-                        FROM accounts
-                        WHERE account_id = %s;
-                        """, [account_id],
+                        SELECT (review_id, reviewer_username, account_id, 
+                        review_event, event_id, attendee rating, review_description, 
+                        location_zip, location_rating)
+                        FROM reviews
+                        WHERE review_id = %s;
+                        """, [review_id],
                     )
                 row = cur.fetchone()
                 print("lookhere", (cur.description))

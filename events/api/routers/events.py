@@ -31,23 +31,20 @@ def create_event(event: EventIn, response: Response, leader_id: int):
                             event.event_time]
             )
             row = cur.fetchone()
-            event_id = cur.fetchone()
-            print(row)
+            
+            print("look here", row)
             record = {}
             for i, column in enumerate(cur.description):
                 record[column.name] = row[i]
             print(record)
-            # try:
-            cur.execute(
-                """INSERT INTO eventsusersjunction (event_id, account_id)
-                    SELECT events.event_id, accounts.account_id
-                    FROM events
-                    JOIN accounts
-                    ON
-                    events.account_id = accounts.account_id"""
-            )
-            # except psycopg.errors.UniqueViolation:
-            #     pass
+            try:
+                cur.execute(
+                    """INSERT INTO eventsusersjunction (event_id, account_id)
+                        VALUES(%s, %s)
+                    """, [row[0], leader_id]
+                )
+            except psycopg.errors.UniqueViolation:
+                pass
             return record
 
 @router.get("/api/events/{event_id}")

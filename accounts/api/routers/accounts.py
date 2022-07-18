@@ -39,23 +39,39 @@ class Accounts(BaseModel):
     email: str
     username: str
 
+
+class DogIn(BaseModel):
+    dog_name: str
+    dog_breed: str
+    dog_age: int
+    dog_gender: str
+    dog_photo: str
+    dog_temperament: str
+    dog_about: str
+    dog_size: str
+    dog_weight: int
+    dog_medical_history: str
+    dog_account_id: int
+
+class DogOut(BaseModel):
+    dog_name: str
+    dog_breed: str
+    dog_age: int
+    dog_gender: str
+    dog_photo: str
+    dog_temperament: str
+    dog_about: str
+    dog_size: str
+    dog_weight: int
+    dog_medical_history: str
+    account_id: int
+
+
 # @router.post("/api/create-user/{user_id}")
 # def createAccount(user_id: int, username: str, password: str):
 #     with psycopg.connect() as conn:
 #         with conn.cursor() as cur:
 
-<<<<<<< HEAD
-def row_to_account(row):
-    return {
-        "account_id": row[0],
-        "first_name": row[1],
-        "last_name": row[2],
-        "email": row[3],
-        "username": row[4],
-        "password": row[5],
-        "date_of_birth": row[6],
-    }
-=======
 @router.post("/api/accounts")
 def create_account(account: AccountIn, response: Response):
     with psycopg.connect() as conn:
@@ -89,7 +105,6 @@ def create_account(account: AccountIn, response: Response):
             for i, column in enumerate(cur.description):
                 record[column.name] = row[i]
             return record
->>>>>>> dd7f9e050a2ea97e954dac35b3a9a4e9b62555e2
 
 @router.get("/api/accounts/{account_id}")
 def get_account(account_id: int, response: Response):
@@ -152,5 +167,57 @@ def accounts_list(page: int = 0):
             print("goated")
             # return Accounts(page_count=page_count, accounts=results)
             return results
+
+
+@router.post("/api/dog")
+def create_dog(dog: DogIn, response: Response, dog_account_id: int):
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr:
+            try:
+                curr.execute(
+                    """INSERT INTO dogs (dog_name, dog_breed, dog_age, dog_gender,
+                                        dog_photo, dog_temperament, dog_about,
+                                        dog_size, dog_weight,
+                                        dog_medical_history, account_id)
+                        VALUES (%s, %s, %d, %s, %s, %s, %s, %s, %d, %s, %d)
+                        RETURNING dog_id;""",
+                    [dog.dog_name, dog.dog_breed, dog.dog_age,
+                        dog.dog_gender, dog.dog_photo,
+                        dog.dog_temperament, dog.dog_about,
+                        dog.dog_size, dog.dog_weight,
+                        dog.dog_medical_history, dog.account_id]
+                        )
+                row = curr.fetchone()
+                record = {}
+                for i, column in enumerate(curr.description):
+                    record[column.name] = row[i]
+                return record
+            except psycopg.InterfaceError as exc:
+                print(exc.message)
+
+@router.get("/api/dog/{dog_id}")
+def get_dog(dog_id: int, response: Response):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as curr:
+                curr.execute(
+                    """SELECT dog_name, dog_breed, dog_age, dog_gender,
+                                dog_photo, dog_temperament, dog_about,
+                                dog_size, dog_weight, dog_medical_history,
+                                account_id
+                        FROM dogs
+                        WHERE dog_id = %d;""",
+                        [dog_id],
+                )
+        row = curr.fetchone()
+        if row is None:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return {"message": "Dog not found"}
+        record = {}
+        for i, column in enumerate(curr.description):
+            record[column.name] = row[i]
+        return record
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
 
 # This is a new line that ends the file.

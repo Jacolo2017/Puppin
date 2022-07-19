@@ -1,7 +1,11 @@
+from events.api.routers.events import join_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from typing import Union
 import psycopg
+from events import join_event
+
+
 router = APIRouter()
 
 
@@ -73,3 +77,18 @@ def get_review(review_id: int, response: Response):
                 return record
     except psycopg.InterfaceError as exc:
         print(exc.message)
+
+def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: int, response: Response):
+    with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                if any(x.name == reviewer_id for x in join_event(event_id,
+                        reviewed_id)) and any(x.name == reviewed_id for x in 
+                                join_event(event_id, reviewer_id)):
+                    cur.execute(
+                    """
+                    INSERT INTO ratingaccountswithinevents (reviewer_id, reviewed_id, event_id, rating)
+                        VALUES(%s, %s, %s, %d)
+                        RETURNING event_id, reviewer_id, reviewed_id
+                    """)
+                    row = cur.fetchone()
+                    pass

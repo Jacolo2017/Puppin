@@ -6,7 +6,7 @@ router = APIRouter()
 
 
 class EventReviewIn(BaseModel):
-    review_id: int
+    account_id: int
     reviewer_username: int
     review_event_id: int
     review_description: str
@@ -14,18 +14,18 @@ class EventReviewIn(BaseModel):
 
 
 @router.post("/api/reviews/create")
-def create_event_review(review: EventReviewIn, response: Response):
+def create_event_review(review: EventReviewIn, account_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute(
-                    """ INSERT INTO reviews (review_id, reviewer_username, account_id, 
+                    """ INSERT INTO reviews (reviewer_username, account_id, 
                         review_event, event_id, attendee rating, review_description, 
                         location_zip, location_rating)
                         VALUES (%s, %s, %s, %s)
                 RETURNING account_id;
                 """,
-                    [review.review_id, review.reviewer_username,
+                    [review.reviewer_username,
                         review.review_event_id, review.review_description]
                 )
             except psycopg.errors.UniqueViolation:

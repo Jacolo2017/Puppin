@@ -49,14 +49,14 @@ def create_event_review(review: EventReviewIn, response: Response):
 
 
 @router.get("/api/event/reviews/{review_id}")
-def get_account(review_id: int, response: Response):
+def get_review(review_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                         """
                         SELECT (review_id, reviewer_username, account_id, 
-                        review_event, event_id, attendee rating, review_description, 
+                        review_event, event_id, attendee_rating, review_description, 
                         location_zip, location_rating)
                         FROM reviews
                         WHERE review_id = %s;
@@ -66,7 +66,7 @@ def get_account(review_id: int, response: Response):
                 print(cur.description)
                 if row is None:
                     response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "Account not found"}
+                    return {"message": "Review not found"}
                 record = {}
                 for i, column in enumerate(cur.description):
                     record[column.name] = row[i]

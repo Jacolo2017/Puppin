@@ -7,7 +7,6 @@ router = APIRouter()
 
 class EventReviewIn(BaseModel):
     reviewer_username: str
-    account_id: int
     review_event_id: int
     review_event: str
     review_description: str
@@ -19,7 +18,6 @@ class EventReviewIn(BaseModel):
 
 class EventReviewUpdate(BaseModel):
     reviewer_username: str
-    account_id: int
     review_event_id: int
     review_event: str
     review_description: str
@@ -30,18 +28,26 @@ class EventReviewUpdate(BaseModel):
 
 # --- Create new event review --- #
 @router.post("/api/event/reviews/create")
-def create_event_review(review: EventReviewIn, response: Response):
+def create_event_review(review: EventReviewIn, response: Response, account_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute(
-                    """ INSERT INTO reviews (reviewer_username, account_id, 
-                        event_id, review_event, review_description, attendee_rating,
-                        location_zip, location_rating)
+                    """ INSERT INTO reviews (
+                        reviewer_username,
+                        account_id,
+                        event_id,
+                        review_event,
+                        review_description,
+                        attendee_rating,
+                        location_zip,
+                        location_rating)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING account_id;
-                """,
-                    [review.reviewer_username, review.account_id, review.review_event_id,
+                        RETURNING review_id, reviewer_username, account_id,
+                        event_id, review_event, review_description,
+                        attendee_rating, location_zip, location_rating;
+                        """,
+                    [review.reviewer_username, account_id, review.review_event_id,
                     review.review_event, review.review_description, review.attendee_rating, 
                     review.location_zip, review.location_rating]
                 )
@@ -59,8 +65,8 @@ def create_event_review(review: EventReviewIn, response: Response):
             return record
 
 
-# --- Get event review by review ID --- #
-@router.get("/api/event/reviews/{review_id}")
+# --- Get an event review by review ID --- #
+@router.get("/api/event/reviews/review={review_id}")
 def get_review(review_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
@@ -75,7 +81,43 @@ def get_review(review_id: int, response: Response):
                         """, [review_id],
                     )
                 row = cur.fetchone()
-                print(cur.description)
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Review not found"}
+                record = {}
+                for i, column in enumerate(cur.description):
+                    print(column)
+                    record[column.name] = row[i]
+                return record
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
+
+
+# --- Get all event reviews by event ID --- #
+@router.get("/api/event/reviews/event={event_id}")
+def get_event_reviews(event_id: int, response: Response):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                        """
+                        SELECT (
+                            review_id,
+                            reviewer_username,
+                            account_id,
+                            review_event,
+                            event_id,
+                            attendee_rating,
+                            review_description,
+                            location_zip,
+                            location_rating)
+                        FROM reviews
+                        WHERE event_id= %s;
+                        """, [event_id],
+                    )
+                row = cur.fetchone()
+                print("row: ", row)
+                print("cur.description: ", cur.description)
                 if row is None:
                     response.status_code = status.HTTP_404_NOT_FOUND
                     return {"message": "Review not found"}
@@ -87,19 +129,30 @@ def get_review(review_id: int, response: Response):
         print(exc.message)
 
 
+# --- Update a specific review by review ID --- #
 @router.put("/api/event/reviews/{review_id}")
-def update_review(review_id: int, response: Response):
+def update_review(review: EventReviewUpdate, review_id: int, account_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                         """
-                        SELECT (review_id, reviewer_username, account_id, 
-                        review_event, event_id, attendee_rating, review_description, 
-                        location_zip, location_rating)
-                        FROM reviews
-                        WHERE review_id = %s;
-                        """, [review_id],
+                        UPDATE reviews
+                        SET reviewer_username = %s,
+                            account_id = %s,
+                            review_event = %s,
+                            event_id = %s,
+                            attendee_rating = %s,
+                            review_description = %s,
+                            location_zip = %s
+                            location_rating = %s
+                        WHERE review_id = %s
+                        RETURNING review_id, reviewer_username, account_id,
+                        event_id, review_event, review_description,
+                        attendee_rating, location_zip, location_rating;
+                        """, [review.reviewer_username, account_id, review.review_event_id,
+                    review.review_event, review.review_description, review.attendee_rating, 
+                    review.location_zip, review.location_rating, review_id]
                     )
                 row = cur.fetchone()
                 print(cur.description)

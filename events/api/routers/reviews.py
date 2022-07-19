@@ -6,27 +6,32 @@ router = APIRouter()
 
 
 class EventReviewIn(BaseModel):
+    reviewer_username: str
     account_id: int
-    reviewer_username: int
     review_event_id: int
+    review_event: str
     review_description: str
+    attendee_rating: bool
+    location_zip: int
+    location_rating: int
 
 
 
-@router.post("/api/reviews/create")
-def create_event_review(review: EventReviewIn, account_id: int, response: Response):
+@router.post("/api/event/reviews/create")
+def create_event_review(review: EventReviewIn, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute(
                     """ INSERT INTO reviews (reviewer_username, account_id, 
-                        review_event, event_id, attendee rating, review_description, 
+                        event_id, review_event, review_description, attendee_rating,
                         location_zip, location_rating)
-                        VALUES (%s, %s, %s, %s)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING account_id;
                 """,
-                    [review.reviewer_username,
-                        review.review_event_id, review.review_description]
+                    [review.reviewer_username, review.account_id, review.review_event_id,
+                    review.review_event, review.review_description, review.attendee_rating, 
+                    review.location_zip, review.location_rating]
                 )
             except psycopg.errors.UniqueViolation:
                 # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
@@ -43,7 +48,7 @@ def create_event_review(review: EventReviewIn, account_id: int, response: Respon
 
 
 
-@router.get("/api/reviews/{review_id}")
+@router.get("/api/event/reviews/{review_id}")
 def get_account(review_id: int, response: Response):
     try:
         with psycopg.connect() as conn:

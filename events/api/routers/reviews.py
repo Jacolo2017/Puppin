@@ -17,6 +17,18 @@ class EventReviewIn(BaseModel):
 
 
 
+class EventReviewUpdate(BaseModel):
+    reviewer_username: str
+    account_id: int
+    review_event_id: int
+    review_event: str
+    review_description: str
+    attendee_rating: bool
+    location_zip: int
+    location_rating: int
+
+
+# --- Create new event review --- #
 @router.post("/api/event/reviews/create")
 def create_event_review(review: EventReviewIn, response: Response):
     with psycopg.connect() as conn:
@@ -47,9 +59,36 @@ def create_event_review(review: EventReviewIn, response: Response):
             return record
 
 
-
+# --- Get event review by review ID --- #
 @router.get("/api/event/reviews/{review_id}")
 def get_review(review_id: int, response: Response):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                        """
+                        SELECT (review_id, reviewer_username, account_id, 
+                        review_event, event_id, attendee_rating, review_description, 
+                        location_zip, location_rating)
+                        FROM reviews
+                        WHERE review_id = %s;
+                        """, [review_id],
+                    )
+                row = cur.fetchone()
+                print(cur.description)
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Review not found"}
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                return record
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
+
+
+@router.put("/api/event/reviews/{review_id}")
+def update_review(review_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:

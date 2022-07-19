@@ -51,8 +51,10 @@ class DogIn(BaseModel):
     dog_about: str
     dog_size: str
     dog_weight: int
-    dog_medical_history: str
-    dog_account_id: int
+    spayed_neutered: bool
+    vaccination_history: str
+    account_id: int
+
 
 class DogOut(BaseModel):
     dog_name: str
@@ -64,7 +66,8 @@ class DogOut(BaseModel):
     dog_about: str
     dog_size: str
     dog_weight: int
-    dog_medical_history: str
+    spayed_neutered: bool
+    vaccination_history: str
     account_id: int
 
 
@@ -194,31 +197,32 @@ def get_associated_events_of_user(account_id: int, response: Response):
             return results
 
 
-@router.post("/api/dog")
-def create_dog(dog: DogIn, response: Response, account_id: int):
+@router.post("/api/dog/create")
+def create_dog(dog: DogIn, response_model: DogOut):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
-            try:
-                curr.execute(
-                    """INSERT INTO public.dogs (dog_name, dog_breed, dog_age, dog_gender,
-                                        dog_photo, dog_temperament, dog_about,
-                                        dog_size, dog_weight,
-                                        dog_medical_history, account_id)
-                        VALUES (%s, %s, %d, %s, %s, %s, %s, %s, %d, %s, %d)
-                        RETURNING dog_id;""",
-                    [dog.dog_name, dog.dog_breed, dog.dog_age,
-                        dog.dog_gender, dog.dog_photo,
-                        dog.dog_temperament, dog.dog_about,
-                        dog.dog_size, dog.dog_weight,
-                        dog.dog_medical_history, dog.account_id]
-                        )
-                row = curr.fetchone()
-                record = {}
-                for i, column in enumerate(curr.description):
-                    record[column.name] = row[i]
-                return record
-            except psycopg.InterfaceError as exc:
-                print(exc.message)
+            curr.execute(
+                """
+                    INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
+                    dog_gender, dog_photo, dog_temperament, dog_about,
+                    dog_size, dog_weight, spayed_neutered,
+                    vaccination_history, account_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
+                    RETURNING dog_id;
+                """,
+                [dog.dog_name, dog.dog_breed, dog.dog_age,
+                    dog.dog_gender, dog.dog_photo,
+                    dog.dog_temperament, dog.dog_about,
+                    dog.dog_size, dog.dog_weight,
+                    dog.vaccination_history,
+                    dog.account_id]
+                    )
+            row = curr.fetchone()
+            record = {}
+            for i, column in enumerate(curr.description):
+                record[column.name] = row[i]
+            return record
+
 
 @router.get("/api/dog/{dog_id}")
 def get_dog(dog_id: int, response: Response):

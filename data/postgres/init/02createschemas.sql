@@ -30,7 +30,7 @@ CREATE TABLE public.dogs(
     dog_about character varying(750) NOT NULL,
     dog_size character varying(15) NOT NULL,
     dog_weight int NOT NULL,
-    spayed_neutered BIT NOT NULL,
+    spayed_neutered BOOLEAN,
     vaccination_history character varying(750) NOT NULL,
     account_id serial,
     FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE

@@ -1,6 +1,6 @@
 from multiprocessing.reduction import steal_handle
 from xml.dom import DOMSTRING_SIZE_ERR
-from pydantic import BaseModel,
+from pydantic import BaseModel
 from datetime import date
 from typing import Union
 

@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from datetime import date
 from typing import Union
 
+
 class DogCreateIn(BaseModel):
     dog_name: str
     dog_breed: str
@@ -16,6 +17,7 @@ class DogCreateIn(BaseModel):
     dog_weight: int
     spayed_neutered: bool
     vaccination_history: str
+
 
 class DogUpdateIn(BaseModel):
     dog_name: str
@@ -30,6 +32,7 @@ class DogUpdateIn(BaseModel):
     spayed_neutered: bool
     vaccination_history: str
 
+
 class DogOut(BaseModel):
     dog_name: str
     dog_breed: str
@@ -42,5 +45,3 @@ class DogOut(BaseModel):
     dog_weight: int
     spayed_neutered: bool
     vaccination_history: str
-
-    

@@ -2,7 +2,7 @@ from sqlite3 import connect
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from models.common import ErrorMessage
-from typing import Union
+from typing import Union, Optional
 import psycopg
 router = APIRouter()
 
@@ -70,6 +70,19 @@ class DogOut(BaseModel):
     vaccination_history: str
     account_id: int
 
+
+class DogUpdate(BaseModel):
+    dog_name: Optional[str] = None
+    dog_breed: Optional[str] = None
+    dog_age: Optional[int] = None
+    dog_gender: Optional[str] = None
+    dog_photo: Optional[str] = None
+    dog_temperament: Optional[str] = None
+    dog_about: Optional[str] = None
+    dog_size: Optional[str] = None
+    dog_weight: Optional[int] = None
+    spayed_neutered: Optional[bool] = None
+    vaccination_history: Optional[str] = None
 
 # @router.post("/api/create-user/{user_id}")
 # def createAccount(user_id: int, username: str, password: str):
@@ -235,7 +248,7 @@ def get_dog(dog_id: int, response: Response):
                                 dog_size, dog_weight, dog_medical_history,
                                 account_id
                         FROM public.dogs
-                        WHERE dog_id = %d;""",
+                        WHERE dog_id = %s;""",
                         [dog_id],
                 )
         row = curr.fetchone()
@@ -250,13 +263,38 @@ def get_dog(dog_id: int, response: Response):
         print(exc.message)
 
 
+@router.put("api/dog/{dog_id}", response_model=DogUpdate)
+def update_dog(dog_id: str, dog: DogUpdate):
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr:
+            curr.execute(
+                """
+                INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
+                    dog_gender, dog_photo, dog_temperament, dog_about,
+                    dog_size, dog_weight, spayed_neutered,
+                    vaccination_history)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                """,
+                [dog.dog_name, dog.dog_breed, dog.dog_age,
+                    dog.dog_gender, dog.dog_photo,
+                    dog.dog_temperament, dog.dog_about,
+                    dog.dog_size, dog.dog_weight,
+                    dog.vaccination_history]
+            )
+            row = curr.fetchone()
+            record = {}
+            for i, column in enumerate(curr.description):
+                record[column.name] = row[i]
+            return record
+
+
 
 @router.get("/api/accounts/{account_id}/dogs")
 def get_account_dogs(account_id: int, response: Response):
     with psycopg.connection() as conn:
         with conn.cursor() as curr:
             try:
-                curr.exectue("""
+                curr.execute("""
                     SELECT d.dog_id, d.dog_name, d.dog_about
                     FROM public.dogs AS d
                     LEFT JOIN public.accounts AS a

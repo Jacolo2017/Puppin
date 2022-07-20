@@ -14,6 +14,20 @@ class EventReviewIn(BaseModel):
     location_zip: int
     location_rating: int
 
+# def row_to_reviews_list(row):
+#     rating = {
+#         "review_id": row[0],
+#         "reviewer_username": row[1],
+#         "account_id": row[2],
+#         "review_event": row[3],
+#         "event_id": row[4],
+#         "attendee_rating": row[5],
+#         "review_description": row[6],
+#         "location_zip": row[7],
+#         "location_rating": row[8]
+#     }
+#     return rating
+
 
 
 class EventReviewUpdate(BaseModel):
@@ -33,7 +47,7 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
         with conn.cursor() as cur:
             try:
                 cur.execute(
-                    """ INSERT INTO reviews (
+                    """ INSERT INTO reviews 
                         reviewer_username,
                         account_id,
                         event_id,
@@ -41,7 +55,7 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                         review_description,
                         attendee_rating,
                         location_zip,
-                        location_rating)
+                        location_rating
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                         RETURNING review_id, reviewer_username, account_id,
                         event_id, review_event, review_description,
@@ -57,12 +71,17 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                 return {
                     "message": "Already reviewed"
                 }
-            row = cur.fetchone()
-            record = {}
+            # row = cur.fetchone()
+            # record = {}
 
-            for i, column in enumerate(cur.description):
-                record[column.name] = row[i]
-            return record
+            # for i, column in enumerate(cur.description):
+            #     record[column.name] = row[i]
+            # return record
+
+            reviews = cur.fetchall()
+            return {
+                "reviews": [row_to_reviews_list(row) for row in reviews]
+            }
 
 
 # --- Get an event review by review ID --- #
@@ -73,9 +92,16 @@ def get_review(review_id: int, response: Response):
             with conn.cursor() as cur:
                 cur.execute(
                         """
-                        SELECT (review_id, reviewer_username, account_id, 
-                        review_event, event_id, attendee_rating, review_description, 
-                        location_zip, location_rating)
+                        SELECT
+                            review_id,
+                            reviewer_username,
+                            account_id,
+                            review_event,
+                            event_id,
+                            attendee_rating,
+                            review_description,
+                            location_zip,
+                            location_rating
                         FROM reviews
                         WHERE review_id = %s;
                         """, [review_id],
@@ -101,7 +127,7 @@ def get_event_reviews(event_id: int, response: Response):
             with conn.cursor() as cur:
                 cur.execute(
                         """
-                        SELECT (
+                        SELECT
                             review_id,
                             reviewer_username,
                             account_id,
@@ -110,21 +136,29 @@ def get_event_reviews(event_id: int, response: Response):
                             attendee_rating,
                             review_description,
                             location_zip,
-                            location_rating)
+                            location_rating
                         FROM reviews
                         WHERE event_id= %s;
                         """, [event_id],
                     )
-                row = cur.fetchone()
-                print("row: ", row)
-                print("cur.description: ", cur.description)
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "Review not found"}
-                record = {}
-                for i, column in enumerate(cur.description):
-                    record[column.name] = row[i]
-                return record
+                results = []
+                print("do you see me?")
+                for row in cur.fetchall():
+                    if row is None:
+                        response.status_code = status.HTTP_404_NOT_FOUND
+                        return {"message": "Review not found"}
+                    print("row: ", row)
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        # print("i, column: ", i, column)
+                        record[column.name] = row[i]
+                    results.append(record)
+                return results
+                # reviews = cur.fetchall()
+                # print(reviews)
+                # return {
+                #     "reviews": [row_to_reviews_list(row) for row in reviews]
+                # }
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
@@ -150,12 +184,12 @@ def update_review(review: EventReviewUpdate, review_id: int, account_id: int, re
                         RETURNING review_id, reviewer_username, account_id,
                         event_id, review_event, review_description,
                         attendee_rating, location_zip, location_rating;
-                        """, [review.reviewer_username, account_id, review.review_event_id,
-                    review.review_event, review.review_description, review.attendee_rating, 
-                    review.location_zip, review.location_rating, review_id]
+                        """, [review.reviewer_username, account_id, 
+                        review.review_event_id, review.review_event, 
+                        review.review_description, review.attendee_rating, 
+                        review.location_zip, review.location_rating, review_id]
                     )
                 row = cur.fetchone()
-                print(cur.description)
                 if row is None:
                     response.status_code = status.HTTP_404_NOT_FOUND
                     return {"message": "Review not found"}

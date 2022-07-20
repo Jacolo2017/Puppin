@@ -4,7 +4,7 @@ import {BsLinkedin} from 'react-icons/bs'
 
 const Developers = () => {
   return (
-    <div className='w-full h-screen mt-24'>
+    <div className='w-full h-screen mt-24' id="contact">
         <div className='w-full h-[700px bg-gray-900/90 absolute'>
     
         </div>

@@ -7,9 +7,9 @@ const Navbar = () => {
                 <h2 class="text-3xl text-gray-800 font-bold">P<span class="text-red-600">U</span>PP<span class="text-red-800">I</span><span class="text-green-800">N</span></h2>
             </div>
             <div class="flex items-center space-x-10 font-semibold capitalize px-4">
-                <a href="#" class="text-gray-800 hover:underline">home</a>
+                <a href="#home" class="text-gray-800 hover:underline">home</a>
                 <a href="#about" class="text-gray-600 hover:text-gray-800 hover:underline">about</a>
-                <a href="#" class="text-gray-600 hover:text-gray-800 hover:underline">contact</a>
+                <a href="#contact" class="text-gray-600 hover:text-gray-800 hover:underline">contact</a>
                 <a href="#" class="text-gray-600 hover:text-gray-800 hover:underline"><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' className='h-[20px]'></img></a>
             </div>
             <div className='px-4 py-2'>

@@ -1,9 +1,9 @@
-from events.api.routers.events import join_event
+# from events.api.routers.events import join_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
+from psycopg.errors import UniqueViolation
 from typing import Union
 import psycopg
-from events import join_event
 
 
 router = APIRouter()
@@ -48,6 +48,9 @@ class EventReviewUpdateOut(BaseModel):
     attendee_rating: bool
     location_zip: int
     location_rating: int
+
+class ReviewDelete(BaseModel):
+    result: bool
 
 
 # --- Create new event review --- #
@@ -174,6 +177,65 @@ def get_event_reviews(event_id: int, response: Response):
         print(exc.message)
 
 
+# --- Get event review by event ID and account ID --- #
+@router.get("/api/event/reviews/account={account_id}event_id={event_id}")
+def get_account_reviews_per_event(account_id: int, event_id: int, response: Response):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                        """
+                        SELECT
+                            review_id,
+                            reviewer_username,
+                            account_id,
+                            review_event,
+                            event_id,
+                            attendee_rating,
+                            review_description,
+                            location_zip,
+                            location_rating
+                        FROM reviews
+                        WHERE account_id = %s AND event_id= %s;
+                        """, [account_id, event_id]
+                    )
+                row = cur.fetchone()
+                record = {}
+
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                return record
+                # reviews = cur.fetchall()
+                # print(reviews)
+                # return {
+                #     "reviews": [row_to_reviews_list(row) for row in reviews]
+                # }
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
+
+
+# --- Delete review by review ID --- #
+@router.delete("/api/event/reviews/{review_id}")
+def update_review(
+    review_id: int, 
+    account_id: int, 
+    response_model: ReviewDelete
+):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                        """
+                        DELETE FROM reviews
+                        WHERE review_id = %s
+                        """,
+                        [review_id],
+                    )
+        return {f"Review {review_id} deleted": True}
+    except Exception:
+        return {f"Review {review_id} deleted": False}          
+
+
 # --- Update a specific review by review ID --- #
 @router.put("/api/event/reviews/{review_id}")
 def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, response: Response):
@@ -205,6 +267,7 @@ def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, 
                 return record
     except psycopg.InterfaceError as exc:
         print(exc.message)
+
 
 def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response):
     with psycopg.connect() as conn:

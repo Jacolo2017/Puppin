@@ -14,6 +14,7 @@ class EventReviewIn(BaseModel):
     location_zip: int
     location_rating: int
 
+
 # def row_to_reviews_list(row):
 #     rating = {
 #         "review_id": row[0],
@@ -29,8 +30,13 @@ class EventReviewIn(BaseModel):
 #     return rating
 
 
+class EventReviewUpdateIn(BaseModel):
+    review_event: str
+    review_description: str
+    attendee_rating: bool
+    location_rating: int
 
-class EventReviewUpdate(BaseModel):
+class EventReviewUpdateOut(BaseModel):
     reviewer_username: str
     review_event_id: int
     review_event: str
@@ -48,22 +54,25 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
             try:
                 cur.execute(
                     """ INSERT INTO reviews 
-                        reviewer_username,
+                        (reviewer_username,
                         account_id,
                         event_id,
                         review_event,
                         review_description,
                         attendee_rating,
                         location_zip,
-                        location_rating
+                        location_rating)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                         RETURNING review_id, reviewer_username, account_id,
                         event_id, review_event, review_description,
                         attendee_rating, location_zip, location_rating;
-                        """,
-                    [review.reviewer_username, account_id, review.review_event_id,
-                    review.review_event, review.review_description, review.attendee_rating, 
-                    review.location_zip, review.location_rating]
+                    """,
+                    [
+                        review.reviewer_username, account_id,
+                        review.review_event_id, review.review_event,
+                        review.review_description, review.attendee_rating, 
+                        review.location_zip, review.location_rating
+                    ]
                 )
             except psycopg.errors.UniqueViolation:
                 # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
@@ -71,17 +80,17 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                 return {
                     "message": "Already reviewed"
                 }
-            # row = cur.fetchone()
-            # record = {}
+            row = cur.fetchone()
+            record = {}
 
-            # for i, column in enumerate(cur.description):
-            #     record[column.name] = row[i]
-            # return record
+            for i, column in enumerate(cur.description):
+                record[column.name] = row[i]
+            return record
 
-            reviews = cur.fetchall()
-            return {
-                "reviews": [row_to_reviews_list(row) for row in reviews]
-            }
+            # reviews = cur.fetchall()
+            # return {
+            #     "reviews": [row_to_reviews_list(row) for row in reviews]
+            # }
 
 
 # --- Get an event review by review ID --- #
@@ -112,7 +121,6 @@ def get_review(review_id: int, response: Response):
                     return {"message": "Review not found"}
                 record = {}
                 for i, column in enumerate(cur.description):
-                    print(column)
                     record[column.name] = row[i]
                 return record
     except psycopg.InterfaceError as exc:
@@ -147,7 +155,6 @@ def get_event_reviews(event_id: int, response: Response):
                     if row is None:
                         response.status_code = status.HTTP_404_NOT_FOUND
                         return {"message": "Review not found"}
-                    print("row: ", row)
                     record = {}
                     for i, column in enumerate(cur.description):
                         # print("i, column: ", i, column)
@@ -165,29 +172,24 @@ def get_event_reviews(event_id: int, response: Response):
 
 # --- Update a specific review by review ID --- #
 @router.put("/api/event/reviews/{review_id}")
-def update_review(review: EventReviewUpdate, review_id: int, account_id: int, response: Response):
+def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                         """
                         UPDATE reviews
-                        SET reviewer_username = %s,
-                            account_id = %s,
-                            review_event = %s,
-                            event_id = %s,
-                            attendee_rating = %s,
+                        SET review_event = %s,
                             review_description = %s,
-                            location_zip = %s
+                            attendee_rating = %s,
                             location_rating = %s
                         WHERE review_id = %s
                         RETURNING review_id, reviewer_username, account_id,
                         event_id, review_event, review_description,
                         attendee_rating, location_zip, location_rating;
-                        """, [review.reviewer_username, account_id, 
-                        review.review_event_id, review.review_event, 
+                        """, [review.review_event, 
                         review.review_description, review.attendee_rating, 
-                        review.location_zip, review.location_rating, review_id]
+                        review.location_rating, review_id]
                     )
                 row = cur.fetchone()
                 if row is None:

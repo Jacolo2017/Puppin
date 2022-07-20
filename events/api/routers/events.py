@@ -70,6 +70,44 @@ def get_event(event_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
+@router.get("/api/events/{event_id}/users")
+def get_all_users_from_event(event_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT account_id from eventsusersjunction where event_id = %s;
+                """, [event_id])
+            
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(cur.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
+
+@router.post("/api/events/{event_id}/") 
+def join_event(event_id: int, account_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute(
+                    """
+                    INSERT INTO eventsusersjunction (event_id, account_id)
+                    VALUES(%s, %s)
+                    RETURNING event_id;""", [event_id, account_id]
+                )
+                record = {}
+                row = cur.fetchone()
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                return record
+            except psycopg.errors.UniqueViolation:
+                return {"duplicate join"}
 
 
 # def row_to_event(row):

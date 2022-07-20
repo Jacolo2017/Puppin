@@ -1,3 +1,4 @@
+from sqlite3 import connect
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from models.common import ErrorMessage
@@ -38,6 +39,37 @@ class Accounts(BaseModel):
     last_name: str
     email: str
     username: str
+
+
+class DogIn(BaseModel):
+    dog_name: str
+    dog_breed: str
+    dog_age: int
+    dog_gender: str
+    dog_photo: str
+    dog_temperament: str
+    dog_about: str
+    dog_size: str
+    dog_weight: int
+    spayed_neutered: bool
+    vaccination_history: str
+    account_id: int
+
+
+class DogOut(BaseModel):
+    dog_name: str
+    dog_breed: str
+    dog_age: int
+    dog_gender: str
+    dog_photo: str
+    dog_temperament: str
+    dog_about: str
+    dog_size: str
+    dog_weight: int
+    spayed_neutered: bool
+    vaccination_history: str
+    account_id: int
+
 
 # @router.post("/api/create-user/{user_id}")
 # def createAccount(user_id: int, username: str, password: str):
@@ -139,5 +171,106 @@ def accounts_list(page: int = 0):
             print("goated")
             # return Accounts(page_count=page_count, accounts=results)
             return results
+
+@router.get("/api/accounts/{account_id}/events")
+def get_associated_events_of_user(account_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT events.event_id, events.event_name
+                FROM events
+                WHERE
+                events.account_id = %s
+
+                """, [account_id]
+            )
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(cur.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
+
+
+@router.post("/api/dog/create")
+def create_dog(dog: DogIn, response_model: DogOut):
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr:
+            curr.execute(
+                """
+                    INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
+                    dog_gender, dog_photo, dog_temperament, dog_about,
+                    dog_size, dog_weight, spayed_neutered,
+                    vaccination_history, account_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
+                    RETURNING dog_id;
+                """,
+                [dog.dog_name, dog.dog_breed, dog.dog_age,
+                    dog.dog_gender, dog.dog_photo,
+                    dog.dog_temperament, dog.dog_about,
+                    dog.dog_size, dog.dog_weight,
+                    dog.vaccination_history,
+                    dog.account_id]
+                    )
+            row = curr.fetchone()
+            record = {}
+            for i, column in enumerate(curr.description):
+                record[column.name] = row[i]
+            return record
+
+
+@router.get("/api/dog/{dog_id}")
+def get_dog(dog_id: int, response: Response):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as curr:
+                curr.execute(
+                    """SELECT dog_name, dog_breed, dog_age, dog_gender,
+                                dog_photo, dog_temperament, dog_about,
+                                dog_size, dog_weight, dog_medical_history,
+                                account_id
+                        FROM public.dogs
+                        WHERE dog_id = %d;""",
+                        [dog_id],
+                )
+        row = curr.fetchone()
+        if row is None:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return {"message": "Dog not found"}
+        record = {}
+        for i, column in enumerate(curr.description):
+            record[column.name] = row[i]
+        return record
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
+
+
+
+@router.get("/api/accounts/{account_id}/dogs")
+def get_account_dogs(account_id: int, response: Response):
+    with psycopg.connection() as conn:
+        with conn.cursor() as curr:
+            try:
+                curr.exectue("""
+                    SELECT d.dog_id, d.dog_name, d.dog_about
+                    FROM public.dogs AS d
+                    LEFT JOIN public.accounts AS a
+                        ON(d.account_id = a.account_id)
+                """, [account_id])
+                row = curr.fetchone()
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "No dogs registered yet"}
+                record = {}
+                for i, column in enumerate(curr.description):
+                    record[column.name] = row[i]
+                return record
+            except psycopg.InterfaceError as exc:
+                print(exc.message)
 
 # This is a new line that ends the file.

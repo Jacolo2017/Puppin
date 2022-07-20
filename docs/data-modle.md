@@ -15,6 +15,14 @@ User (Person/Owner and Dog will be associated with this data/login)
 | Photo | string | no | no |
 | About | textarea | no | yes |
 
+
+Junction Table (Account to Event)
+
+| Event Id | User Id|
+|----------|--------|
+| Foreign Key | Foreign Key |
+
+
 Dog(ManyToOne with Person/Owner) 
 
 | Name | Type | Unique | Optional |
@@ -37,7 +45,7 @@ Event(Will pull information from Location Model)
 |------|------|--------|----------|
 | Name | string | no | no |
 | location | string(serial) | no | no |
-| Accounts | string(Foreign Key) | no | no |
+| Accounts | string(Foreign Key) | no | no | 
 | Time | DateTime | no | no |
 | Date | DateTime | no | no |
 

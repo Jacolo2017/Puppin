@@ -1,10 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Developers from './components/Developers';
+import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <h1 className="text-3xl font-bold underline  bg-red-500">
-      Hello world! My name is Cooper
-    </h1>
+    <>
+    <Navbar/>
+    <Hero/>
+    <About/>
+    <Developers/>
+    <Footer/>
+    </>
   )
 }

@@ -78,7 +78,7 @@ def get_review(review_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
-def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: int, response: Response):
+def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response):
     with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 if any(x.name == reviewer_id for x in join_event(event_id,
@@ -91,4 +91,14 @@ def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: 
                         RETURNING event_id, reviewer_id, reviewed_id
                     """)
                     row = cur.fetchone()
-                    pass
+                    print(cur.description)
+                    if row is None:
+                        response.status_code = status.HTTP_404_NOT_FOUND
+                        return {"message": "Event or account not found"}
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                    return record
+
+                    
+#end of file

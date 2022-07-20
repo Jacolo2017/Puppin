@@ -1,9 +1,9 @@
-from events.api.routers.events import join_event
+from .events import get_all_users_from_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from typing import Union
 import psycopg
-from events import join_event
+
 
 
 router = APIRouter()
@@ -78,18 +78,21 @@ def get_review(review_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
+@router.post("/api/event/reviews/{reviewed_id}/{reviewer_id}")
 def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response):
     with psycopg.connect() as conn:
             with conn.cursor() as cur:
-                if any(x.name == reviewer_id for x in join_event(event_id,
-                        reviewed_id)) and any(x.name == reviewed_id for x in 
-                                join_event(event_id, reviewer_id)):
+                # print(any(reviewed_id == reviewer_id for reviewed_id in get_all_users_from_event(event_id, response)))
+                # if any(x == reviewer_id for x in get_all_users_from_event(event_id, response)) and any(x == reviewed_id for x in 
+                #                 get_all_users_from_event(event_id, response)):
+                list_of_all_values = [value for elem in get_all_users_from_event(event_id, response) for value in elem.values()]
+                if reviewer_id in list_of_all_values and reviewed_id in list_of_all_values:
                     cur.execute(
                     """
-                    INSERT INTO ratingaccountswithinevents (reviewer_id, reviewed_id, event_id, rating)
-                        VALUES(%s, %s, %s, %d)
-                        RETURNING event_id, reviewer_id, reviewed_id
-                    """)
+                    INSERT INTO ratingaccountsinevents (reviewer_id, reviewed_id, event_id, rating)
+                        VALUES(%s, %s, %s, %s)
+                        RETURNING event_id, reviewer_id, reviewed_id, rating
+                    """,[reviewer_id, reviewed_id, event_id, rating])
                     row = cur.fetchone()
                     print(cur.description)
                     if row is None:
@@ -99,6 +102,8 @@ def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: 
                     for i, column in enumerate(cur.description):
                         record[column.name] = row[i]
                     return record
+                else:
+                    return "if failed"
 
                     
 #end of file

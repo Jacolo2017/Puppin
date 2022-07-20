@@ -89,7 +89,7 @@ CREATE TABLE public.ratingaccountsinevents(
     reviewed_id serial,
     event_id serial,
     FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE NO ACTION,
-    rating BOOLEAN NOT NULL
+    rating BOOLEAN NULL
 );
 
 

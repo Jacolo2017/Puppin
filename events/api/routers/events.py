@@ -115,8 +115,19 @@ def join_event(event_id: int, account_id: int, dog_id: int, response: Response):
             except psycopg.errors.UniqueViolation:
                 return {"duplicate join"}
 
-
-
+@router.post("/api/events/{event_id}/dogs")
+def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
+                VALUES(%s, %s, %s)
+                RETURNING dog_id, event_id, acount_id
+                """, [event_id, account_id, dog_id])
+            record = {}
+            row = cur.fetchone()
+            for i, column in enumerate(cur.description):
+                record[column.name] = row[i]
+                return record
 # def row_to_event(row):
 #     event = {
 #         "id": row[0],

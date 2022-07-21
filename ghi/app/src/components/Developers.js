@@ -83,7 +83,7 @@ const Developers = () => {
                         Cut production costs by $400,000 for Chrysler’s premier luxury sedan. Designed high-profile,
                         commercial building infrastructure at Arup. Demonstrates unbending work ethic grounded
                         in military experience and proficient in collaborating with global, cross-disciplinary teams.
-                         Committed to looking for a solution, no matter how small the problem...
+                         Committed to looking for a solution, no matter how small the problem.
                     </p>
 
                 </div>

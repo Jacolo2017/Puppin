@@ -110,6 +110,8 @@ def join_event(event_id: int, account_id: int, response: Response):
                 return {"duplicate join"}
 
 
+
+
 # def row_to_event(row):
 #     event = {
 #         "id": row[0],

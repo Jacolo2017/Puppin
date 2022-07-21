@@ -2,7 +2,7 @@ import React from 'react'
 
 const Hero = () => {
   return (
-    <div className='bg-white h-screen flex flex-col justify-center items-center' id="home">
+    <div className='bg-white h-screen flex flex-col justify-center items-center'>
       <h1 className='lg:text-7xl md:text-7xl sm:text-7xl text-4xl font-black mb-14'>
         Purely Puptonic
       </h1>

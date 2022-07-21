@@ -82,7 +82,15 @@ CREATE TABLE public.eventsusersjunction(
     account_id serial,
     FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE,
     UNIQUE(event_id, account_id)
-)
+);
+
+CREATE TABLE public.ratingaccountsinevents(
+    reviewer_id serial,
+    reviewed_id serial,
+    event_id serial,
+    FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE NO ACTION,
+    rating BOOLEAN NULL
+);
 
 
     

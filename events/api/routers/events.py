@@ -2,6 +2,8 @@ from fastapi import APIRouter, Response, status
 from pydantic import BaseModel
 import psycopg
 
+
+
 router = APIRouter()
 
 
@@ -11,44 +13,78 @@ class EventIn(BaseModel):
     event_date: str
     event_time: str
 
+@router.get("/api/events")
+def events_list(page: int= 0):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT event_id, event_name, event_date, account_id
+                FROM events
+                ORDER BY event_id
+                LIMIT 100 OFFSET %s;
+            """,
+                [page * 100],
+            )
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                results.append(record)
+            cur.execute(
+                """
+                SELECT COUNT(*) FROM accounts;
+            """
+            )
+            raw_count = cur.fetchone()[0]
+            page_count = (raw_count // 100) + 1
+            print("goated")
+            # return Accounts(page_count=page_count, accounts=results)
+            return results
+
 @router.post("/api/events")
 def create_event(event: EventIn, dog_id: int, response: Response, leader_id: int):
     print("at least we started")
     with psycopg.connect() as conn:
         print("we got to psyco connect")
         with conn.cursor() as cur:
-            print("now we got to cur")
-            print("gothere")
-            cur.execute(
-                """INSERT INTO events (account_id, event_name, event_location,
-                    event_date, event_time)
-                    VALUES (%s, %s, %s, %s, %s)
-                    RETURNING event_id;""",
-                        [leader_id,
-                            event.event_name,
-                            event.event_location,
-                            event.event_date,
-                            event.event_time]
-            )
-            row = cur.fetchone()
-            
-            print("look here", row)
-            record = {}
-            for i, column in enumerate(cur.description):
-                record[column.name] = row[i]
-            print(record)
-            try:
+            list_of_all_dogvalues = [value for elem in get_account_dogs(leader_id, response) for value in elem.values()]
+            if dog_id in list_of_all_dogvalues:
+                print("now we got to cur")
+                print("gothere")
                 cur.execute(
-                    """INSERT INTO eventsusersjunction (event_id, account_id)
-                        VALUES(%s, %s)
-                    """, [row[0], leader_id]
+                    """INSERT INTO events (account_id, event_name, event_location,
+                        event_date, event_time)
+                        VALUES (%s, %s, %s, %s, %s)
+                        RETURNING event_id;""",
+                            [leader_id,
+                                event.event_name,
+                                event.event_location,
+                                event.event_date,
+                                event.event_time]
                 )
-                cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
-                VALUES(%s, %s, %s)
-                """, [event.event_id, leader_id, dog_id])
-            except psycopg.errors.UniqueViolation:
-                pass
-            return record
+                row = cur.fetchone()
+                
+                print("look here", row)
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                print(record)
+                try:
+                    cur.execute(
+                        """INSERT INTO eventsusersjunction (event_id, account_id)
+                            VALUES(%s, %s)
+                        """, [row[0], leader_id]
+                    )
+                    cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
+                    VALUES(%s, %s, %s)
+                    """, [row[0], leader_id, dog_id])
+                except psycopg.errors.UniqueViolation:
+                    pass
+                return record
+            else:
+                return {"this aint yo dog wtf u doin!"}
 
 @router.get("/api/events/{event_id}")
 def get_event(event_id: int, response: Response):
@@ -97,39 +133,64 @@ def get_all_users_from_event(event_id: int, response: Response):
 def join_event(event_id: int, account_id: int, dog_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
-            try:
-                cur.execute(
-                    """
-                    INSERT INTO eventsusersjunction (event_id, account_id)
-                    VALUES(%s, %s)
-                    RETURNING event_id;""", [event_id, account_id]
-                )
-                record = {}
-                row = cur.fetchone()
-                cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
-                VALUES(%s, %s, %s)
-                """, [event_id, account_id, dog_id])
-                for i, column in enumerate(cur.description):
-                    record[column.name] = row[i]
-                return record
-            except psycopg.errors.UniqueViolation:
-                return {"duplicate join"}
+            list_of_all_dogvalues = [value for elem in get_account_dogs(account_id, response) for value in elem.values()]
+            if dog_id in list_of_all_dogvalues:
+                try:
+                    cur.execute(
+                        """
+                        INSERT INTO eventsusersjunction (event_id, account_id)
+                        VALUES(%s, %s)
+                        RETURNING event_id;""", [event_id, account_id]
+                    )
+                    record = {}
+                    row = cur.fetchone()
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                    cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
+                    VALUES(%s, %s, %s)
+                    """, [event_id, account_id, dog_id])
+                    
+                    return record
+                except psycopg.errors.UniqueViolation:
+                    return {"duplicate join"}
+            else:
+                return {"You don't own this dog, wtf u doin!"}
 
 @router.post("/api/events/{event_id}/dogs")
 def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
-            # if account_id in get_all_users_from_event(event_id):
-            cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
-                VALUES(%s, %s, %s)
-                RETURNING dog_id, event_id, acount_id
-                """, [event_id, account_id, dog_id])
+            list_of_all_dogvalues = [value for elem in get_account_dogs(event_id, response) for value in elem.values()]
+            if account_id in get_all_users_from_event(event_id) and dog_id in list_of_all_dogvalues:
+                cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
+                    VALUES(%s, %s, %s)
+                    RETURNING dog_id, event_id, acount_id
+                    """, [event_id, account_id, dog_id])
             record = {}
             row = cur.fetchone()
             for i, column in enumerate(cur.description):
                 record[column.name] = row[i]
                 return record
 
+
+def get_account_dogs(account_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr: 
+            curr.execute("""
+                SELECT d.dog_id, d.dog_name, d.dog_about
+                FROM public.dogs AS d
+                    WHERE (d.account_id = %s)
+            """, [account_id])
+            results = []
+            for row in curr.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(curr.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
 # need to check that dog belongs to you when adding it to event. accoutn for adddogto event, joinevent, create event
 # def row_to_event(row):
 #     event = {

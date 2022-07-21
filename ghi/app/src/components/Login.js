@@ -2,7 +2,7 @@ import React from 'react'
 
 const Login = () => {
   return (
-    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[180px] '>
+    <div className='items-center h-screen w-screen bg-gradient-to-r bg-[#CE6D8B] from-[#9EB7E5] py-[180px] bg-grad'>
         <div className='flex flex-col justify-center'>
             <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl'>
                 {/* <div className='p-8'>
@@ -30,4 +30,3 @@ const Login = () => {
 }
 
 export default Login
-// bg-[#CE6D8B] from-[#9EB7E5]

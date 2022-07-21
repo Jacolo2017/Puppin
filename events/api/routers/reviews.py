@@ -1,9 +1,11 @@
-# from events.api.routers.events import join_event
+from events.api.routers.events import join_event
+from .events import get_all_users_from_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from psycopg.errors import UniqueViolation
 from typing import Union
 import psycopg
+
 
 
 router = APIRouter()
@@ -269,27 +271,58 @@ def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, 
         print(exc.message)
 
 
+@router.post("/api/event/{event_id}/reviews/{reviewed_id}/{reviewer_id}")
 def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response):
     with psycopg.connect() as conn:
-            with conn.cursor() as cur:
-                if any(x.name == reviewer_id for x in join_event(event_id,
-                        reviewed_id)) and any(x.name == reviewed_id for x in 
-                                join_event(event_id, reviewer_id)):
-                    cur.execute(
-                    """
-                    INSERT INTO ratingaccountswithinevents (reviewer_id, reviewed_id, event_id, rating)
-                        VALUES(%s, %s, %s, %d)
-                        RETURNING event_id, reviewer_id, reviewed_id
-                    """)
-                    row = cur.fetchone()
-                    print(cur.description)
-                    if row is None:
-                        response.status_code = status.HTTP_404_NOT_FOUND
-                        return {"message": "Event or account not found"}
-                    record = {}
-                    for i, column in enumerate(cur.description):
-                        record[column.name] = row[i]
-                    return record
+        with conn.cursor() as cur:
+            # print(any(reviewed_id == reviewer_id for reviewed_id in get_all_users_from_event(event_id, response)))
+            # if any(x == reviewer_id for x in get_all_users_from_event(event_id, response)) and any(x == reviewed_id for x in 
+            #                 get_all_users_from_event(event_id, response)):
+            list_of_all_values = [value for elem in get_all_users_from_event(event_id, response) for value in elem.values()]
+            list_of_all_reviewers = [d['reviewer_id'] for d in get_all_ratings_from_specific_event(event_id, response) if 'reviewer_id' in d]
+            if reviewer_id in list_of_all_values and reviewed_id in list_of_all_values and reviewer_id not in list_of_all_reviewers:
+                cur.execute(
+                """
+                INSERT INTO ratingaccountsinevents (reviewer_id, reviewed_id, event_id, rating)
+                    VALUES(%s, %s, %s, %s)
+                    RETURNING event_id, reviewer_id, reviewed_id, rating
+                """,[reviewer_id, reviewed_id, event_id, rating])
+                row = cur.fetchone()
+                print(cur.description)
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Event or account not found"}
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                return record
+            else:
+                return "you already reviewed this or their/your account does not exist"
 
-                    
+
+@router.get("/api/events/{event_id}/ratings")
+def get_all_ratings_from_specific_event(event_id: int, response: Response):
+    
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT * FROM ratingaccountsinevents
+                WHERE
+                event_id = %s
+
+            """, [event_id])
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(cur.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
+
+
+
 #end of file

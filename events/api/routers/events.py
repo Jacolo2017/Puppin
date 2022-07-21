@@ -12,7 +12,7 @@ class EventIn(BaseModel):
     event_time: str
 
 @router.post("/api/events")
-def create_event(event: EventIn, response: Response, leader_id: int):
+def create_event(event: EventIn, dog_id: int, response: Response, leader_id: int):
     print("at least we started")
     with psycopg.connect() as conn:
         print("we got to psyco connect")
@@ -43,6 +43,9 @@ def create_event(event: EventIn, response: Response, leader_id: int):
                         VALUES(%s, %s)
                     """, [row[0], leader_id]
                 )
+                cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
+                VALUES(%s, %s, %s)
+                """, [event.event_id, leader_id, dog_id])
             except psycopg.errors.UniqueViolation:
                 pass
             return record
@@ -91,7 +94,7 @@ def get_all_users_from_event(event_id: int, response: Response):
             return results
 
 @router.post("/api/events/{event_id}/") 
-def join_event(event_id: int, account_id: int, response: Response):
+def join_event(event_id: int, account_id: int, dog_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
@@ -103,11 +106,15 @@ def join_event(event_id: int, account_id: int, response: Response):
                 )
                 record = {}
                 row = cur.fetchone()
+                cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
+                VALUES(%s, %s, %s)
+                """, [event_id, account_id, dog_id])
                 for i, column in enumerate(cur.description):
                     record[column.name] = row[i]
                 return record
             except psycopg.errors.UniqueViolation:
                 return {"duplicate join"}
+
 
 
 # def row_to_event(row):

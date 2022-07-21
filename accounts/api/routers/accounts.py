@@ -89,7 +89,7 @@ class DogIn(BaseModel):
     dog_weight: int
     spayed_neutered: bool
     vaccination_history: str
-    account_id: int
+
 
 
 class DogOut(BaseModel):
@@ -344,7 +344,7 @@ def get_associated_events_of_user(account_id: int, response: Response):
 
 
 @router.post("/api/dog/create")
-def create_dog(dog: DogIn, response_model: DogOut):
+def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             curr.execute(
@@ -361,7 +361,7 @@ def create_dog(dog: DogIn, response_model: DogOut):
                     dog.dog_temperament, dog.dog_about,
                     dog.dog_size, dog.dog_weight,
                     dog.vaccination_history,
-                    dog.account_id]
+                    account_id]
                     )
             row = curr.fetchone()
             record = {}
@@ -378,22 +378,23 @@ def get_dog(dog_id: int, response: Response):
                 curr.execute(
                     """SELECT dog_name, dog_breed, dog_age, dog_gender,
                                 dog_photo, dog_temperament, dog_about,
-                                dog_size, dog_weight, dog_medical_history,
+                                dog_size, dog_weight, spayed_neutered, vaccination_history,
                                 account_id
-                        FROM public.dogs
+                        FROM dogs
                         WHERE dog_id = %s;""",
                         [dog_id],
                 )
-        row = curr.fetchone()
-        if row is None:
-            response.status_code = status.HTTP_404_NOT_FOUND
-            return {"message": "Dog not found"}
-        record = {}
-        for i, column in enumerate(curr.description):
-            record[column.name] = row[i]
-        return record
+                row = curr.fetchone()
+                print(row)
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Dog not found"}
+                record = {}
+                for i, column in enumerate(curr.description):
+                    record[column.name] = row[i]
+                return record
     except psycopg.InterfaceError as exc:
-        print(exc.message)
+        print(exc)
 
 
 @router.put("api/dog/{dog_id}", response_model=DogUpdate)
@@ -424,25 +425,23 @@ def update_dog(dog_id: str, dog: DogUpdate):
 
 @router.get("/api/accounts/{account_id}/dogs")
 def get_account_dogs(account_id: int, response: Response):
-    with psycopg.connection() as conn:
-        with conn.cursor() as curr:
-            try:
-                curr.execute("""
-                    SELECT d.dog_id, d.dog_name, d.dog_about
-                    FROM public.dogs AS d
-                    LEFT JOIN public.accounts AS a
-                        ON(d.account_id = a.account_id)
-                """, [account_id])
-                row = curr.fetchone()
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "No dogs registered yet"}
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr: 
+            curr.execute("""
+                SELECT d.dog_id, d.dog_name, d.dog_about
+                FROM public.dogs AS d
+                    WHERE (d.account_id = %s)
+            """, [account_id])
+            results = []
+            for row in curr.fetchall():
                 record = {}
+                print("whatever")
                 for i, column in enumerate(curr.description):
+                    print(i)
                     record[column.name] = row[i]
-                return record
-            except psycopg.InterfaceError as exc:
-                print(exc.message)
+                    print(record)
+                results.append(record)
+            return results
 
 
 @router.delete("/api/accounts/{account_id}/dogs/{dog_id}",

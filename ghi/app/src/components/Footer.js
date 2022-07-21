@@ -2,27 +2,37 @@ import React from 'react'
 import { AiFillLinkedin, AiFillGithub } from 'react-icons/ai'
 const Footer = () => {
   return (
-    <div className='w-screen mt-[750px] bg-black text-gray-300 justify-between items-center text-center py-3'>
-        <div className='w-screen grid grid-cols-3 py-8 px-4'>
+    <div className='w-full mt-[1100px] bg-black text-gray-300 py-y px-[100px]'>
+        <div className='max-w-[1240px] mx auto grid md:grid-cols-5 border-b-2 border-gray-600 py-8 px-4 justify-between'>
             <div>
-                <h2 className='text-2xl font-semibold uppercase py-3'>Registration</h2>
+                <h6 className='font-bold uppercase pt-2'>Developers</h6>
                 <ul>
-                    <li className='py-2'>Sign In</li>
-                    <li className='py-2'>Sign Up</li>
+                    <li className='py-1'>Jack Lemieux</li>
+                    <li className='py-1'>Mark Esposito</li>
+                    <li className='py-1'>Roger Wang</li>
+                    <li className='py-1'>Cooper Edmondson</li>
                 </ul>
             </div>
-            <div className='grid grid-rows-1 gap-2 text-center'>
-                <h2 className='text-2xl font-semibold uppercase py-3'>Developers</h2>
-                <a>Mark</a>
-                <a>Jack</a>
-                <a>Roger</a>
-                <a>Cooper</a>
+            <div>
+                <h6 className='font-bold uppercase pt-2'>Registration</h6>
+                <ul>
+                    <li className='py-1'>Sign In</li>
+                    <li className='py-1'>Sign Up</li>
+                </ul>
             </div>
-            <div className='grid grid-rows-1text-center'>
-                <h2 className='text-2xl font-semibold uppercase py-3'>Navigation</h2>
-                <a>Home</a>
-                <a>About</a>
-                <a>Developers</a>
+            
+            <div className='col-span-2 px-8 pt-8 md:pt-2'>
+            <h2 class="text-3xl text-gray-200 font-bold">P<span class="text-red-600">U</span>PP<span class="text-red-800">I</span><span class="text-green-800">N</span></h2>
+            </div>
+            
+            <div>
+                <h6 className='font-bold uppercase pt-2'>Purely Puptonic</h6>
+                <ul>
+                    <li className='py-1'>Home</li>
+                    <li className='py-1'>About</li>
+                    <li className='py-1'>GitLab</li>
+                    
+                </ul>
             </div>
         </div>
     </div>

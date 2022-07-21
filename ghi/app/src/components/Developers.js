@@ -171,4 +171,8 @@ export default Developers;
                 </div>
             </div>
         </div>
-    </div> */}
+    </div>
+  )
+}
+
+export default Developers

@@ -81,7 +81,7 @@ const SignUp = () => {
 
 
   return (
-      <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#CE6D8B] from-[#9EB7E5] py-[50px] bg-grad'>
+      <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
           <div className='flex flex-col justify-center'>
               <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
                   {/* <div className='p-8'>

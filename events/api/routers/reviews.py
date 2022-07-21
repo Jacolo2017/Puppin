@@ -178,7 +178,7 @@ def get_event_reviews(event_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
-
+# work from yesterday #
 # --- Get event review by event ID and account ID --- #
 @router.get("/api/event/reviews/account={account_id}event_id={event_id}")
 def get_account_reviews_per_event(account_id: int, event_id: int, response: Response):

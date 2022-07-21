@@ -119,7 +119,7 @@ def join_event(event_id: int, account_id: int, dog_id: int, response: Response):
 def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
-            # if (account_id in get_all_users_from_event)
+            # if account_id in get_all_users_from_event(event_id):
             cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
                 VALUES(%s, %s, %s)
                 RETURNING dog_id, event_id, acount_id
@@ -129,6 +129,8 @@ def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response)
             for i, column in enumerate(cur.description):
                 record[column.name] = row[i]
                 return record
+
+# need to check that dog belongs to you when adding it to event. accoutn for adddogto event, joinevent, create event
 # def row_to_event(row):
 #     event = {
 #         "id": row[0],

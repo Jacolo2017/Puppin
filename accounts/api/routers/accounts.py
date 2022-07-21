@@ -1,10 +1,44 @@
 from sqlite3 import connect
-from fastapi import APIRouter, Response, status, Depends
+from fastapi import (
+    APIRouter,
+    Response,
+    status,
+    Depends,
+    HTTPException,
+    Cookie,
+    Request,
+)
 from pydantic import BaseModel
 from models.common import ErrorMessage
 from typing import Union, Optional
 import psycopg
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from db.accounts import AccountQueries
+from jose import JWTError, jwt, jws, JWSError
+from passlib.context import CryptContext
+import os
+
+
+SIGNING_KEY = os.environ["SIGNING_KEY"]
+ALGORITHM = "HS256"
+COOKIE_NAME = "fastapi_access_token"
+
+
 router = APIRouter()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+class HttpError(BaseModel):
+    detail: str
+
+
+class TokenData(BaseModel):
+    username: str
+
+
+class AccessToken(BaseModel):
+    token: str
 
 
 class AccountIn(BaseModel):
@@ -12,7 +46,7 @@ class AccountIn(BaseModel):
     last_name: str
     email: str
     username: str
-    password: str
+    account_password: str
     date_of_birth: str
     city: str
     state: str
@@ -26,6 +60,7 @@ class AccountOut(BaseModel):
     last_name: str
     email: str
     username: str
+    account_password: str
     date_of_birth: str
     city: str
     state: str
@@ -39,6 +74,7 @@ class Accounts(BaseModel):
     last_name: str
     email: str
     username: str
+
 
 
 class DogIn(BaseModel):
@@ -84,6 +120,103 @@ class DogUpdate(BaseModel):
     spayed_neutered: Optional[bool] = None
     vaccination_history: Optional[str] = None
 
+
+class DogDelete(BaseModel):
+    result: bool
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# User is the current logged in account
+
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def authenticate_user(repo: AccountQueries, username: str, password: str):
+    user = repo.get_user(username)
+    if not user:
+        return False
+    if not verify_password(password, user["hashed_password"]):
+        return False
+    return user
+
+
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    encoded_jwt = jwt.encode(to_encode, SIGNING_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+async def get_current_user(
+    bearer_token: Optional[str] = Depends(oauth2_scheme),
+    cookie_token: Optional[str] | None = (
+        Cookie(default=None, alias=COOKIE_NAME)
+    ),
+    repo: AccountQueries = Depends(),
+):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    token = bearer_token
+    if not token and cookie_token:
+        token = cookie_token
+    try:
+        payload = jwt.decode(token, SIGNING_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except (JWTError, AttributeError):
+        raise credentials_exception
+    user = repo.get_user(username)
+    if user is None:
+        raise credentials_exception
+    return user  # User is the active account user
+
+
+@router.post("/token")
+async def login_for_access_token(
+    response: Response,
+    request: Request,
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    repo: AccountQueries = Depends(),
+):
+    user = authenticate_user(repo, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = create_access_token(
+        data={"sub": user[1]},
+    )
+    token = {"access_token": access_token, "token_type": "bearer"}
+    headers = request.headers
+    samesite = "none"
+    secure = True
+    if "origin" in headers and "localhost" in headers["origin"]:
+        samesite = "lax"
+        secure = False
+    response.set_cookie(
+        key=COOKIE_NAME,
+        value=access_token,
+        httponly=True,
+        samesite=samesite,
+        secure=secure,
+    )
+    return token
+
+
+@router.get("/token", response_model=AccessToken)
+async def get_token(request: Request):
+    if COOKIE_NAME in request.cookies:
+        return {"token": request.cookies[COOKIE_NAME]}
+
+
 # @router.post("/api/create-user/{user_id}")
 # def createAccount(user_id: int, username: str, password: str):
 #     with psycopg.connect() as conn:
@@ -96,7 +229,7 @@ def create_account(account: AccountIn, response: Response):
             try:
                 cur.execute(
                     """INSERT INTO accounts (first_name, last_name, email, username,
-                        password, date_of_birth, city, state, gender,
+                        account_password, date_of_birth, city, state, gender,
                         photo_url, about)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING account_id;
@@ -310,5 +443,18 @@ def get_account_dogs(account_id: int, response: Response):
                 return record
             except psycopg.InterfaceError as exc:
                 print(exc.message)
+
+
+@router.delete("/api/accounts/{account_id}/dogs/{dog_id}",
+               response_model=DogDelete)
+def delete_dog(
+    current_user: User = Depends(get_current_user),
+    query=Depends(ProfileQueries)
+):
+    try:
+        query.delete_dog(current_user["id"])  #We will have to figure out how to use the current account_id to get the attached dog_id and delete based off that.
+        return {"result": True}
+    except Exception:
+        return {"result": False}
 
 # This is a new line that ends the file.

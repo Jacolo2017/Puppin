@@ -92,15 +92,6 @@ CREATE TABLE public.ratingaccountsinevents(
     rating BOOLEAN NULL
 );
 
-CREATE TABLE public.dogsinevents(
-    account_id serial,
-    FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE,
-    event_id serial,
-    FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE NO ACTION,
-    dog_id serial,
-    FOREIGN KEY (dog_id) REFERENCES public.dogs(dog_id) ON DELETE CASCADE
-);
-
 
     
 

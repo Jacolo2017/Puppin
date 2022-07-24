@@ -5,18 +5,20 @@ import Developers from './components/Developers';
 import Footer from './components/Footer';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
+import RegisterDog from './components/Dog';
 
 
 export default function App() {
   return (
     <>
     <div className=''>
-    <Navbar/>
+    {/* <Navbar/>
     <Hero/>
     <About/>
     <Developers/>
     <Footer/>
-    {/* <Login/> */}
+    <Login/> */}
+    <RegisterDog/>
     </div>
     </>
   )

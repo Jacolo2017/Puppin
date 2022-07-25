@@ -1,7 +1,6 @@
-from fastapi import FastAPI
+
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer
-from fastapi import FastAPI
 from routers import accounts
 from fastapi.middleware.cors import CORSMiddleware
 import os

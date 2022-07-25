@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 let internalToken = null;
 
 export function getToken() {
   return internalToken;
 }
 
-async function getTokenInternal() {
-  const url = `${process.env.REACT_APP_API_HOST}/token`;
+export async function getTokenInternal() {
+  const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
   try {
     const response = await fetch(url, {
-      credentials: 'include',
+      credentials: "include",
     });
     if (response.ok) {
       const data = await response.json();
@@ -20,8 +21,48 @@ async function getTokenInternal() {
   return false;
 }
 
-export function useToken() {
+function handleErrorMessage(error) {
+  if ("error" in error) {
+    error = error.error;
+    try {
+      error = JSON.parse(error);
+      if ("__all__" in error) {
+        error = error.__all__;
+      }
+    } catch {}
+  }
+  if (Array.isArray(error)) {
+    error = error.join("<br>");
+  } else if (typeof error === "object") {
+    error = Object.entries(error).reduce(
+      (acc, x) => `${acc}<br>${x[0]}: ${x[1]}`,
+      ""
+    );
+  }
+  return error;
+}
+
+export const AuthContext = createContext({
+  token: null,
+  setToken: () => null,
+});
+
+export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
+
+  return (
+    <AuthContext.Provider value={{ token, setToken }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuthContext = () => useContext(AuthContext);
+
+export function useToken() {
+  const { token, setToken } = useAuthContext();
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchToken() {
       const token = await getTokenInternal();
@@ -30,25 +71,26 @@ export function useToken() {
     if (!token) {
       fetchToken();
     }
-  }, [token]);
+  }, [setToken, token]);
 
   async function logout() {
     if (token) {
-      const url = `${process.env.REACT_APP_API_HOST}/token`;
-      await fetch(url, {method: 'delete', credentials: 'include'});
+      const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
+      await fetch(url, { method: "delete", credentials: "include" });
       internalToken = null;
       setToken(null);
+      navigate("/");
     }
   }
 
-  async function login(username, account_password) {
-    const url = `${process.env.REACT_APP_API_HOST}/token`;
+  async function login(username, password) {
+    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/registration/login`;
     const form = new FormData();
-    form.append('username', username);
-    form.append('password', account_password);
+    form.append("username", username);
+    form.append("password", password);
     const response = await fetch(url, {
-      method: 'post',
-      credentials: 'include',
+      method: "post",
+      credentials: "include",
       body: form,
     });
     if (response.ok) {
@@ -57,14 +99,13 @@ export function useToken() {
       return;
     }
     let error = await response.json();
-    return error.detail;
+    return handleErrorMessage(error);
   }
 
-  async function signup(username, account_password, email, firstName, lastName, dateOfBirth, city, state, gender, photoUrl, about) {
-    const url = `${process.env.REACT_APP_API_HOST}/api/profiles/profiles`;
+  async function signup(username, account_password, email, firstName, lastName, dateOfBirth, city, state, gender, photoUrl, about ) {
+    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/`;
     const response = await fetch(url, {
-      credentials: 'include',
-      method: 'post',
+      method: "post",
       body: JSON.stringify({
         username,
         account_password,
@@ -79,8 +120,8 @@ export function useToken() {
         about: about,
       }),
       headers: {
-        'Content-Type': 'application/json',
-      }
+        "Content-Type": "application/json",
+      },
     });
     if (response.ok) {
       await login(username, password);
@@ -88,20 +129,27 @@ export function useToken() {
     return false;
   }
 
-  return [token, login, logout, signup];
+  async function update(username, password, email, firstName, lastName) {
+    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/`;
+    const response = await fetch(url, {
+      method: "post",
+      body: JSON.stringify({
+        username,
+        password,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      await login(username, password);
+    }
+    return false;
+  }
+
+
+  return [token, login, logout, signup, update];
 }
-
-
-
-
-//         username,
-//         password,
-//         email,
-//         first_name: firstName,
-//         last_name: lastName,
-//         date_of_birth: dateOfBirth,
-//         city: city,
-//         state: state,
-//         gender: gender,
-//         photo_url: photoUrl,
-//         about: about,

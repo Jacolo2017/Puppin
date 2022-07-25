@@ -6,12 +6,10 @@ import Footer from './components/Footer';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useToken  } from './auth/Authentication';
 import Events from './components/Events';
 
 
 export default function App() {
-  const [token, login, logout, signup] = useToken();
 
   return (
     <>
@@ -19,8 +17,8 @@ export default function App() {
         <Routes>
           <Route path="" element={[<Navbar/>,<Hero/>, <About/>, <Developers/>, <Footer/> ]}/>
           <Route path='registration'>
-            <Route path="login" element={<Login token={token} login={login} />}/>
-            <Route path="create" element={<SignUp token={token} signup={signup} />}/>
+            <Route path="login" element={<Login  />}/>
+            <Route path="create" element={<SignUp />}/>
           </Route>
           <Route path='event'>
             <Route path='home'element={<Events/>} />

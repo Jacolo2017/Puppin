@@ -1,7 +1,9 @@
 import React, { useEffect, useState} from 'react'
+import DogAbout from './DogAbout';
+import DogBasicInfo from './DogBasicInfo';
 
 
-const RegisterDog = () => {
+const DogRegister = () => {
     const [breedOptions, setBreedOptions] = useState([]);
     const [formData, setFormData] = useState({
             dog_name: "",
@@ -13,7 +15,7 @@ const RegisterDog = () => {
             dog_about: "",
             dog_size: "",
             dog_weight: "",
-            spayed_neutered: "",
+            spayed_neutered: false,
             vaccination_history: "",
         });
 
@@ -72,53 +74,62 @@ const RegisterDog = () => {
                 dog_about: "",
                 dog_size: "",
                 dog_weight: "",
-                spayed_neutered: "",
+                spayed_neutered: false,
                 vaccination_history: "",
             })
         }
     
     }
 
+
+    const changePage = (e) => {
+      e.preventDefault()
+      if (e.target.value === 'next') {
+        setPage(page+1);
+      } else if (e.target.value === 'previous') {
+        setPage(page-1);
+      }
+    }
+  
+
+    const[page, setPage] = useState(0);
+  
+    const FormTitles = ["Register Your Dog!", "Tell Us What Your Dog is Like"];
+    
+    const PageDisplay = () => {
+      if (page === 0) {
+        return <DogBasicInfo formData = {formData} setFormData={setFormData} breedOptions = {breedOptions} setBreedOptions = {setBreedOptions}/>
+      } else {
+        return <DogAbout formData ={formData} setFormData={setFormData}/>
+      } 
+    };
+
+
 return (
     <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
         <div className='flex flex-col justify-center'>
             <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
                 {/* <div className='p-8'>
-                    <img  className='rounded-lg shadow-xl' src='https://img.freepik.com/free-vector/people-walking-park-with-their-dogs_52683-37181.jpg?w=2000'/>
+                    <img  className='rounded-lg shadow-xl' src='https://img.freepik.com/free-photo/group-portrait-adorable-puppies_53876-64778.jpg?t=st=1658714676~exp=1658715276~hmac=b3e0ae6c222531949120b233a58326383236d7ae9f56ac110524a98258bd69bb&w=1380'/>
                 </div> */}
-                <h2 className='text-3xl text-black uppercase font-semibold text-center'>Register Your Dog</h2>
+                <h2 className='text-3xl text-black uppercase font-semibold text-center'>{FormTitles[page]}</h2>
+                
                 <div className='flex flex-col text-gray-900 py-2'>
-                  Tell us about your poop machine!
-                </div>
-                <div className='flex flex-col text-gray-900 py-2'>
-                    <label>Name</label>
-                    <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_breed} onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}/>
-                    <label>Breed</label>
-                    <select  required name="breed" id="breed" className="form-select">
-                      <option value="" id="breed_name" >Choose Breed</option>
-                        {breedOptions.map((breed) => {return (
-                          <option key = {breed} value = {breed}>{breed}</option>
-                        );})}
-                        
-                    </select>
-                    {/* <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_breed} onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}/> */}
-                    <label>Age</label>
-                    <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_breed} onChange={(event) => setFormData({...formData, dog_age: event.target.value})}/>
-                    <label>Gender</label>
-                    <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_breed} onChange={(event) => setFormData({...formData, dog_gender: event.target.value})}/>
-                    <label>Photo URL</label>
-                    <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_breed} onChange={(event) => setFormData({...formData, dog_photo: event.target.value})}/>
+                  {PageDisplay()}
                 </div>
                 
-                
-                {/* <div className='container flex justify-around  gap-2 mt-4 mb-3 py-2'>
-                  <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
-                  value='previous'
-                  >previous</button>
-                  <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
-                  value='next'
-                  >stuff</button>
-                </div> */}
+                <div className='container flex justify-around  gap-2 mt-4 mb-3 py-2'>
+                    <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
+                    value='previous'
+                    disabled={page == 0}
+                    onClick={changePage}
+                    >previous</button>
+                    <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
+                    value='next'
+                    disabled={page == FormTitles.length - 1}
+                    onClick={changePage}
+                    >{page === FormTitles.length - 1 ? "Submit": "Next"}</button>
+                  </div>
                 <div className='flex justify-between item-center'>
                   <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Register</button>
                 </div>
@@ -128,7 +139,4 @@ return (
 )
 }
 
-
-
-
-export default RegisterDog
+export default DogRegister

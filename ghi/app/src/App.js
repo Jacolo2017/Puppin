@@ -5,7 +5,7 @@ import Developers from './components/Developers';
 import Footer from './components/Footer';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
-import RegisterDog from './components/Dog';
+import DogRegister from './components/DogRegister';
 
 
 export default function App() {
@@ -18,7 +18,7 @@ export default function App() {
     <Developers/>
     <Footer/>
     <Login/> */}
-    <RegisterDog/>
+    <DogRegister/>
     </div>
     </>
   )

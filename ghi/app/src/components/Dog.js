@@ -17,6 +17,20 @@ const RegisterDog = () => {
             vaccination_history: "",
         });
 
+    function breedConvert(breed_object) {
+            let breedList = []
+            for (let breed of Object.keys(breed_object)){
+              if(breed_object[breed].length === 0){
+                  breedList.push(breed)
+              } else {
+                for (let type of breed_object[breed]){
+                  breedList.push(`${breed}, ${type}`)
+                }
+              }
+            }
+            return breedList
+          }
+
     useEffect(() => {
         async function getBreeds(){
         // console.log("hello")
@@ -24,12 +38,13 @@ const RegisterDog = () => {
         const response = await fetch(breedUrl);
         if (response.ok) {
             const data = await response.json();
-            console.log(data)
-            setBreedOptions({breeds: data});
+            const breedList = breedConvert(data['message'])
+            setBreedOptions(breedList)
         }}
         getBreeds();
         }, []);
         
+
     const handleSubmit = async (event) =>{
         event.preventDefault();
         const data = {...formData}
@@ -62,8 +77,6 @@ const RegisterDog = () => {
             })
         }
     
-
-
     }
 
 return (
@@ -79,15 +92,14 @@ return (
                 </div>
                 <div className='flex flex-col text-gray-900 py-2'>
                     <label>Name</label>
-                    <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_name} onChange={(event) => setFormData({...formData, dog_name: event.target.value})}/>
+                    <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_breed} onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}/>
                     <label>Breed</label>
-                    <select  required name="technician" id="technician" className="form-select">
+                    <select  required name="breed" id="breed" className="form-select">
                       <option value="" id="breed_name" >Choose Breed</option>
-                      {/* {this.state.breeds.map(breed=> {
-                        return (
-                          <option key={breed.name} value={breed.name}>{breed.name}</option>
-                        )
-                      })} */}
+                        {breedOptions.map((breed) => {return (
+                          <option key = {breed} value = {breed}>{breed}</option>
+                        );})}
+                        
                     </select>
                     {/* <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_breed} onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}/> */}
                     <label>Age</label>

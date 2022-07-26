@@ -30,5 +30,8 @@ Drafted three different APIs, get reviews by review ID, get all reviews by event
 
 Fixed a bug with the update review api, which only updates the review "body" but leaves the event, account, and attendee information un-editable. Talking with the group, started to create fastapis for delete event review, get event review by account id & event id, get all events for accounts_ID.
 
+## July 21 2022
+Added a get event reviews by account ID fastAPI. Updated the backend to reflect a change in which we no longer are reviewing or tracking the locations of events anymore. This involved updating the PSQL tables, modifying existing APIs, and updating the design docs. Feeling ood about the project, as we are about to transition from workign on the backend to the front end.
+
 
 

@@ -1,4 +1,4 @@
-from events.api.routers.events import join_event
+from .events import join_event
 from .events import get_all_users_from_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
@@ -17,8 +17,7 @@ class EventReviewIn(BaseModel):
     review_event: str
     review_description: str
     attendee_rating: bool
-    location_zip: int
-    location_rating: int
+    location_rating: str
 
 
 # def row_to_reviews_list(row):
@@ -30,8 +29,7 @@ class EventReviewIn(BaseModel):
 #         "event_id": row[4],
 #         "attendee_rating": row[5],
 #         "review_description": row[6],
-#         "location_zip": row[7],
-#         "location_rating": row[8]
+#         "location_rating": row[7]
 #     }
 #     return rating
 
@@ -48,8 +46,7 @@ class EventReviewUpdateOut(BaseModel):
     review_event: str
     review_description: str
     attendee_rating: bool
-    location_zip: int
-    location_rating: int
+    location_rating: str
 
 class ReviewDelete(BaseModel):
     result: bool
@@ -62,25 +59,25 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
         with conn.cursor() as cur:
             try:
                 cur.execute(
-                    """ INSERT INTO reviews 
+                    """ 
+                        INSERT INTO reviews 
                         (reviewer_username,
                         account_id,
                         event_id,
                         review_event,
                         review_description,
                         attendee_rating,
-                        location_zip,
                         location_rating)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
                         RETURNING review_id, reviewer_username, account_id,
                         event_id, review_event, review_description,
-                        attendee_rating, location_zip, location_rating;
+                        attendee_rating, location_rating;
                     """,
                     [
                         review.reviewer_username, account_id,
                         review.review_event_id, review.review_event,
-                        review.review_description, review.attendee_rating, 
-                        review.location_zip, review.location_rating
+                        review.review_description, review.attendee_rating,
+                        review.location_rating
                     ]
                 )
             except psycopg.errors.UniqueViolation:
@@ -118,7 +115,6 @@ def get_review(review_id: int, response: Response):
                             event_id,
                             attendee_rating,
                             review_description,
-                            location_zip,
                             location_rating
                         FROM reviews
                         WHERE review_id = %s;
@@ -137,7 +133,7 @@ def get_review(review_id: int, response: Response):
 
 
 # --- Get all event reviews by event ID --- #
-@router.get("/api/event/reviews/event={event_id}")
+@router.get("/api/event/{event_id}/reviews/")
 def get_event_reviews(event_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
@@ -152,7 +148,6 @@ def get_event_reviews(event_id: int, response: Response):
                             event_id,
                             attendee_rating,
                             review_description,
-                            location_zip,
                             location_rating
                         FROM reviews
                         WHERE event_id= %s;
@@ -178,9 +173,9 @@ def get_event_reviews(event_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
-# work from yesterday #
+
 # --- Get event review by event ID and account ID --- #
-@router.get("/api/event/reviews/account={account_id}event_id={event_id}")
+@router.get("/api/event/{event_id}/reviews/account={account_id}")
 def get_account_reviews_per_event(account_id: int, event_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
@@ -195,7 +190,6 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
                             event_id,
                             attendee_rating,
                             review_description,
-                            location_zip,
                             location_rating
                         FROM reviews
                         WHERE account_id = %s AND event_id= %s;
@@ -207,11 +201,43 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
                 for i, column in enumerate(cur.description):
                     record[column.name] = row[i]
                 return record
-                # reviews = cur.fetchall()
-                # print(reviews)
-                # return {
-                #     "reviews": [row_to_reviews_list(row) for row in reviews]
-                # }
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
+
+
+# --- Get all event reviews by account ID --- #
+@router.get("/api/event/reviews/account={account_id}")
+def get_event_reviews_for_account(account_id: int, response: Response):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                        """
+                        SELECT
+                            review_id,
+                            reviewer_username,
+                            account_id,
+                            review_event,
+                            event_id,
+                            attendee_rating,
+                            review_description,
+                            location_rating
+                        FROM reviews
+                        WHERE account_id= %s;
+                        """, [account_id],
+                    )
+                results = []
+                print("do you see me?")
+                for row in cur.fetchall():
+                    if row is None:
+                        response.status_code = status.HTTP_404_NOT_FOUND
+                        return {"message": "Review not found"}
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        # print("i, column: ", i, column)
+                        record[column.name] = row[i]
+                    results.append(record)
+                return results
     except psycopg.InterfaceError as exc:
         print(exc.message)
 

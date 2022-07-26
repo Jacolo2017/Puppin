@@ -18,7 +18,6 @@ from jose import JWTError, jwt, jws, JWSError
 from passlib.context import CryptContext
 import os
 
-
 SIGNING_KEY = os.environ["SIGNING_KEY"]
 ALGORITHM = "HS256"
 COOKIE_NAME = "fastapi_access_token"
@@ -26,7 +25,7 @@ COOKIE_NAME = "fastapi_access_token"
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token",  auto_error=False)
 
 
 class HttpError(BaseModel):
@@ -70,8 +69,8 @@ class AccountOut(BaseModel):
 
 
 class Accounts(BaseModel):
-    first_name: str
-    last_name: str
+    id: int
+    user: str
     email: str
     username: str
 
@@ -88,7 +87,7 @@ class DogIn(BaseModel):
     dog_weight: int
     spayed_neutered: bool
     vaccination_history: str
-    account_id: int
+
 
 
 class DogOut(BaseModel):
@@ -133,11 +132,11 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def authenticate_user(repo: AccountQueries, username: str, password: str):
+def authenticate_user(repo: AccountQueries, username: str, account_password: str):
     user = repo.get_user(username)
     if not user:
         return False
-    if not verify_password(password, user["hashed_password"]):
+    if not verify_password(account_password, user["account_password"]):
         return False
     return user
 
@@ -191,7 +190,7 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(
-        data={"sub": user[1]},
+        data={"sub": user["username"]},
     )
     token = {"access_token": access_token, "token_type": "bearer"}
     headers = request.headers
@@ -226,6 +225,7 @@ def create_account(account: AccountIn, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
+                hashed_password = pwd_context.hash(account.account_password)
                 cur.execute(
                     """INSERT INTO accounts (first_name, last_name, email, username,
                         account_password, date_of_birth, city, state, gender,
@@ -235,7 +235,7 @@ def create_account(account: AccountIn, response: Response):
                 """,
                     [account.first_name, account.last_name,
                         account.email, account.username,
-                        account.password, account.date_of_birth,
+                        hashed_password, account.date_of_birth,
                         account.city, account.state,
                         account.gender, account.photo_url,
                         account.about]
@@ -343,7 +343,7 @@ def get_associated_events_of_user(account_id: int, response: Response):
 
 
 @router.post("/api/dog/create")
-def create_dog(dog: DogIn, response_model: DogOut):
+def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             curr.execute(
@@ -364,7 +364,7 @@ def create_dog(dog: DogIn, response_model: DogOut):
                     dog.dog_temperament, dog.dog_about,
                     dog.dog_size, dog.dog_weight,
                     dog.vaccination_history,
-                    dog.account_id]
+                    account_id]
                     )
             row = curr.fetchone()
             record = {}
@@ -381,22 +381,23 @@ def get_dog(dog_id: int, response: Response):
                 curr.execute(
                     """SELECT dog_name, dog_breed, dog_age, dog_gender,
                                 dog_photo, dog_temperament, dog_about,
-                                dog_size, dog_weight, dog_medical_history,
+                                dog_size, dog_weight, spayed_neutered, vaccination_history,
                                 account_id
-                        FROM public.dogs
+                        FROM dogs
                         WHERE dog_id = %s;""",
                         [dog_id],
                 )
-        row = curr.fetchone()
-        if row is None:
-            response.status_code = status.HTTP_404_NOT_FOUND
-            return {"message": "Dog not found"}
-        record = {}
-        for i, column in enumerate(curr.description):
-            record[column.name] = row[i]
-        return record
+                row = curr.fetchone()
+                print(row)
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Dog not found"}
+                record = {}
+                for i, column in enumerate(curr.description):
+                    record[column.name] = row[i]
+                return record
     except psycopg.InterfaceError as exc:
-        print(exc.message)
+        print(exc)
 
 
 @router.put("api/dog/{dog_id}", response_model=DogUpdate)
@@ -427,32 +428,30 @@ def update_dog(dog_id: str, dog: DogUpdate):
 
 @router.get("/api/accounts/{account_id}/dogs")
 def get_account_dogs(account_id: int, response: Response):
-    with psycopg.connection() as conn:
-        with conn.cursor() as curr:
-            try:
-                curr.execute("""
-                    SELECT d.dog_id, d.dog_name, d.dog_about
-                    FROM public.dogs AS d
-                    LEFT JOIN public.accounts AS a
-                        ON(d.account_id = a.account_id)
-                """, [account_id])
-                row = curr.fetchone()
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "No dogs registered yet"}
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr: 
+            curr.execute("""
+                SELECT d.dog_id, d.dog_name, d.dog_about
+                FROM public.dogs AS d
+                    WHERE (d.account_id = %s)
+            """, [account_id])
+            results = []
+            for row in curr.fetchall():
                 record = {}
+                print("whatever")
                 for i, column in enumerate(curr.description):
+                    print(i)
                     record[column.name] = row[i]
-                return record
-            except psycopg.InterfaceError as exc:
-                print(exc.message)
+                    print(record)
+                results.append(record)
+            return results
 
 
 @router.delete("/api/accounts/{account_id}/dogs/{dog_id}",
                response_model=DogDelete)
 def delete_dog(
-    current_user: User = Depends(get_current_user),
-    query=Depends(ProfileQueries)
+    current_user: Accounts = Depends(get_current_user),
+    query=Depends(AccountQueries)
 ):
     try:
         query.delete_dog(current_user["id"])  #We will have to figure out how to use the current account_id to get the attached dog_id and delete based off that.

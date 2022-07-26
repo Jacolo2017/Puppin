@@ -9,7 +9,7 @@ CREATE TABLE public.accounts(
     last_name character varying(30) NOT NULL,
     email character varying(50) NOT NULL,
     username character varying(30) NOT NULL,
-    account_password character varying(50) NOT NULL,
+    account_password character varying(500) NOT NULL,
     date_of_birth date NOT NULL,
     city character varying(20) NOT NULL,
     state character varying(15) NOT NULL,
@@ -71,8 +71,7 @@ CREATE TABLE public.reviews(
     FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE CASCADE,
     attendee_rating BOOLEAN NOT NULL,
     review_description character varying(750) NOT NULL,
-    location_zip int NOT NULL,
-    location_rating int NOT NULL
+    location_rating character varying(200)
 );
 
 CREATE TABLE public.eventsusersjunction(
@@ -92,6 +91,13 @@ CREATE TABLE public.ratingaccountsinevents(
     rating BOOLEAN NULL
 );
 
-
+CREATE TABLE public.dogsinevents(
+    account_id serial,
+    FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE,
+    event_id serial,
+    FOREIGN KEY (event_id) REFERENCES public.events(event_id) ON DELETE NO ACTION,
+    dog_id serial,
+    FOREIGN KEY (dog_id) REFERENCES public.dogs(dog_id) ON DELETE CASCADE
+);
     
 

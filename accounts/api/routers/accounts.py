@@ -76,7 +76,6 @@ class Accounts(BaseModel):
     username: str
 
 
-
 class DogIn(BaseModel):
     dog_name: str
     dog_breed: str
@@ -353,6 +352,10 @@ def create_dog(dog: DogIn, response_model: DogOut):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history, account_id)
+                    # SELECT account_id
+                    # FROM public.accounts
+                    # JOIN account_id
+                    #     ON (accounts.account_id = dogs.account_id)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
                     RETURNING dog_id;
                 """,

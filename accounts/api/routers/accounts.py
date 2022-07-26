@@ -18,7 +18,6 @@ from jose import JWTError, jwt, jws, JWSError
 from passlib.context import CryptContext
 import os
 
-
 SIGNING_KEY = os.environ["SIGNING_KEY"]
 ALGORITHM = "HS256"
 COOKIE_NAME = "fastapi_access_token"
@@ -192,7 +191,7 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(
-        data={"sub": user[1]},
+        data={"sub": user["username"]},
     )
     token = {"access_token": access_token, "token_type": "bearer"}
     headers = request.headers

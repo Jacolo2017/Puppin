@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 
 
 class Login extends React.Component{
+   
     state = {
         username: '',
         account_password: '',
@@ -38,11 +39,11 @@ class Login extends React.Component{
                     <h2 className='text-3xl text-black uppercase font-semibold text-center'>Sign In</h2>
                     <div className='flex flex-col text-gray-900 py-2'>
                         <label>Username</label>
-                        <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" onChange={this.handleChange} name='username'/>
+                        <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" onChange={this.handleChange} name='username' id='username'/>
                     </div>
                     <div className='flex flex-col text-gray-900 py-2'>
                         <label>Password</label>
-                        <input className='rounded-lg bg-gray-300 hover:bg-gray-400 mt-2 p-2' type="password" onChange={this.handleChange} name='account_password'/>
+                        <input className='rounded-lg bg-gray-300 hover:bg-gray-400 mt-2 p-2' type="password" onChange={this.handleChange} name='account_password' id='account_password'/>
                     </div>
                     <button className='w-full my-5 py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'>Login</button>
                     <div>

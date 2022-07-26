@@ -7,16 +7,14 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Events from './components/Events';
-import { AuthProvider } from './auth/Authentication';
 import { useToken } from './auth/Authentication';
 
 export default function App() {
-  const [token, login, logout, signup, update] = useToken();
+  const [token, login, logout, signup] = useToken();
 
   return (
     <>
     <BrowserRouter>
-      <AuthProvider>
           <Routes>
             <Route path="" element={[<Navbar/>,<Hero/>, <About/>, <Developers/>, <Footer/> ]}/>
             <Route path='registration'>
@@ -27,7 +25,6 @@ export default function App() {
               <Route path='home'element={<Events/>} />
             </Route>
           </Routes>
-      </AuthProvider>
     </BrowserRouter>
     </>
   )

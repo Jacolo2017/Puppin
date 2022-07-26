@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
+import { Navigate } from 'react-router-dom';
 let internalToken = null;
 
 export function getToken() {
@@ -19,6 +20,22 @@ async function getTokenInternal() {
   } catch (e) {}
   return false;
 }
+export const AuthContext = createContext({
+  token: null,
+  setToken: () => null,
+});
+
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(null);
+
+  return (
+    <AuthContext.Provider value={{ token, setToken }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuthContext = () => useContext(AuthContext);
 
 export function useToken() {
   const [token, setToken] = useState(null);
@@ -46,6 +63,9 @@ export function useToken() {
     const form = new FormData();
     form.append('username', username);
     form.append('account_password', account_password);
+    console.log(form.entries());
+    console.log(account_password);
+    console.log(form);
     const response = await fetch(url, {
       method: 'post',
       credentials: 'include',

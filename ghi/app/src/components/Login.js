@@ -8,6 +8,7 @@ class Login extends React.Component{
     state = {
         username: '',
         account_password: '',
+        token: '',
     }
 
     handleChange = (e) => {
@@ -17,6 +18,9 @@ class Login extends React.Component{
 
     handleSubmit = async (e) => {
         e.preventDefault()
+        const token = await this.props.login(this.state.username, this.state.account_password);
+        this.setState({ token: token })
+        console.log(this.state)
         this.setState({
             username: '',
             account_password: '',
@@ -24,9 +28,7 @@ class Login extends React.Component{
         });
     }
     render(){
-        if(this.props.token) {
-            return <Navigate to='/event/home'/>
-        }
+        
     
 
     return (

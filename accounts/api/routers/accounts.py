@@ -138,7 +138,7 @@ def authenticate_user(repo: AccountQueries, username: str, account_password: str
     user = repo.get_user(username)
     if not user:
         return False
-    if not verify_password(account_password, user["hashed_password"]):
+    if not verify_password(account_password, user["account_password"]):
         return False
     return user
 
@@ -184,7 +184,7 @@ async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     repo: AccountQueries = Depends(),
 ):
-    user = authenticate_user(repo, form_data.username, form_data.account_password)
+    user = authenticate_user(repo, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -227,6 +227,7 @@ def create_account(account: AccountIn, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
+                hashed_password = pwd_context.hash(account.account_password)
                 cur.execute(
                     """INSERT INTO accounts (first_name, last_name, email, username,
                         account_password, date_of_birth, city, state, gender,
@@ -236,7 +237,7 @@ def create_account(account: AccountIn, response: Response):
                 """,
                     [account.first_name, account.last_name,
                         account.email, account.username,
-                        account.account_password, account.date_of_birth,
+                        hashed_password, account.date_of_birth,
                         account.city, account.state,
                         account.gender, account.photo_url,
                         account.about]

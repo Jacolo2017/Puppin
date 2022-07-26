@@ -9,7 +9,7 @@ CREATE TABLE public.accounts(
     last_name character varying(30) NOT NULL,
     email character varying(50) NOT NULL,
     username character varying(30) NOT NULL,
-    account_password character varying(50) NOT NULL,
+    account_password character varying(500) NOT NULL,
     date_of_birth date NOT NULL,
     city character varying(20) NOT NULL,
     state character varying(15) NOT NULL,

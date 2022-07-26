@@ -61,7 +61,7 @@ export const useAuthContext = () => useContext(AuthContext);
 
 export function useToken() {
   const { token, setToken } = useAuthContext();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchToken() {
@@ -83,11 +83,11 @@ export function useToken() {
     }
   }
 
-  async function login(username, password) {
+  async function login(username, account_password) {
     const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/registration/login`;
     const form = new FormData();
     form.append("username", username);
-    form.append("password", password);
+    form.append("account_password", account_password);
     const response = await fetch(url, {
       method: "post",
       credentials: "include",
@@ -103,7 +103,7 @@ export function useToken() {
   }
 
   async function signup(username, account_password, email, firstName, lastName, dateOfBirth, city, state, gender, photoUrl, about ) {
-    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/`;
+    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/registration/create`;
     const response = await fetch(url, {
       method: "post",
       body: JSON.stringify({
@@ -124,18 +124,18 @@ export function useToken() {
       },
     });
     if (response.ok) {
-      await login(username, password);
+      await login(username, account_password);
     }
     return false;
   }
 
-  async function update(username, password, email, firstName, lastName) {
+  async function update(username, account_password, email, firstName, lastName) {
     const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/`;
     const response = await fetch(url, {
       method: "post",
       body: JSON.stringify({
         username,
-        password,
+        account_password,
         email,
         first_name: firstName,
         last_name: lastName,
@@ -145,7 +145,7 @@ export function useToken() {
       },
     });
     if (response.ok) {
-      await login(username, password);
+      await login(username, account_password);
     }
     return false;
   }

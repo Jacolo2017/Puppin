@@ -128,8 +128,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # User is the current logged in account
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(password, hashed_password):
+    return pwd_context.verify(password, hashed_password)
 
 
 def authenticate_user(repo: AccountQueries, username: str, account_password: str):
@@ -182,6 +182,7 @@ async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     repo: AccountQueries = Depends(),
 ):
+    print(form_data)
     user = authenticate_user(repo, form_data.username, form_data.password)
     if not user:
         raise HTTPException(

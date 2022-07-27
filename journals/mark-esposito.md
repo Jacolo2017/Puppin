@@ -34,4 +34,13 @@ Fixed a bug with the update review api, which only updates the review "body" but
 Added a get event reviews by account ID fastAPI. Updated the backend to reflect a change in which we no longer are reviewing or tracking the locations of events anymore. This involved updating the PSQL tables, modifying existing APIs, and updating the design docs. Feeling ood about the project, as we are about to transition from workign on the backend to the front end.
 
 
+## July 24 2022
+Started working on the front end by drafting up the dog form. Cooper's work on sign-up was a great reference for creating the form and spanning the form across two pages. A tricky portion of the form was pulling in a list of dog breeds from a 3rd party API. I converted the response from that API into a list, but not sure if that is the best way to go about it. However it does seem to work from what I can tell. Since our authentication is not working right now, I wasn't able to figure out how to put in the account ID into the form submission at this time.
+
+## July 25 2022
+As a team, we troubleshot our authentication, which has probably been the biggest challenge to implement up until this point, as no one on the team has ever done it and only had to reference past modules team projects and a "cookbook" realeased by Galvanize. As a team we were able to figure out about 90% of it before calling it a day. Later that night I was able to get the last little bit working. Feels good being able to contribute.
+
+## July 26 2022
+Authentication appears to be working! Going to finish up the dog form and move on from there.
+
 

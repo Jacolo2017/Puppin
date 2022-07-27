@@ -87,7 +87,7 @@ class DogIn(BaseModel):
     dog_weight: int
     spayed_neutered: bool
     vaccination_history: str
-
+    account_id: int
 
 
 class DogOut(BaseModel):
@@ -353,10 +353,7 @@ def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history, account_id)
-                    # SELECT account_id
-                    # FROM public.accounts
-                    # JOIN account_id
-                    #     ON (accounts.account_id = dogs.account_id)
+                    SELECT DATABASE_PRINCIPAL_ID() AS account_id
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
                     RETURNING dog_id;
                 """,
@@ -365,7 +362,7 @@ def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
                     dog.dog_temperament, dog.dog_about,
                     dog.dog_size, dog.dog_weight,
                     dog.vaccination_history,
-                    account_id]
+                    dog.account_id]
                     )
             row = curr.fetchone()
             record = {}

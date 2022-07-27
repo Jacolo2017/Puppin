@@ -99,5 +99,7 @@ CREATE TABLE public.dogsinevents(
     dog_id serial,
     FOREIGN KEY (dog_id) REFERENCES public.dogs(dog_id) ON DELETE CASCADE
 );
+
+
     
 

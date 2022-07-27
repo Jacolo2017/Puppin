@@ -13,7 +13,6 @@ services:
     depends_on:
       - postgres
     environment:
-      SIGNING_KEY: e7eb3ee8f8e8045c8497e605849804d14d3979cb4922b476b67e199448b6b00b
       PGHOST: postgres
       PGDATABASE: puppin
       PGUSER: puppin
@@ -41,7 +40,6 @@ services:
     depends_on:
       - postgres
     environment:
-      SIGNING_KEY: e7eb3ee8f8e8045c8497e605849804d14d3979cb4922b476b67e199448b6b00b
       PGHOST: postgres
       PGDATABASE: puppin
       PGUSER: puppin
@@ -60,4 +58,5 @@ services:
         POSTGRES_DB: puppin
       ports:
           - 15432:5432
+
     

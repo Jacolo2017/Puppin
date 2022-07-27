@@ -10,13 +10,13 @@ import Login from './components/Login';
 export default function App() {
   return (
     <>
-    <div className=''>
-    <Navbar/>
+    <div className='container'>
+    {/* <Navbar/>
     <Hero/>
     <About/>
     <Developers/>
-    <Footer/>
-    {/* <Login/> */}
+    <Footer/> */}
+    <SignUp/>
     </div>
     </>
   )

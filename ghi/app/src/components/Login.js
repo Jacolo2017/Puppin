@@ -59,6 +59,7 @@ class Login extends React.Component{
 }
 }
 
+<<<<<<< HEAD
 export default Login;
 // bg-[#CE6D8B] from-[#9EB7E5]
 // import React, { useState} from 'react';
@@ -112,3 +113,6 @@ export default Login;
 //                 </div>
 //             )
 // }
+=======
+export default Login
+>>>>>>> includedogoneventjoin

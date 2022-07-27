@@ -1,8 +1,16 @@
 from sqlite3 import connect
-from fastapi import APIRouter, Response, status, Depends
+from fastapi import (
+    APIRouter,
+    Response,
+    status,
+    Depends,
+    HTTPException,
+    Cookie,
+    Request,
+)
 from pydantic import BaseModel
 from models.common import ErrorMessage
-from typing import Union
+from typing import Union, Optional
 import psycopg
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from db.accounts import AccountQueries
@@ -37,7 +45,7 @@ class AccountIn(BaseModel):
     last_name: str
     email: str
     username: str
-    password: str
+    account_password: str
     date_of_birth: str
     city: str
     state: str
@@ -51,6 +59,7 @@ class AccountOut(BaseModel):
     last_name: str
     email: str
     username: str
+    account_password: str
     date_of_birth: str
     city: str
     state: str
@@ -64,6 +73,7 @@ class Accounts(BaseModel):
     user: str
     email: str
     username: str
+
 
 
 class DogIn(BaseModel):
@@ -220,7 +230,7 @@ def create_account(account: AccountIn, response: Response):
                 hashed_password = pwd_context.hash(account.account_password)
                 cur.execute(
                     """INSERT INTO accounts (first_name, last_name, email, username,
-                        password, date_of_birth, city, state, gender,
+                        account_password, date_of_birth, city, state, gender,
                         photo_url, about)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING account_id;
@@ -386,6 +396,31 @@ def get_dog(dog_id: int, response: Response):
                 return record
     except psycopg.InterfaceError as exc:
         print(exc)
+
+
+@router.put("api/dog/{dog_id}", response_model=DogUpdate)
+def update_dog(dog_id: str, dog: DogUpdate):
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr:
+            curr.execute(
+                """
+                INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
+                    dog_gender, dog_photo, dog_temperament, dog_about,
+                    dog_size, dog_weight, spayed_neutered,
+                    vaccination_history)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                """,
+                [dog.dog_name, dog.dog_breed, dog.dog_age,
+                    dog.dog_gender, dog.dog_photo,
+                    dog.dog_temperament, dog.dog_about,
+                    dog.dog_size, dog.dog_weight,
+                    dog.vaccination_history]
+            )
+            row = curr.fetchone()
+            record = {}
+            for i, column in enumerate(curr.description):
+                record[column.name] = row[i]
+            return record
 
 
 

@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 from .events import join_event
-=======
->>>>>>> includedogoneventjoin
 from .events import get_all_users_from_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
+from psycopg.errors import UniqueViolation
 from typing import Union
 import psycopg
 
@@ -15,7 +13,6 @@ router = APIRouter()
 
 class EventReviewIn(BaseModel):
     reviewer_username: str
-    account_id: int
     review_event_id: int
     review_event: str
     review_description: str
@@ -23,7 +20,6 @@ class EventReviewIn(BaseModel):
     location_rating: str
 
 
-<<<<<<< HEAD
 # def row_to_reviews_list(row):
 #     rating = {
 #         "review_id": row[0],
@@ -57,16 +53,12 @@ class ReviewDelete(BaseModel):
 
 
 # --- Create new event review --- #
-=======
-
->>>>>>> includedogoneventjoin
 @router.post("/api/event/reviews/create")
-def create_event_review(review: EventReviewIn, response: Response):
+def create_event_review(review: EventReviewIn, response: Response, account_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute(
-<<<<<<< HEAD
                     """ 
                         INSERT INTO reviews 
                         (reviewer_username,
@@ -87,17 +79,6 @@ def create_event_review(review: EventReviewIn, response: Response):
                         review.review_description, review.attendee_rating,
                         review.location_rating
                     ]
-=======
-                    """ INSERT INTO reviews (reviewer_username, account_id, 
-                        event_id, review_event, review_description, attendee_rating,
-                        location_zip, location_rating)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING account_id;
-                """,
-                    [review.reviewer_username, review.account_id, review.review_event_id,
-                    review.review_event, review.review_description, review.attendee_rating, 
-                    review.location_zip, review.location_rating]
->>>>>>> includedogoneventjoin
                 )
             except psycopg.errors.UniqueViolation:
                 # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
@@ -112,16 +93,20 @@ def create_event_review(review: EventReviewIn, response: Response):
                 record[column.name] = row[i]
             return record
 
+            # reviews = cur.fetchall()
+            # return {
+            #     "reviews": [row_to_reviews_list(row) for row in reviews]
+            # }
 
 
-@router.get("/api/event/reviews/{review_id}")
+# --- Get an event review by review ID --- #
+@router.get("/api/event/reviews/review={review_id}")
 def get_review(review_id: int, response: Response):
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                         """
-<<<<<<< HEAD
                         SELECT
                             review_id,
                             reviewer_username,
@@ -131,17 +116,11 @@ def get_review(review_id: int, response: Response):
                             attendee_rating,
                             review_description,
                             location_rating
-=======
-                        SELECT (review_id, reviewer_username, account_id, 
-                        review_event, event_id, attendee_rating, review_description, 
-                        location_zip, location_rating)
->>>>>>> includedogoneventjoin
                         FROM reviews
                         WHERE review_id = %s;
                         """, [review_id],
                     )
                 row = cur.fetchone()
-                print(cur.description)
                 if row is None:
                     response.status_code = status.HTTP_404_NOT_FOUND
                     return {"message": "Review not found"}
@@ -152,7 +131,6 @@ def get_review(review_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
-<<<<<<< HEAD
 
 # --- Get all event reviews by event ID --- #
 @router.get("/api/event/{event_id}/reviews/")
@@ -319,8 +297,6 @@ def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, 
         print(exc.message)
 
 
-=======
->>>>>>> includedogoneventjoin
 @router.post("/api/event/{event_id}/reviews/{reviewed_id}/{reviewer_id}")
 def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response):
     with psycopg.connect() as conn:

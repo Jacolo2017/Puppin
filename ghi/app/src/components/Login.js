@@ -8,7 +8,7 @@ class Login extends React.Component{
     state = {
         username: '',
         account_password: '',
-        token: '',
+        error: '',
     }
 
     handleChange = (e) => {
@@ -18,8 +18,8 @@ class Login extends React.Component{
 
     handleSubmit = async (e) => {
         e.preventDefault()
-        const token = await this.props.login(this.state.username, this.state.account_password);
-        this.setState({ token: token })
+        const error = await this.props.login(this.state.username, this.state.account_password);
+        this.setState({ error: error })
         console.log(this.state)
         this.setState({
             username: '',
@@ -28,16 +28,15 @@ class Login extends React.Component{
         });
     }
     render(){
-        
+        if (this.props.token){
+           return <Navigate to='/event/home'/>
+        }
     
 
     return (
         <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[180px] '>
             <div className='flex flex-col justify-center'>
-                <form onSubmit={this.handleSubmit} className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl'>
-                    {/* <div className='p-8'>
-                        <img  className='rounded-lg shadow-xl' src='https://img.freepik.com/free-vector/people-walking-park-with-their-dogs_52683-37181.jpg?w=2000'/>
-                    </div> */}
+                <form onSubmit={this.handleSubmit} className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' method="POST">
                     <h2 className='text-3xl text-black uppercase font-semibold text-center'>Sign In</h2>
                     <div className='flex flex-col text-gray-900 py-2'>
                         <label>Username</label>

@@ -1,5 +1,4 @@
-import { createContext, useEffect, useState, useContext } from "react";
-import { Navigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 let internalToken = null;
 
 export function getToken() {
@@ -20,22 +19,6 @@ async function getTokenInternal() {
   } catch (e) {}
   return false;
 }
-export const AuthContext = createContext({
-  token: null,
-  setToken: () => null,
-});
-
-export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
-
-  return (
-    <AuthContext.Provider value={{ token, setToken }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuthContext = () => useContext(AuthContext);
 
 export function useToken() {
   const [token, setToken] = useState(null);
@@ -58,14 +41,11 @@ export function useToken() {
     }
   }
 
-  async function login(username, account_password) {
+  async function login(username, password) {
     const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
     const form = new FormData();
     form.append('username', username);
-    form.append('account_password', account_password);
-    console.log(form.entries());
-    console.log(account_password);
-    console.log(form);
+    form.append('password', password);
     const response = await fetch(url, {
       method: 'post',
       credentials: 'include',
@@ -80,32 +60,33 @@ export function useToken() {
     return error.detail;
   }
 
-  async function signup(username, email, dateOfBirth, account_password) {
-    const url = `${process.env.REACT_APP_API_HOST}/registration/create`;
+  async function signup(username, email, dob, password) {
+    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
     const response = await fetch(url, {
       credentials: 'include',
       method: 'post',
       body: JSON.stringify({
         username,
-        account_password,
-        date_of_birth: dateOfBirth,
+        password,
+        date_of_birth: dob,
         email,
         first_name: '',
         last_name: '',
-        city: '',
-        state: '',
-        gender: '',
-        photo_url: '',
+        location: '',
+        interested: {
+          interested: [],
+        }
       }),
       headers: {
         'Content-Type': 'application/json',
       }
     });
     if (response.ok) {
-      await login(username, account_password);
+      await login(username, password);
     }
     return false;
   }
 
   return [token, login, logout, signup];
 }
+

@@ -60,33 +60,33 @@ export function useToken() {
     return error.detail;
   }
 
-  async function signup(username, email, dob, password) {
-    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
-    const response = await fetch(url, {
-      credentials: 'include',
-      method: 'post',
-      body: JSON.stringify({
-        username,
-        password,
-        date_of_birth: dob,
-        email,
-        first_name: '',
-        last_name: '',
-        location: '',
-        interested: {
-          interested: [],
-        }
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-    if (response.ok) {
-      await login(username, password);
-    }
-    return false;
-  }
+  // async function signup(username, email, dob, password) {
+  //   const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
+  //   const response = await fetch(url, {
+  //     credentials: 'include',
+  //     method: 'post',
+  //     body: JSON.stringify({
+  //       username,
+  //       password,
+  //       date_of_birth: dob,
+  //       email,
+  //       first_name: '',
+  //       last_name: '',
+  //       location: '',
+  //       interested: {
+  //         interested: [],
+  //       }
+  //     }),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     }
+  //   });
+  //   if (response.ok) {
+  //     await login(username, password);
+  //   }
+  //   return false;
+  // }
 
-  return [token, login, logout, signup];
+  return [token, login, logout];
 }
 

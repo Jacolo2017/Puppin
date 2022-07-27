@@ -18,7 +18,6 @@ from jose import JWTError, jwt, jws, JWSError
 from passlib.context import CryptContext
 import os
 
-
 SIGNING_KEY = os.environ["SIGNING_KEY"]
 ALGORITHM = "HS256"
 COOKIE_NAME = "fastapi_access_token"
@@ -26,7 +25,7 @@ COOKIE_NAME = "fastapi_access_token"
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token",  auto_error=False)
 
 
 class HttpError(BaseModel):
@@ -70,8 +69,8 @@ class AccountOut(BaseModel):
 
 
 class Accounts(BaseModel):
-    first_name: str
-    last_name: str
+    id: int
+    user: str
     email: str
     username: str
 
@@ -130,15 +129,15 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # User is the current logged in account
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(password, hashed_password):
+    return pwd_context.verify(password, hashed_password)
 
 
-def authenticate_user(repo: AccountQueries, username: str, password: str):
+def authenticate_user(repo: AccountQueries, username: str, account_password: str):
     user = repo.get_user(username)
     if not user:
         return False
-    if not verify_password(password, user["hashed_password"]):
+    if not verify_password(account_password, user["account_password"]):
         return False
     return user
 
@@ -184,6 +183,7 @@ async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     repo: AccountQueries = Depends(),
 ):
+    print(form_data)
     user = authenticate_user(repo, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -192,7 +192,7 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(
-        data={"sub": user[1]},
+        data={"sub": user["username"]},
     )
     token = {"access_token": access_token, "token_type": "bearer"}
     headers = request.headers
@@ -227,6 +227,7 @@ def create_account(account: AccountIn, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
+                hashed_password = pwd_context.hash(account.account_password)
                 cur.execute(
                     """INSERT INTO accounts (first_name, last_name, email, username,
                         account_password, date_of_birth, city, state, gender,
@@ -236,7 +237,7 @@ def create_account(account: AccountIn, response: Response):
                 """,
                     [account.first_name, account.last_name,
                         account.email, account.username,
-                        account.password, account.date_of_birth,
+                        hashed_password, account.date_of_birth,
                         account.city, account.state,
                         account.gender, account.photo_url,
                         account.about]
@@ -447,8 +448,8 @@ def get_account_dogs(account_id: int, response: Response):
 @router.delete("/api/accounts/{account_id}/dogs/{dog_id}",
                response_model=DogDelete)
 def delete_dog(
-    current_user: User = Depends(get_current_user),
-    query=Depends(ProfileQueries)
+    current_user: Accounts = Depends(get_current_user),
+    query=Depends(AccountQueries)
 ):
     try:
         query.delete_dog(current_user["id"])  #We will have to figure out how to use the current account_id to get the attached dog_id and delete based off that.

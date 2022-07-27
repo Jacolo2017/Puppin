@@ -8,7 +8,7 @@ const SignUpInfo = ({formData, setFormData}) => {
         <label>Username</label>
         <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.username} onChange={(event) => setFormData({...formData, username: event.target.value})}/>
         <label>Password</label>
-        <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="password" value={formData.password} onChange={(event) => setFormData({...formData, password: event.target.value})}/>
+        <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="password" value={formData.account_password} onChange={(event) => setFormData({...formData, account_password: event.target.value})}/>
     </div>
     
   )

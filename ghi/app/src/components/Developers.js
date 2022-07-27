@@ -54,7 +54,7 @@ const Developers = () => {
 
             <div className='bg-gray-300 rounded-xl shadow-2xl'>
                 <div className='p-10'>
-                    <img src='https://media-exp1.licdn.com/dms/image/C5603AQHeKKbcwKnVRg/profile-displayphoto-shrink_800_800/0/1619729911245?e=1663804800&v=beta&t=R5sGSVqCF1gocFlOG5Jd7AQ68eebwxnDOKRcWg5p5Wo'
+                    <img src='https://media-exp1.licdn.com/dms/image/C5603AQGR8-zm2zDSFg/profile-displayphoto-shrink_800_800/0/1658786569955?e=1664409600&v=beta&t=0Ee5oFmjYNwkQ6u8Kee_SVg9hHa-ujeU1TfQPo2gYm0'
                     className='rounded-full w-20 mt-[-4rem]'/>
                     <h3 className='uppercase font-bold text-center text-2xl py-4'>Roger Wang</h3>
                     <p className='text-center '>

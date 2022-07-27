@@ -6,7 +6,7 @@ export function getToken() {
 }
 
 async function getTokenInternal() {
-  const url = `${process.env.REACT_APP_API_HOST}/token`;
+  const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
   try {
     const response = await fetch(url, {
       credentials: 'include',
@@ -34,18 +34,18 @@ export function useToken() {
 
   async function logout() {
     if (token) {
-      const url = `${process.env.REACT_APP_API_HOST}/token`;
+      const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
       await fetch(url, {method: 'delete', credentials: 'include'});
       internalToken = null;
       setToken(null);
     }
   }
 
-  async function login(username, account_password) {
-    const url = `${process.env.REACT_APP_API_HOST}/token`;
+  async function login(username, password) {
+    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
     const form = new FormData();
     form.append('username', username);
-    form.append('password', account_password);
+    form.append('password', password);
     const response = await fetch(url, {
       method: 'post',
       credentials: 'include',
@@ -60,48 +60,33 @@ export function useToken() {
     return error.detail;
   }
 
-  async function signup(username, account_password, email, firstName, lastName, dateOfBirth, city, state, gender, photoUrl, about) {
-    const url = `${process.env.REACT_APP_API_HOST}/api/profiles/profiles`;
-    const response = await fetch(url, {
-      credentials: 'include',
-      method: 'post',
-      body: JSON.stringify({
-        username,
-        account_password,
-        email,
-        first_name: firstName,
-        last_name: lastName,
-        date_of_birth: dateOfBirth,
-        city: city,
-        state: state,
-        gender: gender,
-        photo_url: photoUrl,
-        about: about,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-    if (response.ok) {
-      await login(username, password);
-    }
-    return false;
-  }
+  // async function signup(username, email, dob, password) {
+  //   const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
+  //   const response = await fetch(url, {
+  //     credentials: 'include',
+  //     method: 'post',
+  //     body: JSON.stringify({
+  //       username,
+  //       password,
+  //       date_of_birth: dob,
+  //       email,
+  //       first_name: '',
+  //       last_name: '',
+  //       location: '',
+  //       interested: {
+  //         interested: [],
+  //       }
+  //     }),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     }
+  //   });
+  //   if (response.ok) {
+  //     await login(username, password);
+  //   }
+  //   return false;
+  // }
 
-  return [token, login, logout, signup];
+  return [token, login, logout];
 }
 
-
-
-
-//         username,
-//         password,
-//         email,
-//         first_name: firstName,
-//         last_name: lastName,
-//         date_of_birth: dateOfBirth,
-//         city: city,
-//         state: state,
-//         gender: gender,
-//         photo_url: photoUrl,
-//         about: about,

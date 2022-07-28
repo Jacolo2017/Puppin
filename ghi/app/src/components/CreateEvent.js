@@ -1,12 +1,17 @@
 import React, { useEffect, useState} from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from 'react-hook-form'
+import DatePicker from 'react-datepicker'
+
+
+import "react-datepicker/dist/react-datepicker.css";
+
 
 
 export default function CreateEvent(){
-
+    const [startDate, setStartDate] = useState(new Date());
     let [userdogs, setUserDogs] = useState()
     let [userSelectedDog, setUserSelectedDog] = useState()
-    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm();
+    const { control, register, handleSubmit, watch, reset, formState: { errors } } = useForm();
     useEffect(() =>{
         fetch(`http://localhost:8001/api/accounts/1/dogs`)
         .then(response => response.json())
@@ -59,9 +64,35 @@ return (
       <div>Event Location</div>
       <input {...register("event_location", {required: true})} />
       <div>Event Date</div>
-      <input {...register("event_date", {required: true})} />
+      <Controller
+    control={control}
+    name='date-input'
+    render={({ field }) => (
+      <DatePicker
+        placeholderText='Select date'
+        onChange={(date) => field.onChange(date)}
+        dateFormat="MM/dd/yyyy"
+        selected={field.value}
+      />
+   )}
+  />
       <div>Event Time</div>
-      <input {...register("event_time", {required: true})} />
+      <Controller
+    control={control}
+    name='event_time'
+    render={({ field }) => (
+      <DatePicker
+        placeholderText='Select time'
+        onChange={(time) => field.onChange(time.toLocaleTimeString())}
+        showTimeSelect
+        showTimeSelectOnly
+        timeIntervals={15}
+        timeCaption="Time"
+        dateFormat="h:mm aa"
+        selected={field.value}
+      />
+   )}
+  />
       <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit" />
       </form>
       </>)

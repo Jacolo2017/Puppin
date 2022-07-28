@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
+from accounts.api.routers.accounts import get_current_user
 import psycopg
 
 
@@ -128,6 +129,39 @@ def get_all_users_from_event(event_id: int, response: Response):
                     print(record)
                 results.append(record)
             return results
+
+
+@router.get("/api/events/myevents")
+def get_all_events_by_user(
+    account_id: int,
+    response: Response,
+    current_user: Depends(get_current_user)
+):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT event_id, event_name, event_date, account_id
+                FROM events
+                WHERE account_id = %s
+            """, [current_user[0]]
+            )
+            results = []
+            rows = cur.fetchall()
+            for row in rows:
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                results.append(record)
+            if rows is None:
+                response.status_code = status.HTTP_404_NOT_FOUND
+                return {"message": "User has no events"}
+            return results
+
+
+
+
+
 
 @router.post("/api/events/{event_id}/") 
 def join_event(event_id: int, account_id: int, response: Response):

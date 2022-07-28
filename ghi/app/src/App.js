@@ -10,12 +10,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Events from './components/Events';
 import { useToken } from './auth/Authentication';
 import LoggedinNav from './components/LoggedinNav';
+import CreateReview from './components/ReviewFrom';
 export default function App() {
   const [ token, login, logout] = useToken();
 
   return (
     <>
-    <BrowserRouter>
+      <CreateReview/>
+    {/* <BrowserRouter>
           <Routes>
             <Route path="" element={[ <Navbar/>,<Hero/>, <About/>, <Developers/>, <Footer/> ]}/>
             <Route path='registration'>
@@ -26,7 +28,7 @@ export default function App() {
               <Route path='home'element={[<LoggedinNav/>, <Events/>]} />
             </Route>
           </Routes>
-    </BrowserRouter>
+    </BrowserRouter> */}
     </>
   )
 }

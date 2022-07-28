@@ -10,6 +10,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Events from './components/Events';
 import { useToken } from './auth/Authentication';
 import LoggedinNav from './components/LoggedinNav';
+import CreateEvent from './components/CreateEvent';
 export default function App() {
   const [ token, login, logout] = useToken();
 
@@ -23,6 +24,7 @@ export default function App() {
               <Route path="create" element={<SignUp token={token}/>}/>
             </Route>
             <Route path='event'>
+              <Route path='create' element={<CreateEvent/>}/>
               <Route path='home'element={[<LoggedinNav/>, <Events/>]} />
             </Route>
           </Routes>

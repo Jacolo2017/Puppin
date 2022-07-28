@@ -45,7 +45,7 @@ def events_list(page: int= 0):
             return results
 
 @router.post("/api/events")
-def create_event(event: EventIn, response: Response, leader_id: int):
+def create_event(event: EventIn, response: Response, leader_id: int, dog_id: int):
     print("at least we started")
     with psycopg.connect() as conn:
         print("we got to psyco connect")
@@ -164,7 +164,7 @@ def get_all_events_by_user(
 
 
 @router.post("/api/events/{event_id}/") 
-def join_event(event_id: int, account_id: int, response: Response):
+def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             list_of_all_dogvalues = [value for elem in get_account_dogs(account_id, response) for value in elem.values()]

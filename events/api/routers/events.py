@@ -2,32 +2,6 @@ from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 
 
-import psycopg
-import os
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
-from typing import Optional
-
-SIGNING_KEY = os.environ["SIGNING_KEY"]
-ALGORITHM = "HS256"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
-
-
-async def get_current_user(
-    token: Optional[str] = Depends(oauth2_scheme),
-):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid authentication credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        return jwt.decode(token, SIGNING_KEY, algorithms=[ALGORITHM])
-    except (JWTError, AttributeError):
-        raise credentials_exception
-
-
 router = APIRouter()
 
 

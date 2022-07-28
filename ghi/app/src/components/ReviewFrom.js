@@ -13,18 +13,18 @@ const CreateReview = () => {
         });
 
     
-        // useEffect(() => {
-        // async function getEvents(){
-        // // console.log("hello")
-        // const breedUrl = 'https://dog.ceo/api/breeds/list/all'
-        // const response = await fetch(breedUrl);
-        // if (response.ok) {
-        //     const data = await response.json();
-        //     const breedList = breedConvert(data['message'])
-        //     setEventData(breedList)
-        // }}
-        // getEvents();
-        // }, []);
+        useEffect(() => {
+        async function getEvents(){
+        // console.log("hello")
+        const breedUrl = '/api/events/myevents/'
+        const response = await fetch(breedUrl);
+        if (response.ok) {
+            const data = await response.json();
+            const breedList = breedConvert(data['message'])
+            setEventData(breedList)
+        }}
+        getEvents();
+        }, []);
         
 
     const handleSubmit = async (event) =>{
@@ -60,7 +60,6 @@ const CreateReview = () => {
 
 return (
 <div className='flex flex-col text-gray-900 py-2'>
-      
       <label>Event Review</label>
         <select  name="size class" id="size_class" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}>
             <option value="" id="event" >Choose Event</option>

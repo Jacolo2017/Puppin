@@ -10,6 +10,8 @@ const DogAbout = ({formData, setFormData}) => {
         <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.dog_temperament} onChange={(event) => setFormData({...formData, dog_temperament: event.target.value})}/>
         <label>Spayed or Neutered?</label>
         <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="checkbox" value={formData.spayed_neutered} onChange={(event) => setFormData({...formData, spayed_neutered: event.target.value})}/>
+        <label>Vaccination History</label>
+        <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.vaccination_history} onChange={(event) => setFormData({...formData, vaccination_history: event.target.value})}/>
         <label>Photo URL</label>
         <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_photo} onChange={(event) => setFormData({...formData, dog_photo: event.target.value})}/>
     </div>

@@ -1,8 +1,31 @@
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
-from accounts.api.routers.accounts import get_current_user
-import psycopg
 
+
+import psycopg
+import os
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from typing import Optional
+
+SIGNING_KEY = os.environ["SIGNING_KEY"]
+ALGORITHM = "HS256"
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
+
+
+async def get_current_user(
+    token: Optional[str] = Depends(oauth2_scheme),
+):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        return jwt.decode(token, SIGNING_KEY, algorithms=[ALGORITHM])
+    except (JWTError, AttributeError):
+        raise credentials_exception
 
 
 router = APIRouter()
@@ -13,6 +36,7 @@ class EventIn(BaseModel):
     event_location: str
     event_date: str
     event_time: str
+
 
 @router.get("/api/events")
 def events_list(page: int= 0):
@@ -131,20 +155,20 @@ def get_all_users_from_event(event_id: int, response: Response):
             return results
 
 
-@router.get("/api/events/myevents")
+@router.get("/api/events/myevents/")
 def get_all_events_by_user(
-    account_id: int,
     response: Response,
-    current_user: Depends(get_current_user)
+    # current_user: Depends(get_current_user)
 ):
+    print("ping")
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
                 SELECT event_id, event_name, event_date, account_id
                 FROM events
-                WHERE account_id = %s
-            """, [current_user[0]]
+                WHERE account_id = 1;
+                """
             )
             results = []
             rows = cur.fetchall()
@@ -157,9 +181,6 @@ def get_all_events_by_user(
                 response.status_code = status.HTTP_404_NOT_FOUND
                 return {"message": "User has no events"}
             return results
-
-
-
 
 
 
@@ -225,6 +246,8 @@ def get_account_dogs(account_id: int, response: Response):
                     print(record)
                 results.append(record)
             return results
+
+            
 # need to check that dog belongs to you when adding it to event. accoutn for adddogto event, joinevent, create event
 # def row_to_event(row):
 #     event = {

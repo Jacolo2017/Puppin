@@ -29,3 +29,5 @@ july 18:
 
 Fixed the junction table, added api function to get all events associated with user
 
+try catch
+

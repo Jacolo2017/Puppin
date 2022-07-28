@@ -83,7 +83,7 @@ return (
     render={({ field }) => (
       <DatePicker
         placeholderText='Select time'
-        onChange={(time) => field.onChange(time.toLocaleTimeString())}
+        onChange={(time) => field.onChange(time.getHours)}
         showTimeSelect
         showTimeSelectOnly
         timeIntervals={15}

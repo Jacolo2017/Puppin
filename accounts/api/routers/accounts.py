@@ -175,6 +175,11 @@ async def get_current_user(
         raise credentials_exception
     return user  # User is the active account user
 
+@router.get("/currentuser")
+def apicurrentuser(bearer_token: Optional[str] = Depends(oauth2_scheme), cookie_token: Optional[str] | None = (Cookie(default=None, alias=COOKIE_NAME))):
+    x = get_current_user(bearer_token, cookie_token)
+    return x
+
 
 @router.post("/token")
 async def login_for_access_token(

@@ -83,7 +83,7 @@ return (
       <div>Event Date/Time</div>
       <Controller 
     control={control}
-    name='event_date'
+    name='event_time'
     render={({ field }) => (
       <DatePicker style = {{width: '33%'}} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white"
         placeholderText='Select time'

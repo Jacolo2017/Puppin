@@ -11,9 +11,9 @@ const DogBasicInfo = ({formData, setFormData, breedOptions, setBreedOptions} ) =
       <label>Gender</label>
       <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_gender} onChange={(event) => setFormData({...formData, dog_gender: event.target.value})}/>
       <label>Weight</label>
-      <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.size} onChange={(event) => setFormData({...formData, dog_size: event.target.value})}/>
+      <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.size} onChange={(event) => setFormData({...formData, dog_weight: event.target.value})}/>
       <label>Size Class</label>
-      <select  name="size class" id="size_class" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}>
+      <select  name="size class" id="size_class" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' onChange={(event) => setFormData({...formData, dog_size: event.target.value})}>
         <option value="" id="breed_name" >Size Class</option>
         <option key = "teacup" value="teacup" id="teacup" >Teacup (less than 5 lbs)</option>
         <option key = "toy" value="toy" id="toy" >Toy (5-12 lbs)</option>

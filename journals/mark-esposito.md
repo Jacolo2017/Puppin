@@ -41,9 +41,6 @@ Started working on the front end by drafting up the dog form. Cooper's work on s
 As a team, we troubleshot our authentication, which has probably been the biggest challenge to implement up until this point, as no one on the team has ever done it and only had to reference past modules team projects and a "cookbook" realeased by Galvanize. As a team we were able to figure out about 90% of it before calling it a day. Later that night I was able to get the last little bit working. Feels good being able to contribute.
 
 ## July 26 2022
-Authentication appears to be working! However, no one on the team can seem to figure out why. The suspecting line that "solved" it was later removed and everything still worked. Going to finish up the dog form and move on from there. We still have a long way to go.
-
-## July 27 2022
-Pressure is starting to mount. I'm working on the event form which seems simple enough but calls for a bunch of different data coming together. Likely going to need to create a new API to get the events that the user has signed in to. Even though the authentication is working, we are struggling to figure when/where to use it and pull the user data from tokens. NGL, I'm pretty frustrated with the project.
+Authentication appears to be working! Going to finish up the dog form and move on from there.
 
 

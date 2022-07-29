@@ -24,6 +24,7 @@ export default function App() {
               <Route path="create" element={<SignUp token={token}/>}/>
             </Route>
             <Route path='event'>
+              <Route path = 'create'element = {<CreateEvent token={token}/>}/>
               <Route path='home'element={[<LoggedinNav/>, <Events/>]} />
             </Route>
           </Routes>

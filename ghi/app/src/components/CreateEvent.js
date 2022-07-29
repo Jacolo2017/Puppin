@@ -7,19 +7,21 @@ import "react-datepicker/dist/react-datepicker.css";
 
 
 
-export default function CreateEvent(){
+export default function CreateEvent(props){
     const [startDate, setStartDate] = useState(new Date());
+    let [gotToken, setGotToken] = useState(false)
     let [userdogs, setUserDogs] = useState()
+    let [currentUser, setCurrentUser] = useState()
     let [userSelectedDog, setUserSelectedDog] = useState()
     const { control, register, handleSubmit, watch, reset, formState: { errors } } = useForm();
     useEffect(() =>{
-        fetch(`http://localhost:8001/api/accounts/1/dogs`)
-        .then(response => response.json())
-        .then(response => setUserDogs(response))
-        .catch(e => console.error(e));
-        console.log(userdogs)
+      
+        
+        
+        
     }, []
     )
+
     const onSubmit = async function(data){
         console.log("submit button hit")
         console.log(data)
@@ -42,6 +44,19 @@ export default function CreateEvent(){
 
 }
 
+  if (props.token && gotToken == false){
+    console.log("yes token")
+    fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+        .then(response => response.json())
+        .then(response => fetch(`http://localhost:8001/api/accounts/${response.id}/dogs`)
+        .then(response => response.json())
+        .then(response => setUserDogs(response)))
+        
+    
+    setGotToken(true)
+  }
+  
+
 return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <>
@@ -63,7 +78,7 @@ return (
       <input {...register("event_name", { required: true })} />
       <div>Event Location</div>
       <input {...register("event_location", {required: true})} />
-      <div>Event Date</div>
+      <div>Event Date/Time</div>
       <Controller
     control={control}
     name='date-input'
@@ -97,3 +112,5 @@ return (
       </form>
       </>)
 }
+
+

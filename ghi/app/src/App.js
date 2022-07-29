@@ -18,13 +18,13 @@ export default function App() {
     <>
     <BrowserRouter>
           <Routes>
-            <Route path="" element={[ <Navbar/>,<Hero/>, <About/>, <Developers/>, <Footer/> ]}/>
+            <Route path="" element={[ <Navbar/>,<Hero token={token}/>, <About/>, <Developers/>, <Footer/> ]}/>
             <Route path='registration'>
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>
             </Route>
             <Route path='event'>
-              <Route path='create' element={<CreateEvent/>}/>
+              <Route path='create' element={<CreateEvent token={token}/>}/>
               <Route path='home'element={[<LoggedinNav/>, <Events/>]} />
             </Route>
           </Routes>

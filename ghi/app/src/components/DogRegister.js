@@ -5,6 +5,7 @@ import DogBasicInfo from './DogBasicInfo';
 
 const DogRegister = () => {
     const [breedOptions, setBreedOptions] = useState([]);
+    const [check, setCheck] = useState([false])
     const [formData, setFormData] = useState({
             dog_name: "",
             dog_breed: "",
@@ -15,7 +16,7 @@ const DogRegister = () => {
             dog_about: "",
             dog_size: "",
             dog_weight: "",
-            spayed_neutered: false,
+            spayed_neutered: check,
             vaccination_history: "",
         });
 
@@ -83,7 +84,7 @@ const DogRegister = () => {
     
     }
 
-
+    const toggleChecked = () => setChecked(value => !value);
 
     const changePage = (e) => {
       e.preventDefault()
@@ -104,7 +105,7 @@ const DogRegister = () => {
       if (page === 0) {
         return <DogBasicInfo formData = {formData} setFormData={setFormData} breedOptions = {breedOptions} setBreedOptions = {setBreedOptions}/>
       } else {
-        return <DogAbout formData ={formData} setFormData={setFormData}/>
+        return <DogAbout formData ={formData} setFormData={setFormData} check = {check} setCheck = {setCheck}/>
       } 
     };
 

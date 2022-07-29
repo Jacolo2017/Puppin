@@ -42,7 +42,7 @@ def events_list(page: int= 0):
             # return Accounts(page_count=page_count, accounts=results)
             return results
 
-@router.post("/api/events")
+@router.post("/api/events/{leader_id}/{dog_id}")
 def create_event(event: EventIn, response: Response, leader_id: int, dog_id: int):
     print("at least we started")
     with psycopg.connect() as conn:

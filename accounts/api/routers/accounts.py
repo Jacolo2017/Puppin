@@ -148,7 +148,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SIGNING_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-
+@router.get("/api/currentuser/{cookie_token}")
 async def get_current_user(
     bearer_token: Optional[str] = Depends(oauth2_scheme),
     cookie_token: Optional[str] | None = (

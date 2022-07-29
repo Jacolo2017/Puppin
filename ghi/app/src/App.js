@@ -11,6 +11,7 @@ import Events from './components/Events';
 import { useToken } from './auth/Authentication';
 import LoggedinNav from './components/LoggedinNav';
 import CreateEvent from './components/CreateEvent';
+import DogUpdate from './components/DogUpdate';
 export default function App() {
   const [ token, login, logout] = useToken();
 
@@ -23,6 +24,7 @@ export default function App() {
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>
               <Route path="dog" element={<DogRegister token={token}/>}/>
+              <Route path="dog/update" element={<DogUpdate token={token}/>}/>
             </Route>
             <Route path='event'>
               <Route path='create' element={<CreateEvent token={token}/>}/>

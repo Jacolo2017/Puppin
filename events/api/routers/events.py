@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Response, status, Depends
+from fastapi import APIRouter, Response, status
 from pydantic import BaseModel
+import psycopg
+
 
 
 router = APIRouter()
@@ -10,7 +12,6 @@ class EventIn(BaseModel):
     event_location: str
     event_date: str
     event_time: str
-
 
 @router.get("/api/events")
 def events_list(page: int= 0):
@@ -128,38 +129,8 @@ def get_all_users_from_event(event_id: int, response: Response):
                 results.append(record)
             return results
 
-
-@router.get("/api/events/myevents/")
-def get_all_events_by_user(
-    response: Response,
-    # current_user: Depends(get_current_user)
-):
-    print("ping")
-    with psycopg.connect() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT event_id, event_name, event_date, account_id
-                FROM events
-                WHERE account_id = 1;
-                """
-            )
-            results = []
-            rows = cur.fetchall()
-            for row in rows:
-                record = {}
-                for i, column in enumerate(cur.description):
-                    record[column.name] = row[i]
-                results.append(record)
-            if rows is None:
-                response.status_code = status.HTTP_404_NOT_FOUND
-                return {"message": "User has no events"}
-            return results
-
-
-
 @router.post("/api/events/{event_id}/") 
-def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
+def join_event(event_id: int, account_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             list_of_all_dogvalues = [value for elem in get_account_dogs(account_id, response) for value in elem.values()]
@@ -220,8 +191,6 @@ def get_account_dogs(account_id: int, response: Response):
                     print(record)
                 results.append(record)
             return results
-
-            
 # need to check that dog belongs to you when adding it to event. accoutn for adddogto event, joinevent, create event
 # def row_to_event(row):
 #     event = {

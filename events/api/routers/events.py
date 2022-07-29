@@ -1,3 +1,5 @@
+from datetime import datetime
+from xmlrpc.client import DateTime
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 import psycopg
@@ -8,8 +10,7 @@ router = APIRouter()
 class EventIn(BaseModel):
     event_name: str
     event_location: str
-    event_date: str
-    event_time: str
+    event_date_time: datetime
 
 
 @router.get("/api/events")
@@ -18,7 +19,7 @@ def events_list(page: int= 0):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT event_id, event_name, event_date, account_id
+                SELECT event_id, event_name, event_date_time, account_id
                 FROM events
                 ORDER BY event_id
                 LIMIT 100 OFFSET %s;
@@ -54,14 +55,13 @@ def create_event(event: EventIn, response: Response, leader_id: int, dog_id: int
                 print("gothere")
                 cur.execute(
                     """INSERT INTO events (account_id, event_name, event_location,
-                        event_date, event_time)
-                        VALUES (%s, %s, %s, %s, %s)
+                        event_date_time)
+                        VALUES (%s, %s, %s, %s)
                         RETURNING event_id;""",
                             [leader_id,
                                 event.event_name,
                                 event.event_location,
-                                event.event_date,
-                                event.event_time]
+                                event.event_date_time]
                 )
                 row = cur.fetchone()
                 

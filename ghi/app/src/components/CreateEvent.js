@@ -65,7 +65,7 @@ return (
     <div className='flex flex-col justify-center'>
     <form method = "get" className = 'max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
       <div>What dog are you bringing?</div>
-    <select {...register("dog_id", { required: true })} onChange = {x => setUserSelectedDog(x.target.value)}id = "dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
+    <select  onChange = {x => setUserSelectedDog(x.target.value)}id = "dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
       {userdogs && userdogs.map(userdog => {
         return (
       <option key = {userdog.id} value ={userdog.dog_id} > 
@@ -73,7 +73,7 @@ return (
       </option>)})} 
       </select>
   
-   
+      {/* {...register("dog_id", { required: true })} */} 
       {/* register your input into the hook by invoking the "register" function */}         
       {/* include validation with required or other standard HTML validation rules */}
       <div>Event Name</div>
@@ -84,7 +84,7 @@ return (
       <div>Event Date/Time</div>
       <Controller 
     control={control}
-    name='event_time'
+    name='event_date_time'
     render={({ field }) => (
       <DatePicker style = {{width: '33%'}} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white"
         placeholderText='Select time'

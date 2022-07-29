@@ -60,56 +60,43 @@ export default function CreateEvent(props){
 return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <>
-    <div>asdf</div>
-    <form>
-    <select onChange = {x => setUserSelectedDog(x.target.value)}id = "dog-select" className="form-select">
+    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
+    <div className='flex flex-col justify-center'>
+    <form className = 'max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
+      <div>What dog are you bringing?</div>
+    <select onChange = {x => setUserSelectedDog(x.target.value)}id = "dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
       {userdogs && userdogs.map(userdog => {
         return (
       <option key = {userdog.id} value ={userdog.dog_id} > 
           {userdog.dog_name} 
       </option>)})} 
       </select>
-    </form>
-    <form onSubmit={handleSubmit(onSubmit)}>
+  
+   
       {/* register your input into the hook by invoking the "register" function */}         
       {/* include validation with required or other standard HTML validation rules */}
       <div>Event Name</div>
       
-      <input {...register("event_name", { required: true })} />
+      <input {...register("event_name", { required: true })} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white"/>
       <div>Event Location</div>
-      <input {...register("event_location", {required: true})} />
+      <input {...register("event_location", {required: true})} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white"/>
       <div>Event Date/Time</div>
-      <Controller
-    control={control}
-    name='date-input'
-    render={({ field }) => (
-      <DatePicker
-        placeholderText='Select date'
-        onChange={(date) => field.onChange(date)}
-        dateFormat="MM/dd/yyyy"
-        selected={field.value}
-      />
-   )}
-  />
-      <div>Event Time</div>
-      <Controller
+      <Controller 
     control={control}
     name='event_time'
     render={({ field }) => (
-      <DatePicker
+      <DatePicker style = {{width: '33%'}} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white"
         placeholderText='Select time'
-        onChange={(time) => field.onChange(time.getHours)}
+        onChange={(date) => field.onChange(date)}
         showTimeSelect
-        showTimeSelectOnly
-        timeIntervals={15}
-        timeCaption="Time"
-        dateFormat="h:mm aa"
+        timeFormat="HH:mm"
+        dateFormat="MMMM d, yyyy h:mm aa"
         selected={field.value}
       />
    )}
   />
-      <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit" />
-      </form>
+      <input className="bg-blue-700 hover:bg-slate-700 mt-4 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white" type="submit" />
+      </form></div></div>
       </>)
 }
 

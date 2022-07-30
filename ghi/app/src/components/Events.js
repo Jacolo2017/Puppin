@@ -51,33 +51,3 @@ export default function Events(){
   )
 }
 
-    // <Swiper
-    //     freeMode={true}
-    //     grabCursor={true}
-    //     modules={FreeMode}
-    //     className='mySwiper'
-    //     slidesPerView={4}
-    //     spaceBetween={40}
-    //     >
-    //       <SwiperSlide>
-    //         <EventCard className='shadow-xl'/>
-    //       </SwiperSlide>
-    //       <SwiperSlide>
-    //         <EventCard/>
-    //       </SwiperSlide>
-    //       <SwiperSlide>
-    //         <EventCard/>
-    //       </SwiperSlide>
-    //       <SwiperSlide>
-    //         <EventCard/>
-    //       </SwiperSlide>
-    //       <SwiperSlide>
-    //         <EventCard/>
-    //       </SwiperSlide>
-    //       <SwiperSlide>
-    //         <EventCard/>
-    //       </SwiperSlide>
-    //       <SwiperSlide>
-    //         <EventCard/>
-    //       </SwiperSlide>
-    //     </Swiper>

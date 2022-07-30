@@ -18,6 +18,7 @@ from jose import JWTError, jwt, jws, JWSError
 from passlib.context import CryptContext
 import os
 
+
 SIGNING_KEY = os.environ["SIGNING_KEY"]
 ALGORITHM = "HS256"
 COOKIE_NAME = "fastapi_access_token"
@@ -147,7 +148,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SIGNING_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-
+@router.get("/api/currentuser/{cookie_token}")
 async def get_current_user(
     bearer_token: Optional[str] = Depends(oauth2_scheme),
     cookie_token: Optional[str] | None = (
@@ -362,7 +363,8 @@ def get_associated_events_of_user(account_id: int, response: Response):
 
 
 @router.post("/api/dog/create")
-def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
+def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
+    print("create_dog ping")
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             curr.execute(
@@ -379,7 +381,7 @@ def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
                     dog.dog_temperament, dog.dog_about,
                     dog.dog_size, dog.dog_weight,
                     dog.vaccination_history,
-                    account_id]
+                    user['id']]
                     )
             row = curr.fetchone()
             record = {}

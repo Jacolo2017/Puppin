@@ -10,10 +10,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Events from './components/Events';
 import { useToken } from './auth/Authentication';
 import LoggedinNav from './components/LoggedinNav';
+
 import Profile from './components/Profile';
 
 
 
+
+
+import CreateEvent from './components/CreateEvent';
 
 export default function App() {
   const [ token, login, logout] = useToken();
@@ -24,16 +28,21 @@ export default function App() {
     <>
     <BrowserRouter>
           <Routes>
-            <Route path="" element={[ <Navbar/>,<Hero/>, <About/>, <Developers/>, <Footer/> ]}/>
+            <Route path="" element={[ <Navbar/>,<Hero token={token}/>, <About/>, <Developers/>, <Footer/> ]}/>
             <Route path='registration'>
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>
             </Route>
             <Route path='event'>
+
               <Route path='home'element={[<LoggedinNav logout={logout} token={token}/>, <Events/>]} />
             </Route>
             <Route path='profile'>
               <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile/>]} />
+
+              <Route path = 'create'element = {<CreateEvent token={token}/>}/>
+              <Route path='home'element={[<LoggedinNav/>, <Events/>]} />
+
             </Route>
           </Routes>
     </BrowserRouter>

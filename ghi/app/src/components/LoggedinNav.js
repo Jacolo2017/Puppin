@@ -15,9 +15,6 @@ const LoggedinNav = ({logout}) => {
 
                 <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/event/home'>Events</Link>
                 <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/profile'>Profile</Link>
-
-                <a href="#about" className="text-gray-600 hover:text-gray-800 hover:underline">Events</a>
-                <a href="#contact" className="text-gray-600 hover:text-gray-800 hover:underline">Profile</a>
                 <a href="http://localhost:3000/event/create" className="text-gray-600 hover:text-gray-800 hover:underline">Create Event</a>
 
                 <a href="https://gitlab.com/purely-puptonic/puppin" className="text-gray-600 hover:text-gray-800 hover:underline"><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' className='h-[20px]'></img></a>

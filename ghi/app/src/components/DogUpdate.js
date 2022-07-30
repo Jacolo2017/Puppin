@@ -1,9 +1,11 @@
 import React, { useEffect, useState} from 'react'
 
-const DogUpdate = () => {
+const DogUpdate = (props) => {
     const [breedOptions, setBreedOptions] = useState([]);
+    let [gotToken, setGotToken] = useState(false)
     const [check, setCheck] = useState(false)
-    const [userdogs, setUserDogs] = useState()
+    const [userDogs, setUserDogs] = useState([])
+    const [selectedDog, setSelectedDog] = useState("")
     const [formData, setFormData] = useState({
             dog_name: "",
             dog_breed: "",
@@ -25,7 +27,6 @@ const DogUpdate = () => {
             .then(response => response.json())
             .then(response => setUserDogs(response)))
             
-        
         setGotToken(true)
     };
 
@@ -55,7 +56,30 @@ const DogUpdate = () => {
         }}
         getBreeds();
         }, []);
-        
+    
+
+    const loadSelectedDogInfo = async (event) => {
+        event.preventDefault();
+        const dog_Id = event.target.value
+        setSelectedDog(event.target.value)
+        event.preventDefault();
+        const dogUrl = `http://localhost:8001/api/dog/${dog_Id}`
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include"
+        }
+
+            const response = await fetch(dogUrl, fetchConfig)
+            if (response.ok) {
+                const dogInfo = await response.json()
+                console.log(dogInfo)
+                setFormData(dogInfo)
+            }
+
+    }
 
     const handleSubmit = async (event) =>{
         event.preventDefault();
@@ -102,7 +126,18 @@ return (
     <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
         <div className='flex flex-col justify-center'>
             <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
-                <h2 className='text-3xl text-black uppercase font-semibold text-center'>{FormTitles[page]}</h2>
+                <h2 className='text-3xl text-black uppercase font-semibold text-center'>Update Dog</h2>
+                <div className='flex flex-col text-gray-900 py-2'>
+                    <label>Select Dog</label>
+                    <select onChange = {event => loadSelectedDogInfo(event)} id = "dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
+                        <option value="" id="dog_select" >Select Dog</option>
+                        {userDogs && userDogs.map(userDog => {
+                            return (
+                                <option key = {userDog.id} value ={userDog.dog_id} > 
+                                    {userDog.dog_name} 
+                                </option>)})} 
+                    </select>
+                </div>
                 <div className='flex flex-col text-gray-900 py-2'>
                     <label>Name</label>
                     <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_name} onChange={(event) => setFormData({...formData, dog_name: event.target.value})}/>
@@ -114,7 +149,7 @@ return (
                     <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.size} onChange={(event) => setFormData({...formData, dog_size: event.target.value})}/>
                     <label>Size Class</label>
                     <select  name="size class" id="size_class" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}>
-                        <option value="" id="breed_name" >Size Class</option>
+                        <option value="" id="size_class" >Size Class</option>
                         <option key = "teacup" value="teacup" id="teacup" >Teacup (less than 5 lbs)</option>
                         <option key = "toy" value="toy" id="toy" >Toy (5-12 lbs)</option>
                         <option key = "small" value="small" id="small" >Small (12-24 lbs)</option>
@@ -134,8 +169,8 @@ return (
                     <label>Temperament</label>
                     <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.dog_temperament} onChange={(event) => setFormData({...formData, dog_temperament: event.target.value})}/>
                     <div className='py-4'>
-                    <label class="form-check-label inline-block text-gray-800" for="flexCheckChecked">Spayed or Neutered?</label>
-                    <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked" onClick={() => toggleCheck()}/>
+                    <label className="form-check-label inline-block text-gray-800" htmlFor="flexCheckChecked">Spayed or Neutered?</label>
+                    <input className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked" onClick={() => toggleCheck()}/>
                     </div>
                     <label>Vaccination History</label>
                     <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.vaccination_history} onChange={(event) => setFormData({...formData, vaccination_history: event.target.value})}/>

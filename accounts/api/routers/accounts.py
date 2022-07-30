@@ -341,9 +341,7 @@ def get_associated_events_of_user(account_id: int, response: Response):
             results = []
             for row in cur.fetchall():
                 record = {}
-                print("whatever")
                 for i, column in enumerate(cur.description):
-                    print(i)
                     record[column.name] = row[i]
                     print(record)
                 results.append(record)
@@ -442,12 +440,10 @@ def get_account_dogs(account_id: int, response: Response):
             results = []
             for row in curr.fetchall():
                 record = {}
-                print("whatever")
                 for i, column in enumerate(curr.description):
-                    print(i)
                     record[column.name] = row[i]
-                    print(record)
                 results.append(record)
+                # print(results)
             return results
 
 

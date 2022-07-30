@@ -147,7 +147,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SIGNING_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-
+@router.get("/api/currentuser/{cookie_token}")
 async def get_current_user(
     bearer_token: Optional[str] = Depends(oauth2_scheme),
     cookie_token: Optional[str] | None = (
@@ -216,6 +216,23 @@ async def get_token(request: Request):
     if COOKIE_NAME in request.cookies:
         return {"token": request.cookies[COOKIE_NAME]}
 
+
+@router.delete("/token")
+async def logout(request: Request, response: Response):
+    samesite = "none"
+    secure = True
+    if (
+        "origin" in request.headers
+        and "localhost" in request.headers["origin"]
+    ):
+        samesite = "lax"
+        secure = False
+    response.delete_cookie(
+        key=COOKIE_NAME,
+        httponly=True,
+        samesite=samesite,
+        secure=secure,
+    )
 
 # @router.post("/api/create-user/{user_id}")
 # def createAccount(user_id: int, username: str, password: str):

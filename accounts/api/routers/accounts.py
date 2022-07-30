@@ -217,6 +217,23 @@ async def get_token(request: Request):
         return {"token": request.cookies[COOKIE_NAME]}
 
 
+@router.delete("/token")
+async def logout(request: Request, response: Response):
+    samesite = "none"
+    secure = True
+    if (
+        "origin" in request.headers
+        and "localhost" in request.headers["origin"]
+    ):
+        samesite = "lax"
+        secure = False
+    response.delete_cookie(
+        key=COOKIE_NAME,
+        httponly=True,
+        samesite=samesite,
+        secure=secure,
+    )
+
 # @router.post("/api/create-user/{user_id}")
 # def createAccount(user_id: int, username: str, password: str):
 #     with psycopg.connect() as conn:

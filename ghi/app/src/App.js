@@ -12,6 +12,7 @@ import { useToken } from './auth/Authentication';
 import LoggedinNav from './components/LoggedinNav';
 import CreateEvent from './components/CreateEvent';
 import DogUpdate from './components/DogUpdate';
+import CreateReview from './components/ReviewFrom';
 export default function App() {
   const [ token, login, logout] = useToken();
 
@@ -20,6 +21,7 @@ export default function App() {
     <BrowserRouter>
           <Routes>
             <Route path="" element={[ <Navbar/>,<Hero token={token}/>, <About/>, <Developers/>, <Footer/> ]}/>
+              <Route path="myreviews/submit" element={<ReviewForm token={token}/>}/>
             <Route path='registration'>
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>

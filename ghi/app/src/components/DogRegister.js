@@ -86,14 +86,11 @@ const DogRegister = () => {
     }
 
 
-<<<<<<< HEAD
     
     const toggleCheck = () => {
       console.log("toggled")
       setCheck(!check);
     }
-=======
->>>>>>> main
 
     const changePage = (e) => {
       e.preventDefault()

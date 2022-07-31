@@ -1,8 +1,11 @@
 import React, { useEffect, useState} from 'react'
 
 
-const CreateReview = () => {
+const CreateReview = (props) => {
     // const [eventData, setEventData] = useState([]);
+    let [gotToken, setGotToken] = useState(false)
+    const [selectedEvent, setEvent] = useState("")
+    const [userEvents, setEvents] = useState([])
     const [formData, setFormData] = useState({
         reviewer_username: "",
         review_event_id: "",
@@ -11,6 +14,17 @@ const CreateReview = () => {
         attendee_rating: true,
         location_rating: ""
         });
+
+    if (props.token && gotToken == false){
+        console.log("yes token")
+        fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+            .then(response => response.json())
+            .then(response => fetch(`http://localhost:8001/api/accounts/${response.id}/dogs`)
+            .then(response => response.json())
+            .then(response => setUserDogs(response)))
+            
+        setGotToken(true)
+    };
 
     
         useEffect(() => {

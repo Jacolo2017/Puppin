@@ -46,4 +46,15 @@ Authentication appears to be working! However, no one on the team can seem to fi
 ## July 27 2022
 Pressure is starting to mount. I'm working on the event form which seems simple enough but calls for a bunch of different data coming together. Likely going to need to create a new API to get the events that the user has signed in to. Even though the authentication is working, we are struggling to figure when/where to use it and pull the user data from tokens. NGL, I'm pretty frustrated with the project.
 
+## July 28 2022
+Ran into a blocker. I could not import the authentication functions from our accounts microservice where the function lives into events. After consulting with SEIRs and instructors, we discovered that our entire project setup was done in an anti-pattern and that microservices should have likely been avoided at this point, and the project structured in a monolith. Although partially my fault for not seeking feedback, getting feedback from the instructors like that this late in the project was very frustrating, considering the generic "positive" feedback we received in the "planning/specs" phase where we proposed our design. Our work around was to do an API from events to accounts to do authentication. However, in retrospec, we should have done a monolith setup, especially since both services use the same database. Lessons learned.
 
+
+## July 29 2022
+Roger was able to get the authentication API working, so things have been progressing. I made some tweaks to the dog-create form to get the "spayed/neuteredcheckbox working. I
+
+## July 30 2022
+Working on the dog-update form, very close to completion, just need to figure out the bus I'm seeing when submitting, an error of method not allowed, even though the method on the frontend fetch and backend API match.
+
+## July 31 2022
+Happy Birthday to me! Got the update bug worked out (a stray '/' in the URL address which caused the back end to assign the "put" request to a "get" request since it was routed to the wrong URL.) Starting to hone in the review-create form.

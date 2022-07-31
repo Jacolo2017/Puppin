@@ -19,27 +19,35 @@ const CreateReview = (props) => {
         console.log("yes token")
         fetch(`http://localhost:8001/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`http://localhost:8001/api/accounts/${response.id}/dogs`)
+            .then(response => fetch(`http://localhost:8000/api/events/myevents/`)
             .then(response => response.json())
-            .then(response => setUserDogs(response)))
+            .then(response => setEvents(response)))
             
         setGotToken(true)
     };
 
-    
-        useEffect(() => {
-        async function getEvents(){
-        // console.log("hello")
-        const breedUrl = '/api/events/myevents/'
-        const response = await fetch(breedUrl);
-        if (response.ok) {
-            const data = await response.json();
-            const breedList = breedConvert(data['message'])
-            setEventData(breedList)
-        }}
-        getEvents();
-        }, []);
-        
+
+    const loadSelectedEvent = async (event) => {
+        event.preventDefault();
+        const eventId = event.target.value
+        setSelectedDog(event.target.value)
+        const eventUrl = `http://localhost:8000/api/events/${event_id}`
+        const fetchConfig = {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include"
+        }
+
+            const response = await fetch(eventUrl, fetchConfig)
+            if (response.ok) {
+                const eventInfo = await response.json()
+                console.log(eventInfo)
+                // setFormData(eventInfo)
+            }
+
+    }
 
     const handleSubmit = async (event) =>{
         event.preventDefault();
@@ -52,7 +60,8 @@ const CreateReview = (props) => {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include"
         }
         
         const response = await fetch(reviewUrl, fetchConfig)
@@ -74,18 +83,29 @@ const CreateReview = (props) => {
 
 return (
 <div className='flex flex-col text-gray-900 py-2'>
-      <label>Event Review</label>
-        <select  name="size class" id="size_class" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}>
-            <option value="" id="event" >Choose Event</option>
-            <option key = "teacup" value="teacup" id="teacup" >Teacup (less than 5 lbs)</option>
-        </select>
-      <label>Event Review</label>
-      <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.review_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
-      <label>Attendee Review</label>
-      {/* List attendees with checkboxes */}
-      <label>Location Rating</label>
-      <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.review_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
-  </div>
+    <div className='flex flex-col justify-center'>  
+            <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
+                <h2 className='text-3xl text-black uppercase font-semibold text-center'>Review My Events</h2>
+                <div className='flex flex-col text-gray-900 py-2'>
+                    <label>Select Event to Review</label>
+                    <select onChange = {event => loadSelectedEvent(event)} id = "dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
+                        <option value="" id="dog_select" >Select Event</option>
+                        {userEvents && userEvents.map(userEvent => {
+                            return (
+                                <option key = {userEvent.id} value ={userEvent.dog_id} > 
+                                    {userEvent.dog_name}
+                                </option>)})} 
+                    </select>
+                </div>
+                <label>Event Review</label>
+                <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.review_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
+                <label>Attendee Review</label>
+                {/* List attendees with checkboxes */}
+                <label>Location Rating</label>
+                <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.location_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
+            </form>
+    </div>
+</div>
 )
 }
 

@@ -141,7 +141,7 @@ def get_all_events_by_user(
                 """
                 SELECT event_id, event_name, event_date, account_id
                 FROM events
-                WHERE account_id = 1;
+                WHERE account_id = {current_user};
                 """
             )
             results = []

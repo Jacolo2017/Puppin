@@ -31,4 +31,3 @@ Fixed the junction table, added api function to get all events associated with u
 
 july 29:
 Making date and time together. Easier to work with date objects than to build dates with individualized strings. Also, made fetching user's dogs based off get current user from token. Need to make fetching token and then the user id one cohesive fetch.
-

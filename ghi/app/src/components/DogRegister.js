@@ -49,16 +49,19 @@ const DogRegister = () => {
 
     const handleSubmit = async (event) =>{
         event.preventDefault();
+        console.log("dog create submit")
         const data = {...formData}
         data[spayed_neutered] = check
         // console.log(data)
+        console.log(JSON.stringify(data))
         const dogUrl = "http://localhost:8001/api/dog/create"
         const fetchConfig = {
-            method: 'post',
+            method: 'POST',
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: 'include'
         }
         
         const response = await fetch(dogUrl, fetchConfig)
@@ -83,11 +86,14 @@ const DogRegister = () => {
     }
 
 
+<<<<<<< HEAD
     
     const toggleCheck = () => {
       console.log("toggled")
       setCheck(!check);
     }
+=======
+>>>>>>> main
 
     const changePage = (e) => {
       e.preventDefault()
@@ -97,6 +103,7 @@ const DogRegister = () => {
         setPage(page-1);
       }
     }
+
   
 
     const[page, setPage] = useState(0);
@@ -120,11 +127,9 @@ return (
                     <img  className='rounded-lg shadow-xl' src='https://img.freepik.com/free-photo/group-portrait-adorable-puppies_53876-64778.jpg?t=st=1658714676~exp=1658715276~hmac=b3e0ae6c222531949120b233a58326383236d7ae9f56ac110524a98258bd69bb&w=1380'/>
                 </div> */}
                 <h2 className='text-3xl text-black uppercase font-semibold text-center'>{FormTitles[page]}</h2>
-                
                 <div className='flex flex-col text-gray-900 py-2'>
                   {PageDisplay()}
                 </div>
-                
                 <div className='container flex justify-around  gap-2 mt-4 mb-3 py-2'>
                     <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
                     value='previous'
@@ -134,9 +139,9 @@ return (
                     <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
                     value='next'
                     disabled={page == FormTitles.length - 1}
-                    onClick={changePage}
-                    >{page === FormTitles.length - 1 ? "Submit": "Next"}</button>
-                  </div>
+                    onClick = {changePage}
+                    >{page === FormTitles.length - 1 ? "": "Next"}</button>
+                </div>
                 <div className='flex justify-between item-center'>
                   <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Register</button>
                 </div>

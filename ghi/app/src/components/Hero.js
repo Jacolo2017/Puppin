@@ -1,10 +1,5 @@
 import React from 'react'
 import SignUp from './SignUp'
-
-
-
-
-
 const Hero = () => {
   return (
     <div className='bg-white h-screen flex flex-col justify-center items-center' id="home">

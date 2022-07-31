@@ -62,7 +62,6 @@ const DogUpdate = (props) => {
         event.preventDefault();
         const dog_Id = event.target.value
         setSelectedDog(event.target.value)
-        event.preventDefault();
         const dogUrl = `http://localhost:8001/api/dog/${dog_Id}`
         const fetchConfig = {
             method: 'GET',
@@ -77,6 +76,7 @@ const DogUpdate = (props) => {
                 const dogInfo = await response.json()
                 console.log(dogInfo)
                 setFormData(dogInfo)
+                setCheck(dogInfo.spayed_neutered)
             }
 
     }
@@ -84,15 +84,17 @@ const DogUpdate = (props) => {
     const handleSubmit = async (event) =>{
         event.preventDefault();
         const data = {...formData}
-        data[spayed_neutered] = check
+        const dogId = selectedDog
+        data.spayed_neutered = check
         // console.log(data)
-        const dogUrl = "http://localhost:8001/api/dog/create"
+        const dogUrl = `http://localhost:8001/api/dog/${dogId}`
         const fetchConfig = {
-            method: 'post',
+            method: 'put',
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include"
         }
         
         const response = await fetch(dogUrl, fetchConfig)
@@ -123,7 +125,7 @@ const DogUpdate = (props) => {
 
 
 return (
-    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
+    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[50px]'>
         <div className='flex flex-col justify-center'>
             <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
                 <h2 className='text-3xl text-black uppercase font-semibold text-center'>Update Dog</h2>
@@ -146,10 +148,10 @@ return (
                     <label>Gender</label>
                     <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_gender} onChange={(event) => setFormData({...formData, dog_gender: event.target.value})}/>
                     <label>Weight</label>
-                    <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.size} onChange={(event) => setFormData({...formData, dog_size: event.target.value})}/>
+                    <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="text" value={formData.dog_weight} onChange={(event) => setFormData({...formData, dog_size: event.target.value})}/>
                     <label>Size Class</label>
                     <select  name="size class" id="size_class" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}>
-                        <option value="" id="size_class" >Size Class</option>
+                        <option value={formData.dog_size} id="size_class" >{formData.dog_size}</option>
                         <option key = "teacup" value="teacup" id="teacup" >Teacup (less than 5 lbs)</option>
                         <option key = "toy" value="toy" id="toy" >Toy (5-12 lbs)</option>
                         <option key = "small" value="small" id="small" >Small (12-24 lbs)</option>
@@ -159,7 +161,7 @@ return (
                     </select>
                     <label>Breed</label>
                     <select  name="breed" id="breed" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' onChange={(event) => setFormData({...formData, dog_breed: event.target.value})}>
-                        <option value="" id="breed_name" >Choose Breed</option>
+                        <option value={formData.dog_breed} id="breed_name" >{formData.dog_breed}</option>
                         {breedOptions.map((breed) => {return (
                             <option key = {breed} value = {breed} >{breed}</option>
                         );})}

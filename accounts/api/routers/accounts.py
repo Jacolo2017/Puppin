@@ -14,6 +14,7 @@ from typing import Union, Optional
 import psycopg
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from db.accounts import AccountQueries
+from db.dogs import DogQueries
 from jose import JWTError, jwt, jws, JWSError
 from passlib.context import CryptContext
 import os
@@ -119,8 +120,13 @@ class DogUpdate(BaseModel):
     vaccination_history: Optional[str] = None
 
 
-class DogDelete(BaseModel):
-    result: bool
+class Dogs(BaseModel):
+    dog_id: str
+    account_id: str
+    dog_name: str
+
+# class DogDelete(BaseModel):
+#     result: bool
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -344,7 +350,8 @@ def get_associated_events_of_user(account_id: int, response: Response):
 
 
 @router.post("/api/dog/create")
-def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
+def create_dog(dog: DogIn, response_model: DogOut,
+                user: Accounts = Depends(get_current_user),):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             curr.execute(
@@ -353,7 +360,6 @@ def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history, account_id)
-                    SELECT DATABASE_PRINCIPAL_ID() AS account_id
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
                     RETURNING dog_id;
                 """,
@@ -362,7 +368,7 @@ def create_dog(dog: DogIn, account_id: int, response_model: DogOut):
                     dog.dog_temperament, dog.dog_about,
                     dog.dog_size, dog.dog_weight,
                     dog.vaccination_history,
-                    dog.account_id]
+                    user['id']]
                     )
             row = curr.fetchone()
             record = {}
@@ -379,11 +385,11 @@ def get_dog(dog_id: int, response: Response):
                 curr.execute(
                     """SELECT dog_name, dog_breed, dog_age, dog_gender,
                                 dog_photo, dog_temperament, dog_about,
-                                dog_size, dog_weight, spayed_neutered, vaccination_history,
-                                account_id
+                                dog_size, dog_weight, spayed_neutered,
+                                vaccination_history, account_id
                         FROM dogs
                         WHERE dog_id = %s;""",
-                        [dog_id],
+                    [dog_id],
                 )
                 row = curr.fetchone()
                 print(row)
@@ -408,7 +414,8 @@ def update_dog(dog_id: str, dog: DogUpdate):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [dog.dog_name, dog.dog_breed, dog.dog_age,
                     dog.dog_gender, dog.dog_photo,
@@ -445,16 +452,28 @@ def get_account_dogs(account_id: int, response: Response):
             return results
 
 
-@router.delete("/api/accounts/{account_id}/dogs/{dog_id}",
-               response_model=DogDelete)
-def delete_dog(
-    current_user: Accounts = Depends(get_current_user),
-    query=Depends(AccountQueries)
-):
-    try:
-        query.delete_dog(current_user["id"])  #We will have to figure out how to use the current account_id to get the attached dog_id and delete based off that.
-        return {"result": True}
-    except Exception:
-        return {"result": False}
+@router.delete("/api/accounts/{account_id}/dogs/{dog_id}")
+def delete_dog(dog_id: str, dog_name: str,
+                dog: Dogs,
+                user: Accounts = Depends(get_current_user),
+                ):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                    DELETE FROM public.dogs
+                    WHERE dog_id = %s && account_id == %s && dog_name == %s
+                """,
+                [dog.dog_id, user["id"], dog.dog_name]
+            )
+
+#     current_user: Accounts = Depends(get_current_user),
+#     query=Depends(DogQueries)
+
+#     try:
+#         query.delete_dog(current_user["id"])
+#         return {"result": True}
+#     except Exception:
+#         return {"result": False}
 
 # This is a new line that ends the file.

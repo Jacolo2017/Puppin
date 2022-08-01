@@ -5,7 +5,6 @@ import DogBasicInfo from './DogBasicInfo';
 
 const DogRegister = () => {
     const [breedOptions, setBreedOptions] = useState([]);
-    const [check, setCheck] = useState(false)
     const [formData, setFormData] = useState({
             dog_name: "",
             dog_breed: "",
@@ -16,6 +15,7 @@ const DogRegister = () => {
             dog_about: "",
             dog_size: "",
             dog_weight: "",
+            spayed_neutered: false,
             vaccination_history: "",
         });
 
@@ -51,8 +51,6 @@ const DogRegister = () => {
         event.preventDefault();
         console.log("dog create submit")
         const data = {...formData}
-        data[spayed_neutered] = check
-        // console.log(data)
         console.log(JSON.stringify(data))
         const dogUrl = "http://localhost:8001/api/dog/create"
         const fetchConfig = {
@@ -85,8 +83,6 @@ const DogRegister = () => {
     
     }
 
-
-    
     const toggleCheck = () => {
       console.log("toggled")
       setCheck(!check);
@@ -111,7 +107,7 @@ const DogRegister = () => {
       if (page === 0) {
         return <DogBasicInfo formData = {formData} setFormData={setFormData} breedOptions = {breedOptions} setBreedOptions = {setBreedOptions}/>
       } else {
-        return <DogAbout formData ={formData} setFormData={setFormData} check = {check} setCheck = {setCheck} toggleCheck = {toggleCheck}/>
+        return <DogAbout formData ={formData} setFormData={setFormData}/>
       } 
     };
 
@@ -148,4 +144,4 @@ return (
 )
 }
 
-export default DogRegister;
+export default DogRegister

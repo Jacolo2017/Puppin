@@ -61,11 +61,11 @@ export default function CreateEvent(props){
 return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <>
-    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
+    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#00A1E4] from-[#0093d2] py-[140px]'>
     <div className='flex flex-col justify-center'>
     <form method = "get" className = 'max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
       <div>What dog are you bringing?</div>
-    <select  onChange = {x => setUserSelectedDog(x.target.value)}id = "dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
+    <select  onChange = {x => setUserSelectedDog(x.target.value)}id = "dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold  hover:bg-blue-300 shadow-sm text-white ">
       {userdogs && userdogs.map(userdog => {
         return (
       <option key = {userdog.id} value ={userdog.dog_id} > 
@@ -78,9 +78,9 @@ return (
       {/* include validation with required or other standard HTML validation rules */}
       <div>Event Name</div>
       
-      <input {...register("event_name", { required: true })} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white"/>
+      <input {...register("event_name", { required: true })} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold hover:bg-blue-300 shadow-sm text-white"/>
       <div>Event Location</div>
-      <input {...register("event_location", {required: true})} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white"/>
+      <input {...register("event_location", {required: true})} className="bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold  hover:bg-blue-300 shadow-sm text-white"/>
       <div>Event Date/Time</div>
       <Controller 
     control={control}
@@ -96,7 +96,7 @@ return (
       />
    )}
   />
-      <input className="bg-blue-700 hover:bg-slate-700 mt-4 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white" type="submit" />
+      <input className="bg-blue-700 hover:bg-slate-700 mt-4 py-2 px-4 rounded font-bold  hover:bg-blue-300 shadow-sm text-white" type="submit" />
       </form></div></div>
       </>)
 }

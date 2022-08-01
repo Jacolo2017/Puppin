@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 
 
@@ -48,9 +48,7 @@ class Login extends React.Component{
                     </div>
                     <button className='w-full my-5 py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'>Login</button>
                     <div>
-                        <ul>
-                            <a className='text-sm text-blue-600 hover:to-blue-800 cursor-pointer text-center' href='http://localhost:3000/registration/login'>Don't have an account?</a>
-                        </ul>
+                        <Link className='text-sm text-blue-600 hover:to-blue-800 cursor-pointer text-center' to='/registration/create'>Don't have an account?</Link>
                     </div>
                 </form>
             </div>

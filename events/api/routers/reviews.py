@@ -16,7 +16,6 @@ class EventReviewIn(BaseModel):
     review_event_id: int
     review_event: str
     review_description: str
-    attendee_rating: bool
     location_rating: str
 
 
@@ -27,9 +26,8 @@ class EventReviewIn(BaseModel):
 #         "account_id": row[2],
 #         "review_event": row[3],
 #         "event_id": row[4],
-#         "attendee_rating": row[5],
-#         "review_description": row[6],
-#         "location_rating": row[7]
+#         "review_description": row[5],
+#         "location_rating": row[6]
 #     }
 #     return rating
 
@@ -37,7 +35,6 @@ class EventReviewIn(BaseModel):
 class EventReviewUpdateIn(BaseModel):
     review_event: str
     review_description: str
-    attendee_rating: bool
     location_rating: int
 
 class EventReviewUpdateOut(BaseModel):
@@ -45,7 +42,6 @@ class EventReviewUpdateOut(BaseModel):
     review_event_id: int
     review_event: str
     review_description: str
-    attendee_rating: bool
     location_rating: str
 
 class ReviewDelete(BaseModel):
@@ -66,17 +62,15 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                         event_id,
                         review_event,
                         review_description,
-                        attendee_rating,
                         location_rating)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        VALUES (%s, %s, %s, %s, %s, %s)
                         RETURNING review_id, reviewer_username, account_id,
-                        event_id, review_event, review_description,
-                        attendee_rating, location_rating;
+                        event_id, review_event, review_description, location_rating;
                     """,
                     [
                         review.reviewer_username, account_id,
                         review.review_event_id, review.review_event,
-                        review.review_description, review.attendee_rating,
+                        review.review_description,
                         review.location_rating
                     ]
                 )
@@ -113,7 +107,6 @@ def get_review(review_id: int, response: Response):
                             account_id,
                             review_event,
                             event_id,
-                            attendee_rating,
                             review_description,
                             location_rating
                         FROM reviews
@@ -146,7 +139,6 @@ def get_event_reviews(event_id: int, response: Response):
                             account_id,
                             review_event,
                             event_id,
-                            attendee_rating,
                             review_description,
                             location_rating
                         FROM reviews
@@ -188,7 +180,6 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
                             account_id,
                             review_event,
                             event_id,
-                            attendee_rating,
                             review_description,
                             location_rating
                         FROM reviews
@@ -219,7 +210,6 @@ def get_event_reviews_for_account(account_id: int, response: Response):
                             account_id,
                             review_event,
                             event_id,
-                            attendee_rating,
                             review_description,
                             location_rating
                         FROM reviews
@@ -275,14 +265,13 @@ def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, 
                         UPDATE reviews
                         SET review_event = %s,
                             review_description = %s,
-                            attendee_rating = %s,
                             location_rating = %s
                         WHERE review_id = %s
                         RETURNING review_id, reviewer_username, account_id,
                         event_id, review_event, review_description,
-                        attendee_rating, location_zip, location_rating;
+                        location_zip, location_rating;
                         """, [review.review_event, 
-                        review.review_description, review.attendee_rating, 
+                        review.review_description, 
                         review.location_rating, review_id]
                     )
                 row = cur.fetchone()

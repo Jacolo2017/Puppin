@@ -96,7 +96,7 @@ def get_event(event_id: int, response: Response):
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT event_name, event_location, event_date, event_time
+                    SELECT event_name, event_location, event_date_time
                     FROM events
                     WHERE event_id = %s;
                     """, [event_id]
@@ -146,7 +146,7 @@ def get_all_events_by_user(
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT event_id, event_name, event_date, account_id
+                SELECT event_id, event_name, event_date_time, account_id
                 FROM events
                 WHERE account_id = %s;
                 """, [account_id]

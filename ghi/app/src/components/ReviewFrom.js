@@ -42,7 +42,6 @@ const CreateReview = (props) => {
         let response = await fetch(eventUrl, fetchConfig)
             if (response.ok) {
                 const eventInfo = await response.json()
-                console.log(eventInfo)
                 setSelectedEvent(eventInfo)
             };
         
@@ -108,14 +107,14 @@ return (
                         {userEvents && userEvents.map(userEvent => {
                             return (
                                 <option key = {userEvent.event_id} value ={userEvent.event_id} > 
-                                    {userEvent.event_name}, {userEvent.event_date}
+                                    {userEvent.event_name}, {userEvent.event_date_time.slice(0,10)}
                                 </option>)})} 
                     </select>
                 </div>
                 <div className='flex flex-col text-gray-900 py-2'>
                 <label>Event Review</label>
                 <input  placeholder = "Tell us about the event" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.review_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
-                <label className='py-3'>Would you meet these pairs again?</label>
+                <label className='py-3'>Would you meetup with these Dog/Owner pairs again?</label>
                     {eventAttendees && eventAttendees.map(attendee => {
                         return(
                             <div>

@@ -17,7 +17,7 @@ root.render(
 
 (async () =>{
     const eventDataResponse = await fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events`);
-    if(eventDataResponse.ok){
+    if(eventDataResponse.ok && accountDataResponse.ok) {
       const eventData = await eventDataResponse.json();
       root.render(
         <React.StrictMode>

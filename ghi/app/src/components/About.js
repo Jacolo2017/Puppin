@@ -7,7 +7,7 @@ const About = () => {
             <div className='text-center'>
                 <h2 className='text-5xl font-bold'>Looking for an event with trusted dog owners?</h2>
                 <p className='text-3xl py-6 text-gray-700'>
-                    Then, Purely Puptonic is for you! We want to create an enviorment
+                    Then, Purely Puptonic is for you! We want to create an environment
                     where you don't have to worry about dogs or their owners misbehaving.
                 </p>
             </div>

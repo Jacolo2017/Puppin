@@ -13,7 +13,7 @@ router = APIRouter()
 
 class EventReviewIn(BaseModel):
     reviewer_username: str
-    review_event_id: int
+    # review_event_id: int
     review_event: str
     review_description: str
     attendee_rating: bool
@@ -53,8 +53,8 @@ class ReviewDelete(BaseModel):
 
 
 # --- Create new event review --- #
-@router.post("/api/event/reviews/create")
-def create_event_review(review: EventReviewIn, response: Response, account_id: int):
+@router.post("/api/event/{event_id}/reviews/create")
+def create_event_review(review: EventReviewIn, response: Response, account_id: int, event_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
@@ -75,7 +75,7 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                     """,
                     [
                         review.reviewer_username, account_id,
-                        review.review_event_id, review.review_event,
+                        event_id, review.review_event,
                         review.review_description, review.attendee_rating,
                         review.location_rating
                     ]

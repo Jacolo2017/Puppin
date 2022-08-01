@@ -4,8 +4,9 @@ import React, { useEffect, useState} from 'react'
 const CreateReview = (props) => {
     // const [eventData, setEventData] = useState([]);
     let [gotToken, setGotToken] = useState(false)
-    const [selectedEvent, setEvent] = useState("")
+    const [selectedEvent, setSelectedEvent] = useState("")
     const [userEvents, setEvents] = useState([])
+    const [eventAttendees, setEventAttendees] = useState([])
     const [formData, setFormData] = useState({
         reviewer_username: "",
         review_event_id: "",
@@ -19,7 +20,7 @@ const CreateReview = (props) => {
         console.log("yes token")
         fetch(`http://localhost:8001/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`http://localhost:8000/api/events/myevents/`)
+            .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`)
             .then(response => response.json())
             .then(response => setEvents(response)))
             
@@ -30,21 +31,34 @@ const CreateReview = (props) => {
     const loadSelectedEvent = async (event) => {
         event.preventDefault();
         const eventId = event.target.value
-        setSelectedDog(event.target.value)
-        const eventUrl = `http://localhost:8000/api/events/${event_id}`
-        const fetchConfig = {
+        const eventUrl = `http://localhost:8000/api/events/${eventId}`
+        let fetchConfig = {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
             },
             credentials: "include"
         }
-
-            const response = await fetch(eventUrl, fetchConfig)
+        let response = await fetch(eventUrl, fetchConfig)
             if (response.ok) {
                 const eventInfo = await response.json()
                 console.log(eventInfo)
-                // setFormData(eventInfo)
+                setFormData(eventInfo)
+            };
+        
+        const attendeeUrl = `http://localhost:8000/api/events/${eventId}/users`
+        fetchConfig = {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include"
+        };
+        response = await fetch(attendeeUrl, fetchConfig)
+            if (response.ok) {
+                const attendeeInfo = await response.json()
+                console.log(attendeeInfo)
+                setEventAttendees(attendeeInfo)
             }
 
     }
@@ -92,17 +106,19 @@ return (
                         <option value="" id="dog_select" >Select Event</option>
                         {userEvents && userEvents.map(userEvent => {
                             return (
-                                <option key = {userEvent.id} value ={userEvent.dog_id} > 
-                                    {userEvent.dog_name}
+                                <option key = {userEvent.event_id} value ={userEvent.event_id} > 
+                                    {userEvent.event_name}
                                 </option>)})} 
                     </select>
                 </div>
+                <div className='flex flex-col text-gray-900 py-2'>
                 <label>Event Review</label>
                 <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.review_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
                 <label>Attendee Review</label>
                 {/* List attendees with checkboxes */}
                 <label>Location Rating</label>
                 <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.location_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
+                </div>
             </form>
     </div>
 </div>

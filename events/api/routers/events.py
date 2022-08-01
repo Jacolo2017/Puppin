@@ -109,30 +109,33 @@ def get_event(event_id: int, response: Response):
         print(exc.message)
 
 @router.get("/api/events/{event_id}/users")
-def get_all_users_from_event(event_id: int, response: Response):
+def get_all_users_and_dogs_from_event(event_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT account_id from eventsusersjunction where event_id = %s;
+                SELECT euj.account_id, accounts.first_name, dogs.dog_name, dogs.dog_photo
+                FROM eventsusersjunction AS euj
+                INNER JOIN accounts ON euj.account_id = accounts.account_id
+                INNER JOIN dogsinevents ON euj.account_id = dogsinevents.account_id
+                INNER JOIN dogs ON dogsinevents.dog_id = dogs.dog_id
+                WHERE euj.event_id = %s;
                 """, [event_id])
-            
+                   
             results = []
             for row in cur.fetchall():
                 record = {}
-                print("whatever")
                 for i, column in enumerate(cur.description):
-                    print(i)
                     record[column.name] = row[i]
-                    print(record)
                 results.append(record)
+                print("get_all_users_from_event output: ", results)
             return results
 
 
-@router.get("/api/events/myevents/")
+@router.get("/api/events/myevents={account_id}/")
 def get_all_events_by_user(
     response: Response,
-    # current_user: Depends(get_current_user)
+    account_id: int
 ):
     print("ping")
     with psycopg.connect() as conn:
@@ -141,8 +144,8 @@ def get_all_events_by_user(
                 """
                 SELECT event_id, event_name, event_date, account_id
                 FROM events
-                WHERE account_id = {current_user};
-                """
+                WHERE account_id = %s;
+                """, [account_id]
             )
             results = []
             rows = cur.fetchall()

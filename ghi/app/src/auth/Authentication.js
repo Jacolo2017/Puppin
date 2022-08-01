@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {Navigate} from 'react-router-dom';
 let internalToken = null;
 
 export function getToken() {
@@ -35,7 +36,7 @@ export function useToken() {
   async function logout() {
     if (token) {
       const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
-      await fetch(url, {method: 'delete', credentials: 'include'});
+      await fetch(url, {method: 'DELETE', credentials: 'include'});
       internalToken = null;
       setToken(null);
     }

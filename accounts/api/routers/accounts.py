@@ -1,4 +1,5 @@
 from sqlite3 import connect
+from unittest import result
 from fastapi import (
     APIRouter,
     Response,
@@ -122,12 +123,10 @@ class DogUpdate(BaseModel):
 
 
 class Dogs(BaseModel):
-    dog_id: str
-    account_id: str
     dog_name: str
 
-# class DogDelete(BaseModel):
-#     result: bool
+class DogDelete(BaseModel):
+    result: bool
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -471,27 +470,17 @@ def get_account_dogs(account_id: int, response: Response):
 
 
 @router.delete("/api/accounts/{account_id}/dogs/{dog_id}")
-def delete_dog(dog_id: str, dog_name: str,
-                dog: Dogs,
-                user: Accounts = Depends(get_current_user),
-                ):
-    with psycopg.connect() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                    DELETE FROM public.dogs
-                    WHERE dog_id = %s && account_id == %s && dog_name == %s
-                """,
-                [dog.dog_id, user["id"], dog.dog_name]
-            )
-
-#     current_user: Accounts = Depends(get_current_user),
-#     query=Depends(DogQueries)
-
-#     try:
-#         query.delete_dog(current_user["id"])
-#         return {"result": True}
-#     except Exception:
-#         return {"result": False}
+def delete_dog(dog: Dogs, account_id: int, dog_id: int, query=Depends(DogQueries)):
+    if query.delete_dog(dog_id):
+        return {"result": True}
+    else:
+        return {"result": False}
+    
+                # """
+                #     DELETE FROM public.dogs
+                #     WHERE dog_id = %s && account_id == %s && dog_name == %s
+                # """,
+                # [dog.dog_id, dog.account_id, dog.dog_name]
+            
 
 # This is a new line that ends the file.

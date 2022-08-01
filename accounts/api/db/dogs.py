@@ -77,14 +77,14 @@ class DogQueries:
 
 # Delete a dog from public.dogs based on account_id, dog_id, and dog_name all being present in the table's row
 # Delete path still non-functional
-    def delete_dog(self, dog_id, dog_name, account_id):
+    def delete_dog(self, dog_id):
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
                         DELETE FROM public.dogs
-                        WHERE dog_id = %s && account_id = %s && dog_name = %s)
+                        WHERE dog_id = %s
                     """,
-                    [dog_id, account_id, dog_name],
+                    [dog_id],
                 )
     

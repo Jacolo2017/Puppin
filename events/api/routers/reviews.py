@@ -1,5 +1,5 @@
 from .events import join_event
-from .events import get_all_users_from_event
+from .events import get_all_users_and_dogs_from_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from psycopg.errors import UniqueViolation
@@ -304,7 +304,7 @@ def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: 
             # print(any(reviewed_id == reviewer_id for reviewed_id in get_all_users_from_event(event_id, response)))
             # if any(x == reviewer_id for x in get_all_users_from_event(event_id, response)) and any(x == reviewed_id for x in 
             #                 get_all_users_from_event(event_id, response)):
-            list_of_all_values = [value for elem in get_all_users_from_event(event_id, response) for value in elem.values()]
+            list_of_all_values = [value for elem in get_all_users_and_dogs_from_event(event_id, response) for value in elem.values()]
             list_of_all_reviewers = [d['reviewer_id'] for d in get_all_ratings_from_specific_event(event_id, response) if 'reviewer_id' in d]
             if reviewer_id in list_of_all_values and reviewed_id in list_of_all_values and reviewer_id not in list_of_all_reviewers:
                 cur.execute(

@@ -107,15 +107,22 @@ return (
                         {userEvents && userEvents.map(userEvent => {
                             return (
                                 <option key = {userEvent.event_id} value ={userEvent.event_id} > 
-                                    {userEvent.event_name}
+                                    {userEvent.event_name}, {userEvent.event_date}
                                 </option>)})} 
                     </select>
                 </div>
                 <div className='flex flex-col text-gray-900 py-2'>
                 <label>Event Review</label>
                 <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.review_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
-                <label>Attendee Review</label>
-                {/* List attendees with checkboxes */}
+                <label>Review Attendees</label>
+                {eventAttendees && eventAttendees.map(attendee => {
+                    return(
+                        <div>
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckChecked">{attendee.first_name} with {attendee.dog_name}</label>
+                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked"/>
+                        </div>
+                    )
+                })}
                 <label>Location Rating</label>
                 <input  className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.location_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
                 </div>

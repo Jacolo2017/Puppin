@@ -13,6 +13,7 @@ class EventIn(BaseModel):
     event_date_time: datetime
 
 
+
 @router.get("/api/events")
 def events_list(page: int= 0):
     with psycopg.connect() as conn:
@@ -42,6 +43,9 @@ def events_list(page: int= 0):
             print("goated")
             # return Accounts(page_count=page_count, accounts=results)
             return results
+
+
+
 
 @router.post("/api/events/{leader_id}/{dog_id}")
 def create_event(event: EventIn, response: Response, leader_id: int, dog_id: int):

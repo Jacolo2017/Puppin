@@ -3,7 +3,7 @@ import SignUpInfo from './SignUpInfo';
 import PersonalInfo from './PersonalInfo';
 import AboutInfo from './AboutInfo';
 import Other from './Otherinfo';
-
+import { Link, Navigate } from 'react-router-dom';
 
 
 const SignUp = () => {
@@ -81,7 +81,7 @@ const SignUp = () => {
 
 
   return (
-      <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
+      <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#A9FDAC] from-[#97e19a] py-[140px]'>
           <div className='flex flex-col justify-center'>
               <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
                   {/* <div className='p-8'>
@@ -107,6 +107,9 @@ const SignUp = () => {
                   </div>
                   <div className='flex justify-between item-center'>
                     <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Create</button>
+                  </div>
+                  <div className='py-4'>
+                    <Link className='text-md text-blue-600 hover:to-blue-800 cursor-pointer text-center py-8' to='/registration/login'>Have an account?</Link>
                   </div>
               </form>
           </div>

@@ -21,9 +21,7 @@ import CreateEvent from './components/CreateEvent';
 
 export default function App() {
   const [ token, login, logout] = useToken();
-  if (!{token}) {
-    <Navigate to='localhost:3000'/>
-  }
+  
   return (
     <>
     <BrowserRouter>
@@ -34,16 +32,11 @@ export default function App() {
               <Route path="create" element={<SignUp token={token}/>}/>
             </Route>
             <Route path='event'>
-
+            <Route path = 'create'element = {<CreateEvent token={token}/>}/>
               <Route path='home'element={[<LoggedinNav logout={logout} token={token}/>, <Events/>]} />
             </Route>
             <Route path='profile'>
-              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile/>]} />
-
-              <Route path = 'create'element = {<CreateEvent token={token}/>}/>
-              
-              <Route path='home'element={[<LoggedinNav/>, <Events/>]} />
-
+              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile/>]} />          
             </Route>
           </Routes>
     </BrowserRouter>

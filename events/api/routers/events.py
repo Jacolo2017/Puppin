@@ -10,11 +10,6 @@ router = APIRouter()
 class EventIn(BaseModel):
     event_name: str
     event_location: str
-
-    event_date: str
-    event_time: str
-    
-
     event_date_time: datetime
 
 

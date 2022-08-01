@@ -1,13 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useToken } from '../auth/Authentication'
-const LoggedinNav = ({logout}) => {
 
 
+class LoggedinNav extends React.Component{
 
+    
+    render(){
+        if (!this.props.token){
+           return <Navigate to='/registration/login'/>
+        }
 
   return (
-    <nav class="flex fixed justify-between items-center bg-white shadow-lg w-screen">
+    <nav className="flex fixed justify-between items-center bg-white shadow-lg w-screen">
             <div className='px-4 cursor-pointer'>
                 <h2 className="text-3xl text-gray-800 font-bold">P<span className="text-red-600">U</span>PP<span className="text-red-800">I</span><span className="text-green-800">N</span></h2>
             </div>
@@ -21,11 +26,11 @@ const LoggedinNav = ({logout}) => {
             </div>
             
             <div className='px-8 py-2'>
-                <button className='border border-blue-200 bg-blue-200 rounded-md h-[50px] w-[100px] font-semibold uppercase hover:bg-blue-300' onClick={logout}>Sign out</button>
+                <button className='border border-blue-200 bg-blue-200 rounded-md h-[50px] w-[100px] font-semibold uppercase hover:bg-blue-300' onClick={this.props.logout}>Sign out</button>
             </div>
             
         </nav>
   )
 }
-
+}
 export default LoggedinNav;

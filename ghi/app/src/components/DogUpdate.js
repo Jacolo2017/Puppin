@@ -9,7 +9,7 @@ const DogUpdate = (props) => {
     const [formData, setFormData] = useState({
             dog_name: "",
             dog_breed: "",
-            dog_age: "",
+            dog_age: "",git 
             dog_gender: "",
             dog_photo: "",
             dog_temperament: "",

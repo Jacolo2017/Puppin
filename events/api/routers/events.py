@@ -20,8 +20,10 @@ def events_list(page: int= 0):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT event_id, event_name, event_date_time, account_id
+                SELECT event_id, event_name, event_date_time, events.account_id, accounts.username
                 FROM events
+                INNER JOIN accounts ON
+                events.account_id = accounts.account_id
                 ORDER BY event_id
                 LIMIT 100 OFFSET %s;
             """,
@@ -96,7 +98,7 @@ def get_event(event_id: int, response: Response):
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT event_name, event_location, event_date, event_time
+                    SELECT event_name, event_location, event_date_time
                     FROM events
                     WHERE event_id = %s;
                     """, [event_id]
@@ -113,40 +115,49 @@ def get_event(event_id: int, response: Response):
         print(exc.message)
 
 @router.get("/api/events/{event_id}/users")
-def get_all_users_from_event(event_id: int, response: Response):
+def get_all_users_and_dogs_from_event(event_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT account_id from eventsusersjunction where event_id = %s;
+                SELECT euj.account_id, accounts.first_name, dogs.dog_name, dogs.dog_photo
+                FROM eventsusersjunction AS euj
+                INNER JOIN accounts ON euj.account_id = accounts.account_id
+                INNER JOIN dogsinevents ON euj.account_id = dogsinevents.account_id
+                INNER JOIN dogs ON dogsinevents.dog_id = dogs.dog_id
+                WHERE euj.event_id = %s;
                 """, [event_id])
-            
+                   
             results = []
             for row in cur.fetchall():
                 record = {}
-                print("whatever")
                 for i, column in enumerate(cur.description):
-                    print(i)
                     record[column.name] = row[i]
-                    print(record)
                 results.append(record)
+            i = 0
+            while i < len(results)-1:
+                if results[i] in results:
+                    del results[i]
+                i += 1
+                print("get_all_users_from_event output: ", results)
             return results
 
 
-@router.get("/api/events/myevents/")
+# do we need this?
+@router.get("/api/events/myevents={account_id}/")
 def get_all_events_by_user(
     response: Response,
-    # current_user: Depends(get_current_user)
+    account_id: int
 ):
-    print("ping")
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT event_id, event_name, event_date, account_id
-                FROM events
-                WHERE account_id = 1;
-                """
+                SELECT e.event_id, e.event_name, e.event_date_time
+                FROM events AS e
+                INNER JOIN eventsusersjunction AS euj ON e.event_id = euj.event_id
+                WHERE euj.account_id = %s OR e.account_id = %s
+                """, [account_id, account_id]
             )
             results = []
             rows = cur.fetchall()
@@ -155,14 +166,31 @@ def get_all_events_by_user(
                 for i, column in enumerate(cur.description):
                     record[column.name] = row[i]
                 results.append(record)
+            i = 0
+            while i < len(results)-1:
+                if results[i] == results[i+1]:
+                    del results[i]
+                i += 1
+            # cur.execute(
+            #     """
+            #     SELECT e.event_id, e.event_name, e.event_date_time
+            #     FROM events AS e
+            #     WHERE euj.account_id = account_id
+            #     """, [account_id])
+            # rows = cur.fetchall()
+            # record = {}
+            # for i, column in enumerate(cur.description):
+            #     record[column.name] = row[i]
+            #     results.append(record)
             if rows is None:
                 response.status_code = status.HTTP_404_NOT_FOUND
                 return {"message": "User has no events"}
+            print(results)
             return results
 
 
 
-@router.post("/api/events/{event_id}/") 
+@router.post("/api/events/{event_id}/")
 def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
@@ -194,7 +222,7 @@ def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response)
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             list_of_all_dogvalues = [value for elem in get_account_dogs(event_id, response) for value in elem.values()]
-            if account_id in get_all_users_from_event(event_id) and dog_id in list_of_all_dogvalues:
+            if account_id in get_all_users_and_dogs_from_event(event_id) and dog_id in list_of_all_dogvalues:
                 cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
                     VALUES(%s, %s, %s)
                     RETURNING dog_id, event_id, acount_id

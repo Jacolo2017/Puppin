@@ -46,7 +46,7 @@ export default function Events(){
               grabCursor={false}
               modules={FreeMode}
               className='mySwiper'
-              slidesPerView={isOpen ? 1 : 3}
+              slidesPerView={isOpen ? 2 : 3}
               spaceBetween={100}
               >
               {eventData.map(item => (
@@ -62,7 +62,7 @@ export default function Events(){
               className='border rounded-xl shadow-md text-center p-6 bg-gray-100'>
                 <div>
                 <h2 layout="transition" className='text-xl font-semibold text-gray-800'>{item.event_name}</h2>
-                <p className='text-gray-700 py-4'>{item.event_date_time}</p>
+                <p className='text-gray-700 '>{item.event_date_time}</p>
                 </div>
                 <AnimatePresence>
                 {isOpen && (
@@ -71,18 +71,19 @@ export default function Events(){
                   animate={{opacity: 1}}
                   transition={{duration: 1}}
                   layout
-                  className='grid grid-rows-2 justify-center' id='expand'>
+                  className='grid grid-rows-3 justify-center' id='expand'>
                   <motion.div className='px-16'>
                     <img className='w-[300px] ' src={require('../images/dogs.png')} />
-                    <h1 className='py-3 font-semibold text-2xl'>Learn more about the event!</h1>
+                    <h1 className='py-5 font-semibold text-2xl'>Learn more about the event!</h1>
                   </motion.div>
+                    <motion.div className='grid grid-cols-4 gap-10'>
+                    <h1> attendees </h1>
+                    </motion.div>
                     <motion.div className='grid grid-cols-4 gap-10'>
                     <p className='text-gray-700 py-1'>User Image</p>
                     <p className='text-gray-700 py-1'>username</p>
-                    <p className='text-gray-700 py-1'>Dog Image</p>
-                    <p className='text-gray-700 py-1'>dog name</p>
-                    </motion.div>
                     
+                    </motion.div>
                   </motion.div>
                 )}
                 </AnimatePresence>

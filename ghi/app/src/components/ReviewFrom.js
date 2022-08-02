@@ -1,4 +1,5 @@
 import React, { useEffect, useState} from 'react'
+import { set } from 'react-hook-form'
 
 
 const CreateReview = (props) => {
@@ -12,6 +13,11 @@ const CreateReview = (props) => {
         review_description: "",
         location_rating: ""
     });
+    const [attendeeRating, setAttendeeRating] = useState([{
+        attendee_id: '',
+        attendee_rating: null
+    }]
+    )
 
     if (props.token && gotToken == false){
         loadUserToken()
@@ -61,6 +67,8 @@ const CreateReview = (props) => {
             if (response.ok) {
                 const attendeeInfo = await response.json()
                 setEventAttendees(attendeeInfo)
+                setAttendeeRating(attendeeInfo.id)
+
 
             }
     }
@@ -85,6 +93,7 @@ const CreateReview = (props) => {
             },
             credentials: "include"
         }
+
         
         const response = await fetch(reviewUrl, fetchConfig)
         if (response.ok) {
@@ -130,7 +139,7 @@ return (
                                 </div>
                                 <div className="flex justify-center">
                                     <div className="form-check form-check-inline px-5">
-                                        <input id={attendee.account_id} value="true" className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-green-600 checked:border-green-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" />
+                                        <input onChange = '' id={attendee.account_id} value="true" className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-green-600 checked:border-green-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" />
                                         <label className="form-check-label inline-block  text-gray-800" htmlFor="inlineCheckbox1">YES</label>
                                     </div>
                                     <div className="form-check form-check px-5">

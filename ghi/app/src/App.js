@@ -29,6 +29,7 @@ export default function App() {
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>
               <Route path="dog" element={<DogRegister token={token}/>}/>
+              <Route path="dog/update" element={<DogUpdate token={token}/>}/>
             </Route>
             <Route path='event'>
             <Route path = 'create'element = {<CreateEvent token={token}/>}/>

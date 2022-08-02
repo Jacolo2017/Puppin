@@ -420,8 +420,9 @@ def get_dog(dog_id: int, response: Response):
         print(exc)
 
 
-@router.put("api/dog/{dog_id}", response_model=DogUpdate)
+@router.put("/api/dog/{dog_id}", response_model=DogUpdate)
 def update_dog(dog_id: str, dog: DogUpdate):
+    print("ping")
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             curr.execute(
@@ -430,14 +431,17 @@ def update_dog(dog_id: str, dog: DogUpdate):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history)
-                    )
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING dog_name, dog_breed, dog_age,
+                    dog_gender, dog_photo, dog_temperament, dog_about,
+                    dog_size, dog_weight, spayed_neutered,
+                    vaccination_history
                 """,
                 [dog.dog_name, dog.dog_breed, dog.dog_age,
                     dog.dog_gender, dog.dog_photo,
                     dog.dog_temperament, dog.dog_about,
                     dog.dog_size, dog.dog_weight,
-                    dog.vaccination_history]
+                    dog.spayed_neutered, dog.vaccination_history]
             )
             row = curr.fetchone()
             record = {}

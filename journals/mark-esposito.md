@@ -58,3 +58,6 @@ Working on the dog-update form, very close to completion, just need to figure ou
 
 ## July 31 2022
 Happy Birthday to me! Got the update bug worked out (a stray '/' in the URL address which caused the back end to assign the "put" request to a "get" request since it was routed to the wrong URL.) Starting to hone in the review-create form.
+
+## Aug 01 2022
+Continued to work on the reviews form, which has lead me down a path of solving lots of cyrpticc bugs along the way. I had to modify a bunch of API calls to return the data I wanted. I'm having a hard time conceptaulizing all the required states need to submit the review. I reuqires the accounts, dogs, events, users in events, and a bunch of other state. 

@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { set } from 'react-hook-form';
 
 export default function Profile(){
 
@@ -6,13 +7,15 @@ export default function Profile(){
   let [dogData, setDogData] = useState([]);
 
   useEffect(() => {
-    [fetch('http://localhost:8001/api/accounts'),
-    fetch('http;//localhost:9001/api/dogs'),]
-    .then(([res1, res2]) => {
-      res1.json(), res2.json()})
-    .then(([res1, res2]) => {
-      setAccountData(res1), setDogData(res2)})
+    fetch('http://localhost:8001/api/accounts')
+    .then(res1 => res1.json())
+    .then(res1 => setAccountData(res1))
+    
+    fetch('http;//localhost:8001/api/dogs')
+    .then(res2 => res2.json())
+    .then(res2 => setDogData(res2))
   }, [])
+
 
     return(
         <div className="shadow">
@@ -29,18 +32,18 @@ export default function Profile(){
             /> */}
           </div>
         </div>
-        {accountData.map(item1  => (
+        {accountData.map(account  => (
         <div className='grid grid-cols-3'>
             <div className='grid grid-rows-5 px-4 gap-4 py-8'>
-                <div className='font-bold uppercase' key={accountData.account_id}>{item1.username}</div>
-                <div className='font-semibold text-gray-600' key={accountData.account_id}>{item1.gender}</div>
-              {dogData.map(item2 => (
-                <><div className='font-bold uppercase' key={dogData.dog_id}>{item2.dog_name}</div>
-                <div className='font-semibold text-gray-600' key={dogData.dog_id}>{item2.dog_gender}</div></>
+                <div className='font-bold uppercase' key={accountData.account_id}>{account.username}</div>
+                <div className='font-semibold text-gray-600' key={accountData.account_id}>{account.gender}</div>
+              {dogData.map(dog => (
+                <><div className='font-bold uppercase' key={dogData.dog_id}>{dog.dog_name}</div>
+                <div className='font-semibold text-gray-600' key={dogData.dog_id}>{dog.dog_gender}</div></>
             ))}</div>
             <div className=' px-4 text-center'>
               <div className='py-8 font-semibold' key={accountData.account_id}>
-                  {item1.about}
+                  {account.about}
               </div>
             </div>
             <div className='text-right px-4 py-2'>

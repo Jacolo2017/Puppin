@@ -71,6 +71,20 @@ class AccountOut(BaseModel):
     about: str
 
 
+class AccountUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[str] = None
+    username: Optional[str] = None
+    account_password: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    gender: Optional[str] = None
+    photo_url: Optional[str] = None
+    about: Optional[str] = None
+
+
 class Accounts(BaseModel):
     id: int
     user: str
@@ -123,6 +137,7 @@ class DogUpdate(BaseModel):
 
 class Dogs(BaseModel):
     dog_name: str
+
 
 class DogDelete(BaseModel):
     result: bool
@@ -305,6 +320,33 @@ def get_account(account_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
+
+@router.put("/api/accounts/{account_id}", response_model=AccountUpdate)
+def update_account(account_id: str, account: AccountUpdate):
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr:
+            hashed_password = pwd_context.hash(account.account_password)
+            curr.execute(
+                    """
+                    INSERT INTO accounts (first_name, last_name, email,
+                        username, account_password, date_of_birth, city,
+                        state, gender, photo_url, about)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    [account.first_name, account.last_name,
+                        account.email, account.username,
+                        hashed_password, account.date_of_birth,
+                        account.city, account.state,
+                        account.gender, account.photo_url,
+                        account.about]
+                )
+            row = curr.fetchone()
+            record = {}
+            for i, column in enumerate(curr.description):
+                record[column.name] = row[i]
+            return record
+
+
 @router.get("/api/accounts")
 def accounts_list(page: int = 0):
     # Uses the environment variables to connect
@@ -339,6 +381,7 @@ def accounts_list(page: int = 0):
             print("goated")
             # return Accounts(page_count=page_count, accounts=results)
             return results
+
 
 @router.get("/api/accounts/{account_id}/events")
 def get_associated_events_of_user(account_id: int, response: Response):
@@ -420,7 +463,7 @@ def get_dog(dog_id: int, response: Response):
         print(exc)
 
 
-@router.put("api/dog/{dog_id}", response_model=DogUpdate)
+@router.put("/api/dog/{dog_id}", response_model=DogUpdate)
 def update_dog(dog_id: str, dog: DogUpdate):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:

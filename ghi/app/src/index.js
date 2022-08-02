@@ -15,19 +15,3 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 
-<<<<<<< HEAD
-(async () =>{
-    const eventDataResponse = await fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events`);
-    if(eventDataResponse.ok && accountDataResponse.ok) {
-      const eventData = await eventDataResponse.json();
-      root.render(
-        <React.StrictMode>
-          <App
-          events={eventData}
-          />
-        </React.StrictMode>
-      )
-    }
-})
-=======
->>>>>>> b9b658ea473bca4c48294fae19b54502d691387b

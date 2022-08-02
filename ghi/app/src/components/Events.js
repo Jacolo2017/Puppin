@@ -70,7 +70,7 @@ export default function Events(){
               }}
               className='border rounded-xl shadow-md text-center p-6 bg-gray-100'>
                 <div>
-                <h2 layout="transition" className='text-xl font-semibold text-gray-800'>{item.event_name} hosted by {item.username}</h2>
+                <h2 layout="transition" className='text-xl font-semibold text-gray-800'>{item.event_name} hosted by <a href="#contact" className="text-gray-600 hover:text-gray-800 hover:underline">{item.username}</a></h2>
                 <p className='text-gray-700 py-4'>{item.event_date_time}</p>
                 </div>
                 <AnimatePresence>

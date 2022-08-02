@@ -6,16 +6,12 @@ const CreateReview = (props) => {
     let [gotToken, setGotToken] = useState(false)
     const [selectedEvent, setSelectedEvent] = useState([])
     const [userEvents, setEvents] = useState([])
-    const [username, setUsername] = useState()
+    const [userInfo, setUserInfo] = useState()
     const [eventAttendees, setEventAttendees] = useState([])
     const [formData, setFormData] = useState({
-        reviewer_username: "",
-        review_event_id: "",
-        review_event: "",
         review_description: "",
-        attendee_rating: true,
         location_rating: ""
-        });
+    });
 
     if (props.token && gotToken == false){
         loadUserToken()
@@ -23,10 +19,9 @@ const CreateReview = (props) => {
         
     async function loadUserToken(){
         if (props.token && gotToken == false){
-        console.log("yes token")
         await fetch(`http://localhost:8001/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => setUsername(response));
+            .then(response => setUserInfo(response));
         fetch(`http://localhost:8001/api/currentuser/${props.token}`)
             .then(response => response.json())
             .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`))
@@ -35,33 +30,6 @@ const CreateReview = (props) => {
         setGotToken(true);
         }
     }
-
-    
-    // async function loadUserToken(){
-    //     if (props.token && gotToken == false){
-    //     console.log("yes token")
-    //     await fetch(`http://localhost:8001/api/currentuser/${props.token}`)
-    //         .then(response => response.json())
-    //         .then(response => setUsername(response));
-    //     setGotToken(true);
-    //     }
-    // }
-
-    // if (props.token && gotToken == false){
-    //     console.log("yes token")
-    //     fetch(`http://localhost:8001/api/currentuser/${props.token}`)
-    //         .then(response => response.json())
-    //         .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`))
-    //         .then(response => response.json())
-    //         .then(response => setEvents(response));
-        // fetch(`http://localhost:8001/api/currentuser/${props.token}`)
-        //     .then(response => response.json())
-        //     .then(response => setUsername(response.username));
-        
-        
-        // setGotToken(true);
-        // }
-
 
 
     const loadSelectedEvent = async (event) => {
@@ -78,7 +46,7 @@ const CreateReview = (props) => {
         let response = await fetch(eventUrl, fetchConfig)
             if (response.ok) {
                 const eventInfo = await response.json()
-                setSelectedEvent(eventInfo)
+                setSelectedEvent(eventInfo);
             };
         
         const attendeeUrl = `http://localhost:8000/api/events/${eventId}/users`
@@ -92,23 +60,27 @@ const CreateReview = (props) => {
         response = await fetch(attendeeUrl, fetchConfig)
             if (response.ok) {
                 const attendeeInfo = await response.json()
-                console.log(attendeeInfo)
                 setEventAttendees(attendeeInfo)
 
             }
-
     }
+
+    
+
+
+
 
     const handleSubmit = async (event) =>{
         event.preventDefault();
         let data = {...formData}
-        // console.log(data)
-        const reviewUrl = "/api/event/reviews/create"
+        data["review_event"]= selectedEvent.event_name
+        data["reviewer_username"] = userInfo.username
+        console.log("submitted data body: ", JSON.stringify(data))
+        const reviewUrl = `http://localhost:8000/api/event/${selectedEvent.event_id}/reviews/create?account_id=${userInfo.id}`
         const fetchConfig = {
             method: 'post',
             body: JSON.stringify(data),
             headers: {
-                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
             credentials: "include"
@@ -119,9 +91,6 @@ const CreateReview = (props) => {
             const newReview = await response.json()
             console.log(newReview )
             setFormData({
-                reviewer_username: "",
-                review_event_id: "",
-                review_event: "",
                 review_description: "",
                 location_rating: ""
             })
@@ -150,22 +119,39 @@ return (
                 <label>Event Review</label>
                 <input  placeholder = "Tell us about the event" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.review_description} onChange={(event) => setFormData({...formData, review_description: event.target.value})}/>
                 <label className='py-3'>Would you meetup with these Dog/Owner pairs again?</label>
-                    {eventAttendees && eventAttendees.map(attendee => {
+                    {eventAttendees && eventAttendees.map(attendee => {if(attendee.account_id != userInfo.id){
                         return(
-                            <div>
-                                <div className='grid gap-4 grid-cols-2 grid-row-1'>
-                                    <label className="form-label inline-block text-gray-800 p-2" htmlFor="flexCheckChecked">{attendee.first_name} with {attendee.dog_name}</label>
-                                    <img className='rounded-lg shadow-xl max-w-[200px]' src='https://img.freepik.com/free-vector/people-walking-park-with-their-dogs_52683-37181.jpg?w=2000'/>
+                            <div className='grid gap-4 grid-cols-2 grid-row-1 border-b-4 border-blue-600 py-2'>
+                                <div className=''>
+                                    <div>
+                                        <img className='rounded-lg shadow-xl max-w-[200px]' src='https://img.freepik.com/free-vector/people-walking-park-with-their-dogs_52683-37181.jpg?w=2000'/>
+                                        <label className="form-label inline-block text-gray-800 p-2" htmlFor="flexCheckChecked">{attendee.first_name} with {attendee.dog_name}</label>
+                                    </div>
                                 </div>
-                                <div className='grid gap-4 grid-cols-2 grid-row-2-flex'>
-                                    <input className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked"/>
-                                    <input className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked"/>
+                                <div className="flex justify-center">
+                                    <div className="form-check form-check-inline px-5">
+                                        <input id={attendee.account_id} value="true" className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-green-600 checked:border-green-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" />
+                                        <label className="form-check-label inline-block  text-gray-800" htmlFor="inlineCheckbox1">YES</label>
+                                    </div>
+                                    <div className="form-check form-check px-5">
+                                        <input id={attendee.account_id} value='false' className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-red-600 checked:bg-red-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" />
+                                        <label className="form-check-label inline-block text-gray-800" htmlFor="inlineCheckbox1">NO</label>
+                                    </div>
                                 </div>
+                                {/* <div className='grid gap-4 grid-cols-2 grid-row-1-flex'>
+                                    
+                                    <input label= 'yes' className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="checkbox"/>
+                                    <label>Spayed or Neutered?</label>
+                                    <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="checkbox"/>
+                                </div> */}
                             </div>
                         )
-                    })}
-                <label>Location Rating</label>
-                <input  placeholder = "Tell us about the location" className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" value={formData.location_rating} onChange={(event) => setFormData({...formData, location_rating: event.target.value})}/>
+                    }})}
+                <label className = 'py-2'>Location Rating</label>
+                <input  placeholder = "Tell us about the location" className='rounded-lg bg-gray-300 mt-2 p-2  hover:bg-gray-400' type="textarea" value={formData.location_rating} onChange={(event) => setFormData({...formData, location_rating: event.target.value})}/>
+                </div>
+                <div className='flex justify-between item-center'>
+                  <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Submit</button>
                 </div>
             </form>
     </div>
@@ -174,3 +160,33 @@ return (
 }
 
 export default CreateReview;
+
+
+    // useEffect(()=> {
+    //     setFormData(formData.review_event_id = selectedEvent.event_id)
+    // }, [selectedEvent])
+    
+    // async function loadUserToken(){
+    //     if (props.token && gotToken == false){
+    //     console.log("yes token")
+    //     await fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+    //         .then(response => response.json())
+    //         .then(response => setUsername(response));
+    //     setGotToken(true);
+    //     }
+    // }
+
+    // if (props.token && gotToken == false){
+    //     console.log("yes token")
+    //     fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+    //         .then(response => response.json())
+    //         .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`))
+    //         .then(response => response.json())
+    //         .then(response => setEvents(response));
+        // fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+        //     .then(response => response.json())
+        //     .then(response => setUsername(response.username));
+        
+        
+        // setGotToken(true);
+        // }

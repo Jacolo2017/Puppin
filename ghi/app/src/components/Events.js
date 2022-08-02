@@ -38,63 +38,50 @@ export default function Events(){
         <div className='max-w-[1400px] mx-auto py-10 mt-1'>
             <div className='text-center'>
                 <h2 className='text-2xl font-bold uppercase'>Events</h2>
+                <h3 className='text-xl font-semibold text-zinc-700'> swipe to see more </h3>
             </div>
 
             <div className='flex py-10'>
-              <Swiper
+            <Swiper
               freeMode={true}
               grabCursor={false}
               modules={FreeMode}
-              className='mySwiper'
-              slidesPerView={isOpen ? 2 : 3}
+              className='mySwiper w-screen'
+              slidesPerView={isOpen ? 1 : 3}
               spaceBetween={100}
               >
-              {eventData.map(item => (
-              
-              <SwiperSlide className='pt-4 rounded-sm'  >
-              <motion.div 
-              onClick={() => setIsOpen(!isOpen)}
-              transition={{ layout: {duration: 1, type: 'spring' }}}
-              layout
-              style={{
-                borderRadius: "1rem",
-              }}
-              className='border rounded-xl shadow-md text-center p-6 bg-gray-100'>
-                <div>
-                <h2 layout="transition" className='text-xl font-semibold text-gray-800'>{item.event_name}</h2>
-                <p className='text-gray-700 '>{item.event_date_time}</p>
-                </div>
-                <AnimatePresence>
-                {isOpen && (
+                {eventData.map(item => (
+
+                <SwiperSlide className='pt-4 rounded-sm'>
                   <motion.div
-                  initial={{opacity: 0}}
-                  animate={{opacity: 1}}
-                  transition={{duration: 1}}
+                  onClick={() => setIsOpen(!isOpen)}
+                  transition={{ layout: {duration: 1, type: 'spring' }}}
                   layout
-                  className='grid grid-rows-3 justify-center' id='expand'>
-                  <motion.div className='px-16'>
-                    <img className='w-[300px] ' src={require('../images/dogs.png')} />
-                    <h1 className='py-5 font-semibold text-2xl'>Learn more about the event!</h1>
-                  </motion.div>
-                    <motion.div className='grid grid-cols-4 gap-10'>
-                    <h1> attendees </h1>
-                    </motion.div>
-                    <motion.div className='grid grid-cols-4 gap-10'>
-                    <p className='text-gray-700 py-1'>User Image</p>
-                    <p className='text-gray-700 py-1'>username</p>
+                  style={{
+                    borderRadius: "1rem",
+                  }}
+                  className='border rounded-xl shadow-md text-center p-6 bg-gray-100'
+                  >
+                    <motion.h1>{item.event_name}</motion.h1>
+                    <motion.h2>{item.event_date_time}</motion.h2>
                     
-                    </motion.div>
+                    {isOpen && (
+                      <motion.div
+                      initial={{opacity: 0}}
+                      animate={{opacity: 1}}
+                      transition={{duration: 1}}
+                      layout
+                      >
+                        <p>testing if this works please work omfg I will legit die for this</p>
+                      </motion.div>
+                    )}
                   </motion.div>
-                )}
-                </AnimatePresence>
-              </motion.div>
-              </SwiperSlide>
-              
-              ))}
+                </SwiperSlide>
+                ))}
+                
               </Swiper>
             </div>
         </div>
     </div>
   )
 }
-

@@ -39,10 +39,3 @@ Finally Finished the authentication with the whole group. The authentication was
 * Started working on the profile page, and the events page.
 
 I implemented swiper js to allow users to swipe through the different events that are happening. I have the basic idea of the profile page and there are several different components that need to be implemented. 
-
-
-## 8/1/2022 -
-
-* Passed data into the events page and created an expandable card.
-
-Today I worked on making each event card expandable and passing data into it. I also was able to fix an issue where the nav was being covered by the components, the solution was to change the z-axis of the navbar to always show on top. 

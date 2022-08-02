@@ -17,21 +17,50 @@ const CreateReview = (props) => {
         location_rating: ""
         });
 
-
     if (props.token && gotToken == false){
+        loadUserToken()
+        }
+        
+    async function loadUserToken(){
+        if (props.token && gotToken == false){
         console.log("yes token")
+        await fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+            .then(response => response.json())
+            .then(response => setUsername(response));
         fetch(`http://localhost:8001/api/currentuser/${props.token}`)
             .then(response => response.json())
             .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`))
             .then(response => response.json())
             .then(response => setEvents(response));
-        fetch(`http://localhost:8001/api/currentuser/${props.token}`)
-            .then(response => response.json())
-            .then(response => setUsername(response.username));
-        
-        
         setGotToken(true);
         }
+    }
+
+    
+    // async function loadUserToken(){
+    //     if (props.token && gotToken == false){
+    //     console.log("yes token")
+    //     await fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+    //         .then(response => response.json())
+    //         .then(response => setUsername(response));
+    //     setGotToken(true);
+    //     }
+    // }
+
+    // if (props.token && gotToken == false){
+    //     console.log("yes token")
+    //     fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+    //         .then(response => response.json())
+    //         .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`))
+    //         .then(response => response.json())
+    //         .then(response => setEvents(response));
+        // fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+        //     .then(response => response.json())
+        //     .then(response => setUsername(response.username));
+        
+        
+        // setGotToken(true);
+        // }
 
 
 
@@ -125,12 +154,12 @@ return (
                         return(
                             <div>
                                 <div className='grid gap-4 grid-cols-2 grid-row-1'>
-                                <label className="form-label inline-block text-gray-800 p-2" htmlFor="flexCheckChecked">{attendee.first_name} with {attendee.dog_name}</label>
-                                <img className='rounded-lg shadow-xl max-w-[200px]' src='https://img.freepik.com/free-vector/people-walking-park-with-their-dogs_52683-37181.jpg?w=2000'/>
+                                    <label className="form-label inline-block text-gray-800 p-2" htmlFor="flexCheckChecked">{attendee.first_name} with {attendee.dog_name}</label>
+                                    <img className='rounded-lg shadow-xl max-w-[200px]' src='https://img.freepik.com/free-vector/people-walking-park-with-their-dogs_52683-37181.jpg?w=2000'/>
                                 </div>
                                 <div className='grid gap-4 grid-cols-2 grid-row-2-flex'>
-                                <input label= "yes" className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked"/>
-                                <input className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked"/>
+                                    <input className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked"/>
+                                    <input className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="checkbox" value="" id="flexCheckChecked"/>
                                 </div>
                             </div>
                         )

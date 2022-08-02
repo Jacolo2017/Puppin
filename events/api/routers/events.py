@@ -132,6 +132,11 @@ def get_all_users_and_dogs_from_event(event_id: int, response: Response):
                 for i, column in enumerate(cur.description):
                     record[column.name] = row[i]
                 results.append(record)
+            i = 0
+            while i < len(results)-1:
+                if results[i] in results:
+                    del results[i]
+                i += 1
                 print("get_all_users_from_event output: ", results)
             return results
 
@@ -141,16 +146,15 @@ def get_all_events_by_user(
     response: Response,
     account_id: int
 ):
-    print("ping")
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
                 SELECT e.event_id, e.event_name, e.event_date_time
                 FROM events AS e
-                INNER JOIN eventsusersjunction AS euj ON e.account_id = euj.account_id
-                WHERE euj.account_id = %s;
-                """, [account_id]
+                INNER JOIN eventsusersjunction AS euj ON e.event_id = euj.event_id
+                WHERE euj.account_id = %s OR e.account_id = %s
+                """, [account_id, account_id]
             )
             results = []
             rows = cur.fetchall()
@@ -159,9 +163,26 @@ def get_all_events_by_user(
                 for i, column in enumerate(cur.description):
                     record[column.name] = row[i]
                 results.append(record)
+            i = 0
+            while i < len(results)-1:
+                if results[i] == results[i+1]:
+                    del results[i]
+                i += 1
+            # cur.execute(
+            #     """
+            #     SELECT e.event_id, e.event_name, e.event_date_time
+            #     FROM events AS e
+            #     WHERE euj.account_id = account_id
+            #     """, [account_id])
+            # rows = cur.fetchall()
+            # record = {}
+            # for i, column in enumerate(cur.description):
+            #     record[column.name] = row[i]
+            #     results.append(record)
             if rows is None:
                 response.status_code = status.HTTP_404_NOT_FOUND
                 return {"message": "User has no events"}
+            print(results)
             return results
 
 

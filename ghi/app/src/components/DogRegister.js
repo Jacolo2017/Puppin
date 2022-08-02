@@ -51,10 +51,10 @@ const DogRegister = () => {
         event.preventDefault();
         console.log("dog create submit")
         const data = {...formData}
-        console.log(JSON.stringify(data))
+        console.log(data)
         const dogUrl = "http://localhost:8001/api/dog/create"
         const fetchConfig = {
-            method: 'POST',
+            method: 'post',
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",

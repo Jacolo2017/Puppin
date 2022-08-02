@@ -146,9 +146,10 @@ def get_all_events_by_user(
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT event_id, event_name, event_date_time, account_id
-                FROM events
-                WHERE account_id = %s;
+                SELECT e.event_id, e.event_name, e.event_date_time
+                FROM events AS e
+                INNER JOIN eventsusersjunction AS euj ON e.account_id = euj.account_id
+                WHERE euj.account_id = %s;
                 """, [account_id]
             )
             results = []
@@ -197,7 +198,7 @@ def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response)
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             list_of_all_dogvalues = [value for elem in get_account_dogs(event_id, response) for value in elem.values()]
-            if account_id in get_all_users_from_event(event_id) and dog_id in list_of_all_dogvalues:
+            if account_id in get_all_users_and_dogs_from_event(event_id) and dog_id in list_of_all_dogvalues:
                 cur.execute("""INSERT INTO dogsinevents (event_id, account_id, dog_id)
                     VALUES(%s, %s, %s)
                     RETURNING dog_id, event_id, acount_id

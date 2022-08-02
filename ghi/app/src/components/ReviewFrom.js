@@ -6,6 +6,7 @@ const CreateReview = (props) => {
     let [gotToken, setGotToken] = useState(false)
     const [selectedEvent, setSelectedEvent] = useState([])
     const [userEvents, setEvents] = useState([])
+    const [username, setUsername] = useState()
     const [eventAttendees, setEventAttendees] = useState([])
     const [formData, setFormData] = useState({
         reviewer_username: "",
@@ -16,16 +17,22 @@ const CreateReview = (props) => {
         location_rating: ""
         });
 
+
     if (props.token && gotToken == false){
         console.log("yes token")
         fetch(`http://localhost:8001/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`)
+            .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`))
             .then(response => response.json())
-            .then(response => setEvents(response)))
-            
-        setGotToken(true)
-    };
+            .then(response => setEvents(response));
+        fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+            .then(response => response.json())
+            .then(response => setUsername(response.username));
+        
+        
+        setGotToken(true);
+        }
+
 
 
     const loadSelectedEvent = async (event) => {
@@ -65,7 +72,7 @@ const CreateReview = (props) => {
 
     const handleSubmit = async (event) =>{
         event.preventDefault();
-        const data = {...formData}
+        let data = {...formData}
         // console.log(data)
         const reviewUrl = "/api/event/reviews/create"
         const fetchConfig = {
@@ -87,7 +94,6 @@ const CreateReview = (props) => {
                 review_event_id: "",
                 review_event: "",
                 review_description: "",
-                attendee_rating: true,
                 location_rating: ""
             })
         }
@@ -138,4 +144,4 @@ return (
 )
 }
 
-export default CreateReview
+export default CreateReview;

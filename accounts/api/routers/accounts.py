@@ -1,5 +1,4 @@
 from sqlite3 import connect
-from unittest import result
 from fastapi import (
     APIRouter,
     Response,
@@ -15,7 +14,6 @@ from typing import Union, Optional
 import psycopg
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from db.accounts import AccountQueries
-from db.dogs import DogQueries
 from jose import JWTError, jwt, jws, JWSError
 from passlib.context import CryptContext
 import os
@@ -78,6 +76,7 @@ class Accounts(BaseModel):
     username: str
 
 
+
 class DogIn(BaseModel):
     dog_name: str
     dog_breed: str
@@ -90,6 +89,7 @@ class DogIn(BaseModel):
     dog_weight: int
     spayed_neutered: bool
     vaccination_history: str
+
 
 
 class DogOut(BaseModel):
@@ -120,9 +120,6 @@ class DogUpdate(BaseModel):
     spayed_neutered: Optional[bool] = None
     vaccination_history: Optional[str] = None
 
-
-class Dogs(BaseModel):
-    dog_name: str
 
 class DogDelete(BaseModel):
     result: bool
@@ -376,13 +373,13 @@ def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history, account_id)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %b, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
                     RETURNING dog_id;
                 """,
                 [dog.dog_name, dog.dog_breed, dog.dog_age,
                     dog.dog_gender, dog.dog_photo,
                     dog.dog_temperament, dog.dog_about,
-                    dog.dog_size, dog.dog_weight, dog.spayed_neutered,
+                    dog.dog_size, dog.dog_weight,
                     dog.vaccination_history,
                     user['id']]
                     )
@@ -401,11 +398,11 @@ def get_dog(dog_id: int, response: Response):
                 curr.execute(
                     """SELECT dog_name, dog_breed, dog_age, dog_gender,
                                 dog_photo, dog_temperament, dog_about,
-                                dog_size, dog_weight, spayed_neutered,
-                                vaccination_history, account_id
+                                dog_size, dog_weight, spayed_neutered, vaccination_history,
+                                account_id
                         FROM dogs
                         WHERE dog_id = %s;""",
-                    [dog_id],
+                        [dog_id],
                 )
                 row = curr.fetchone()
                 print(row)
@@ -430,8 +427,7 @@ def update_dog(dog_id: str, dog: DogUpdate):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history)
-                    )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """,
                 [dog.dog_name, dog.dog_breed, dog.dog_age,
                     dog.dog_gender, dog.dog_photo,
@@ -468,18 +464,16 @@ def get_account_dogs(account_id: int, response: Response):
             return results
 
 
-@router.delete("/api/accounts/{account_id}/dogs/{dog_id}")
-def delete_dog(dog: Dogs, account_id: int, dog_id: int, query=Depends(DogQueries)):
-    if query.delete_dog(dog_id):
+@router.delete("/api/accounts/{account_id}/dogs/{dog_id}",
+               response_model=DogDelete)
+def delete_dog(
+    current_user: Accounts = Depends(get_current_user),
+    query=Depends(AccountQueries)
+):
+    try:
+        query.delete_dog(current_user["id"])  #We will have to figure out how to use the current account_id to get the attached dog_id and delete based off that.
         return {"result": True}
-    else:
+    except Exception:
         return {"result": False}
-    
-                # """
-                #     DELETE FROM public.dogs
-                #     WHERE dog_id = %s && account_id == %s && dog_name == %s
-                # """,
-                # [dog.dog_id, dog.account_id, dog.dog_name]
-            
 
 # This is a new line that ends the file.

@@ -26,37 +26,10 @@ We found out that each app doesn't have to have it's own database so we might no
 
 ## July 14, 2022
 
-We decided to do fast api for our app and are finally creating our schemas. Cooper is setting up our front end so we have a visual and the swagger data is accessible. Mark is building our pydantic functions, which to be honest I am reading up on now... oops. 
+We decided to do fast api for our app and are finally creating our schemas. Cooper is setting up our front end so we have a visual and the swagger data is accessible. Mark is building our pedantic functions, which to be honest I am reading up on now... oops. 
 
 ## July 18, 2022
 
 Today was very productive. We revamped out fastAPI. Instead of numbering rows we just now use enumerate which Roger is a genius for thinking of! I personally implemented the create, get dog_id, and view all of an accounts dogs. It was quite easy now that I am getting better and more comfortable with how to make a fastAPI. It was interesting actually using a join in our app, and being more comfortable with SQL, to associate dogs based on account_id. I'm still a bit uncomfortable with with fastAPI, but tomorrow will be a good day to clean up that code and keep push through the project!
 
 ## July 19, 2022
-
-Today I ran into a road block. I am having issues, I guess confirming, that the currently singed in account will have it's id stored correctly in the public.dogs table. With SQL being something new to us, but also being fairly straight forward, I hope that this will only be a small road block and will shed some light into SQL and working directly in the tables themselves. 
-
-## July 21, 2022
-
-Honestly, I'm a little fried from the algorithms lecture today. it's super cool and I see how we have been making them the whole time just in lower complexity. I really see how our views could be considered algorithms. I have given up on trying to figure out how to make sure the account id is the one from the current account/owner account. As it turns out when I told Cooper that we could probably nock out authentication in a couple of hours, I was so so so wrong. This is a beast that is a little out of my brain capacity at the moment. The cook book is basically implemented but... it  doesn't work. We have been skimming docs and the code all day. 
-
-## July 22, 2022
-
-I'm so unfocused today and i feel like my productivity has just dropped after these road blocks we have run into. We are going to try all weekend to figure out how to get out auth to stick, work, just do anything really. It makes sense what it's doing but we are already so deep into the project that we are having to go line by line still to get it to work. And I haven't helped in the slightest, at least it feels like it. 
-
-## July 25, 2022
-
-Well, we have the account passwords being hashed thanks to Mark's genius. I can update a dog, I can delete a dog (I think) if I manually put in data to the public.dogs table but, I can not create a dog with the current users id. I have used CURRENT_USER, SUSER_ID, USER_ID, and DATABASE_PRINCIPAL_ID. No avail. I thought SQL would or seemed more straight forward at least early on in the project. But it is actually quite the opposite. Roger and Mark have been telling us to just not say things are going to be easy/short, because nothing has be lol. I went to a buddy's concert on  Friday night on a whim and ran into Mark! I really enjoy working with these guys, but feel like the worst player on one of the better teams. 
-
-## July 26, 2022
-
-There is nothing to say other than Roger and Cooper are geniuses. We don't know why, but the auth is working. Like fully working and it's so cool to see. I know this will have to be implemented sooner in any other apps I develope but it is so satisfying to have actually completed a major feature. It's been almost a full week since we haven't just pushed a form or two. Now onto the daemon of getting the hecking current user id in the public.dogs account_id row!
-
-## July 27, 2022
-
-First, I simply have been thinking too hard. I again am so thankful that we have Overrated to at least look at to conceptualize what needs to be implemented. I don't think I would have had such 'confidence' during the project with at least some completed app to look at. Mark helped me really understand that I just need to use user["id"] in the list call instead of trying to implement a function inside of the query. I can't believe how long it took me to basically revert a week of work. I need to slow down my thought process and go bit by bit like we did with auth. I just sprinted into finding a super complex way to implement a simple query's data. We ran into a new major issue today. Our auth is in out accounts app and we can't figure out a way to get it into the events app. We had all the SEIRs and instructors in our break out room helping us try to figure out what to do. Roger took Shawn's idea of creating a new router path that the events app can pull the information from. It was actually wild and one of Rogers SWE friends said it wasn't a bad idea or way to implement it in a small app like ours. I'm just glad we didn't have to set up an auxillary sever or de-microservice into a monolith lol. What a wild thing to write. 
-
-## August 1, 2022
-
-Last week to sprint through the final touches. Today I am finalizing all the CRUD for dogs and hopefully start and get a decent way into the public profile view. 
-

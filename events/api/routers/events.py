@@ -20,8 +20,10 @@ def events_list(page: int= 0):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT event_id, event_name, event_date_time, account_id
+                SELECT event_id, event_name, event_date_time, events.account_id, accounts.username
                 FROM events
+                INNER JOIN accounts ON
+                events.account_id = accounts.account_id
                 ORDER BY event_id
                 LIMIT 100 OFFSET %s;
             """,
@@ -133,7 +135,8 @@ def get_all_users_from_event(event_id: int, response: Response):
             return results
 
 
-@router.get("/api/events/myevents/")
+# do we need this?
+@router.get("/api/events/myevents/") 
 def get_all_events_by_user(
     response: Response,
     # current_user: Depends(get_current_user)

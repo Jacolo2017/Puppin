@@ -69,13 +69,8 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                     """,
                     [
                         review.reviewer_username, account_id,
-<<<<<<< HEAD
-                        review.review_event_id, review.review_event,
-                        review.review_description,
-=======
                         event_id, review.review_event,
-                        review.review_description, review.attendee_rating,
->>>>>>> main
+                        review.review_description,
                         review.location_rating
                     ]
                 )

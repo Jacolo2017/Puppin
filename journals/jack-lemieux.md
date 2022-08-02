@@ -60,3 +60,5 @@ First, I simply have been thinking too hard. I again am so thankful that we have
 
 Last week to sprint through the final touches. Today I am finalizing all the CRUD for dogs and hopefully start and get a decent way into the public profile view. 
 
+CRUD has been tested and is 100% operational (insert evil Palpatine laugh here). Now to dive into the front end and create the profile pages. the user view of their profile has run into a road bump. I need to map both accountData and dogData. I can't have two map functions without breaking the page. I'm working with the idea of flat mapping and I hope it will work out, but I am not really sure to be honest. I am planning on reaching out to Zhyn to see if she has some insights, her breathing JS and all.  
+

@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 
 export default function Profile(){
 
-  let [accountData, setAccountData] = useState([])
-  let [dogData, setDogData] = useState([])
+  let [accountData, setAccountData] = useState([]);
+  let [dogData, setDogData] = useState([]);
 
   useEffect(() => {
     [fetch('http://localhost:8001/api/accounts'),
-     fetch('http;//localhost:9001/api/dogs'),]
+    fetch('http;//localhost:9001/api/dogs'),]
     .then(([res1, res2]) => {
       res1.json(), res2.json()})
     .then(([res1, res2]) => {
@@ -30,16 +30,16 @@ export default function Profile(){
           </div>
         </div>
         {accountData.map(item1  => (
-        // {dogData.map(item2 =>
         <div className='grid grid-cols-3'>
             <div className='grid grid-rows-5 px-4 gap-4 py-8'>
-                <div className='font-bold uppercase'>{item1.username}</div>
-                <div className='font-semibold text-gray-600'>{item1.gender}</div>
-                <div className='font-bold uppercase'>dog name</div>
-                <div className='font-semibold text-gray-600'>dog gender</div>
-            </div>
+                <div className='font-bold uppercase' key={accountData.account_id}>{item1.username}</div>
+                <div className='font-semibold text-gray-600' key={accountData.account_id}>{item1.gender}</div>
+              {dogData.map(item2 => (
+                <><div className='font-bold uppercase' key={dogData.dog_id}>{item2.dog_name}</div>
+                <div className='font-semibold text-gray-600' key={dogData.dog_id}>{item2.dog_gender}</div></>
+            ))}</div>
             <div className=' px-4 text-center'>
-              <div className='py-8 font-semibold'>
+              <div className='py-8 font-semibold' key={accountData.account_id}>
                   {item1.about}
               </div>
             </div>
@@ -47,7 +47,6 @@ export default function Profile(){
               <button className=' rounded-xl uppercase font-semibold border border-gray-800 w-[130px] bg-[#4F4789] hover:bg-[#6a60b8] text-gray-200'>edit profile</button>
             </div>
         </div>
-        ))
+      ))}
       </div>
-    
-}
+)}

@@ -1,7 +1,8 @@
 {
     "cSpell.words": [
         "dawg",
-        "pydantic"
+        "pydantic",
+        "SEIRs"
     ],
     "python.linting.enabled": true,
     "python.linting.flake8Enabled": true

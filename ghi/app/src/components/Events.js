@@ -21,17 +21,26 @@ export default function Events(){
     fetch(`http://localhost:8000/api/events`)
     .then(res => res.json())
     .then(res => setEventData(res))
-  }, [])
+
+    fetch(`http://localhost:8000/api/events`)
+    .then(res2 => res2.json())
+    .then(res2 => res2.flatMap(id => id.account_id))
+    .then(res2=>setUserData(res2))
+  }
+ 
   
   
-  useEffect(() => {
-    fetch(`http://localhost:8001/api/accounts/${eventData}`)
-    .then(res1 => res1.json())
-    .then(res1 => setUserData(res1))
-  }, [])
+  , [])
+  
+  
+  // useEffect(() => {
+  //   fetch(`http://localhost:8001/api/accounts/${eventData}`)
+  //   .then(res1 => res1.flatMap(id=> ))
+  //   .then(res1 => setUserData(res1))
+  // }, [])
 
   
-  console.log(userData)
+  console.log(eventData)
 
   return(
     <div className='w-screen py-20 flex' id="about">

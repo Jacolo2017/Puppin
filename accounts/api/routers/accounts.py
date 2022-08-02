@@ -90,7 +90,6 @@ class DogIn(BaseModel):
     dog_weight: int
     spayed_neutered: bool
     vaccination_history: str
-    account_id: int
 
 
 class DogOut(BaseModel):
@@ -377,13 +376,13 @@ def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
                     dog_gender, dog_photo, dog_temperament, dog_about,
                     dog_size, dog_weight, spayed_neutered,
                     vaccination_history, account_id)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %b, %s, %s)
                     RETURNING dog_id;
                 """,
                 [dog.dog_name, dog.dog_breed, dog.dog_age,
                     dog.dog_gender, dog.dog_photo,
                     dog.dog_temperament, dog.dog_about,
-                    dog.dog_size, dog.dog_weight,
+                    dog.dog_size, dog.dog_weight, dog.spayed_neutered,
                     dog.vaccination_history,
                     user['id']]
                     )

@@ -13,11 +13,9 @@ import LoggedinNav from './components/LoggedinNav';
 import ReviewsGivenSlide from './components/ReviewsSliderComponents/ReviewsByUser';
 import Profile from './components/Profile';
 import ReviewsByEvent from './components/ReviewsSliderComponents/ReviewsForEvent';
-
-
-
-
 import CreateEvent from './components/CreateEvent';
+import DogUpdate from './components/DogUpdate';
+import CreateReview from './components/ReviewFrom';
 
 
 export default function App() {
@@ -28,9 +26,11 @@ export default function App() {
     <BrowserRouter>
           <Routes>
             <Route path="" element={[ <Navbar/>,<Hero token={token}/>, <About/>, <Developers/>, <Footer/> ]}/>
+              <Route path="myreviews/submit" element={<CreateReview token={token}/>}/>
             <Route path='registration'>
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>
+              <Route path="dog" element={<DogRegister token={token}/>}/>
             </Route>
             <Route path='event'>
             <Route path = 'create'element = {<CreateEvent token={token}/>}/>

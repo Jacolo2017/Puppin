@@ -162,7 +162,7 @@ def get_all_events_by_user(
 
 
 
-@router.post("/api/events/{event_id}/") 
+@router.post("/api/events/{event_id}/")
 def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:

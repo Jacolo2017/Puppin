@@ -15,6 +15,7 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 
+<<<<<<< HEAD
 (async () =>{
     const eventDataResponse = await fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events`);
     if(eventDataResponse.ok && accountDataResponse.ok) {
@@ -28,3 +29,5 @@ root.render(
       )
     }
 })
+=======
+>>>>>>> b9b658ea473bca4c48294fae19b54502d691387b

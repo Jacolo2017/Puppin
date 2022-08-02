@@ -16,10 +16,18 @@ import ReviewsByEvent from './components/ReviewsSliderComponents/ReviewsForEvent
 import CreateEvent from './components/CreateEvent';
 import DogUpdate from './components/DogUpdate';
 import CreateReview from './components/ReviewFrom';
-
+import React, { useState, useEffect } from 'react';
 
 export default function App() {
   const [ token, login, logout] = useToken();
+  let [currentUser, setCurrentUser] = useState()
+  
+
+
+
+  fetch(`http://localhost:8001/api/currentuser/${token}`)
+  .then(response => response.json())
+  .then(response => setCurrentUser(response.id))
   
   return (
     <>
@@ -37,7 +45,7 @@ export default function App() {
               <Route path='home'element={[<LoggedinNav logout={logout} token={token}/>, <Events/>, <ReviewsGivenSlide token={token}/>, <ReviewsByEvent/>]} />
             </Route>
             <Route path='profile'>
-              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile/>]} />          
+              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile currentUser={currentUser} token={token}/>]} />          
             </Route>
           </Routes>
     </BrowserRouter>

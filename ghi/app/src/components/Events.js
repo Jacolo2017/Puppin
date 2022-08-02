@@ -40,7 +40,7 @@ export default function Events(){
   // }, [])
 
   
-  console.log(eventData)
+  
 
   return(
     <div className='w-screen py-20 flex' id="about">
@@ -73,6 +73,7 @@ export default function Events(){
                   >
                     <motion.h1>{item.event_name}</motion.h1>
                     <motion.h2>{item.event_date_time}</motion.h2>
+                    <motion.h2>Hosted by : {item.username}</motion.h2>
                     
                     {isOpen && (
                       <motion.div

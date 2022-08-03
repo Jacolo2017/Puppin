@@ -306,7 +306,7 @@ def get_account(account_id: int, response: Response):
         print(exc.message)
 
 
-@router.get("/api/accounts/{username}")
+@router.get("/api/accounts/by_user/{username}")
 def get_account_by_username(username: str, response: Response):
     try:
         print("okay we tried")

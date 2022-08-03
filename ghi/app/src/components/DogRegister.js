@@ -113,9 +113,9 @@ const DogRegister = () => {
 
 
 return (
-    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[140px]'>
-        <div className='flex flex-col justify-center'>
-            <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
+    <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c]'>
+        <div className='flex flex-col justify-center '>
+            <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl mt-4' onSubmit={handleSubmit}>
                 {/* <div className='p-8'>
                     <img  className='rounded-lg shadow-xl' src='https://img.freepik.com/free-photo/group-portrait-adorable-puppies_53876-64778.jpg?t=st=1658714676~exp=1658715276~hmac=b3e0ae6c222531949120b233a58326383236d7ae9f56ac110524a98258bd69bb&w=1380'/>
                 </div> */}

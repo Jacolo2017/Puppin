@@ -534,7 +534,9 @@ def get_account_dogs(account_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as curr: 
             curr.execute("""
-                SELECT d.dog_id, d.dog_name, d.dog_about
+                SELECT d.dog_id, d.dog_name, d.dog_about, d.dog_breed, d.dog_age,
+                d.dog_photo, d.dog_temperament, d.dog_size, d.dog_weight, d.spayed_neutered,
+                d.vaccination_history, d.dog_gender
                 FROM public.dogs AS d
                     WHERE (d.account_id = %s)
             """, [account_id])

@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper'
 import 'swiper/css';
 import 'swiper/css/free-mode';
+
 import { AnimatePresence, motion } from 'framer-motion'
 
 
@@ -54,7 +55,7 @@ export default function Events(){
             <Swiper
               freeMode={true}
               grabCursor={false}
-              modules={FreeMode}
+              modules={[FreeMode]}
               className='mySwiper w-screen'
               slidesPerView={isOpen ? 1 : 3}
               spaceBetween={100}

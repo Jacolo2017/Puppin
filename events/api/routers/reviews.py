@@ -199,6 +199,7 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
 # --- Get all event reviews by account ID --- #
 @router.get("/api/event/reviews/account={account_id}")
 def get_event_reviews_for_account(account_id: int, response: Response):
+    print('get_event_reviews_for_account pinged')
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:

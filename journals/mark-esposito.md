@@ -51,7 +51,7 @@ Ran into a blocker. I could not import the authentication functions from our acc
 
 
 ## July 29 2022
-Roger was able to get the authentication API working, so things have been progressing. I made some tweaks to the dog-create form to get the "spayed/neuteredcheckbox working. I
+Roger was able to get the authentication API working, so things have been progressing. I made some tweaks to the dog-create form to get the "spayed/neuteredcheckbox" working. I
 
 ## July 30 2022
 Working on the dog-update form, very close to completion, just need to figure out the bus I'm seeing when submitting, an error of method not allowed, even though the method on the frontend fetch and backend API match.
@@ -60,4 +60,7 @@ Working on the dog-update form, very close to completion, just need to figure ou
 Happy Birthday to me! Got the update bug worked out (a stray '/' in the URL address which caused the back end to assign the "put" request to a "get" request since it was routed to the wrong URL.) Starting to hone in the review-create form.
 
 ## Aug 01 2022
-Continued to work on the reviews form, which has lead me down a path of solving lots of cyrpticc bugs along the way. I had to modify a bunch of API calls to return the data I wanted. I'm having a hard time conceptaulizing all the required states need to submit the review. I reuqires the accounts, dogs, events, users in events, and a bunch of other state. 
+Continued to work on the reviews form, which has lead me down a path of solving lots of cryptic bugs along the way. I had to modify a bunch of API calls to return the data I wanted. I'm having a hard time conceptualizing all the required states need to submit the review. I requires the accounts, dogs, events, users in events, and a bunch of other state. What really has me stumped is how to load all the dependent data and states. 
+
+## Aug 02 2022
+Day started with some git issues, seems that some of the merge commits were overwritting changes made my previous commits. This caused the dog-updat form and all the fixes I implemented to be overridden in the main branch pulls. Finally starting to git the hang of git and the workflow needed to be in place when working in a "large" group. Luckily we have all our changes in branches and in the gitlab web interface so easily fixed. Phew. Working on the creat review form again. I was stumped most of the day and explaining to the team and even the SEIRS. However tonight I finally got the attendee submissions working and the review submissions working!!! Great progress. Roger came thru with a great suggestion to implement a useForm hook, nver heard of it but it made the process so much easier, holy crap. After that I was able to get the core functionality up in about 1.5 hrs. Now I have to do a check to make sure the user doesn't see events already reviewed or can submit reviews if the event is not complete.

@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper'
 import 'swiper/css';
 import 'swiper/css/free-mode';
+
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom';
 import PublicProfile from './PublicProfile';
@@ -96,7 +97,7 @@ export default function Events(){
             <Swiper
               freeMode={true}
               grabCursor={false}
-              modules={FreeMode}
+              modules={[FreeMode]}
               className='mySwiper w-screen'
               slidesPerView={isOpen ? 1 : 3}
               spaceBetween={100}
@@ -116,6 +117,7 @@ export default function Events(){
                     <button onClick={() => setIsOpen(!isOpen)}>open </button>
                     <motion.h1>{item.event_name} by <Link to={`/user/${item.username}`}>{item.username}</Link></motion.h1>
                     <motion.h2>{item.event_date_time}</motion.h2>
+                    <motion.h2>Hosted by : {item.username}</motion.h2>
                     
                     {isOpen && (
                       <motion.div

@@ -68,6 +68,7 @@ function pageChange(index) {
         <div className='absolute -bottom-6 '>
           <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src='https://www.thesprucepets.com/thmb/YQzfza2oKOCzQIvX-K66BRi1DjI=/1080x1080/filters:no_upscale():max_bytes(150000):strip_icc()/30078352_448703938920062_6275637137232625664_n-5b0de8c443a1030036f9e15e.jpg' />
         </div>
+      ))}
       </div>
       <div className='text-center mt-6 text-3xl text-fBlack font-bold'>
         {userData ? userData.username : ''}

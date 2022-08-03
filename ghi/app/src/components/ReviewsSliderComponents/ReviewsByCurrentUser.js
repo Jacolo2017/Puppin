@@ -58,14 +58,14 @@ export default function ReviewsGivenSlide(props){
                       slidesPerView={3}
                       spaceBetween={100}
                       >
-                        {userReviews.map(item => (
+                        {/* {userReviews.map(item => (
               
               <SwiperSlide className='pt-4 rounded-sm' >
               <motion.div className='border rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px]' close={closeModel}>
                 <h2 className='text-xl font-semibold text-gray-800'>{item.review_event} by {currentUser}</h2>
                 <p className='text-gray-700 py-4'>{item.review_description}</p>
               </motion.div>
-              </SwiperSlide>))}
+              </SwiperSlide>))} */}
                       
                       
                       </Swiper>

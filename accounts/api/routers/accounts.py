@@ -71,6 +71,20 @@ class AccountOut(BaseModel):
     about: str
 
 
+class AccountUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[str] = None
+    username: Optional[str] = None
+    account_password: Optional[str] = None
+    # date_of_birth: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    gender: Optional[str] = None
+    photo_url: Optional[str] = None
+    about: Optional[str] = None
+
+
 class Accounts(BaseModel):
     id: int
     user: str
@@ -123,6 +137,7 @@ class DogUpdate(BaseModel):
 
 class Dogs(BaseModel):
     dog_name: str
+
 
 class DogDelete(BaseModel):
     result: bool
@@ -286,7 +301,7 @@ def get_account(account_id: int, response: Response):
             with conn.cursor() as cur:
                 cur.execute(
                         """
-                        SELECT first_name, last_name, email, username,
+                        SELECT account_id, first_name, last_name, email, username,
                         date_of_birth, city, state, gender,
                             photo_url, about
                         FROM accounts
@@ -306,32 +321,48 @@ def get_account(account_id: int, response: Response):
         print(exc.message)
 
 
-@router.get("/api/accounts/by_username/{username}")
-def get_account_by_username(username: str, response: Response):
-    try:
-        print("okay we tried")
-        with psycopg.connect() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                        """
-                        SELECT first_name, last_name, email, username, 
-                        date_of_birth, city, state, gender, account_id,
-                            photo_url, about
-                        FROM accounts
-                        WHERE username = %s;
-                        """, [username],
-                    )
-                row = cur.fetchone()
-                print("lookhere", (cur.description))
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "Account not found"}
-                record = {}
-                for i, column in enumerate(cur.description):
-                    record[column.name] = row[i]
-                return record
-    except psycopg.InterfaceError as exc:
-        print(exc.message)
+@router.put("/api/accounts/update/{account_id}", response_model=AccountUpdate)
+def update_account(account_id: str, account: AccountUpdate):
+    with psycopg.connect() as conn:
+        with conn.cursor() as curr:
+            hashed_password = pwd_context.hash(account.account_password)
+            curr.execute(
+                    """
+                    UPDATE accounts
+                    SET first_name = %s,
+                        last_name = %s,
+                        email = %s,
+                        username = %s,
+                        account_password = %s,
+                        city = %s,
+                        state = %s,
+                        gender = %s,
+                        photo_url = %s,
+                        about = %s
+                    WHERE account_id = %s
+                    RETURNING
+                        first_name,
+                        last_name,
+                        email,
+                        username,
+                        account_password,
+                        city,
+                        state,
+                        gender,
+                        photo_url,
+                        about;
+                    """,
+                    [account.first_name, account.last_name,
+                        account.email, account.username,
+                        hashed_password, account.city, account.state,
+                        account.gender, account.photo_url,
+                        account.about, account_id]
+                )
+            row = curr.fetchone()
+            record = {}
+            for i, column in enumerate(curr.description):
+                record[column.name] = row[i]
+            return record
 
 
 @router.get("/api/accounts")
@@ -368,6 +399,7 @@ def accounts_list(page: int = 0):
             print("goated")
             # return Accounts(page_count=page_count, accounts=results)
             return results
+
 
 @router.get("/api/accounts/{account_id}/events")
 def get_associated_events_of_user(account_id: int, response: Response):

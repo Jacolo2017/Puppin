@@ -76,7 +76,6 @@ class DogQueries:
         return {"id": [0], "dog_name": [1], "dog_gender": [2]}
 
 # Delete a dog from public.dogs based on account_id, dog_id, and dog_name all being present in the table's row
-# Delete path still non-functional
     def delete_dog(self, dog_id):
         with pool.connection() as conn:
             with conn.cursor() as cur:
@@ -87,4 +86,3 @@ class DogQueries:
                     """,
                     [dog_id],
                 )
-    

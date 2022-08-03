@@ -10,13 +10,14 @@ const CreateReview = (props) => {
     const [userInfo, setUserInfo] = useState()
     const [eventAttendees, setEventAttendees] = useState([])
     const [existingReviews, setExistingReviews] = useState()
-    const [enableForm, setEnableForm] = useState(false)
+    const [enableForm, setEnableForm] = useState()
     const { register, handleSubmit } = useForm();
 
     // checking conditions and calling loadUserToken
     if (props.token && gotToken == false) {
         loadUserToken()
     }
+
 
     // loads userInfo (id, username, account_password (hashed) based on token)    
     async function loadUserToken() {
@@ -97,6 +98,8 @@ const CreateReview = (props) => {
             if (Date.now() + 360000 > date) {
                 console.log("event completed")
                 setEnableForm(true)
+            } else {
+                setEnableForm(false)
             }
         };
 
@@ -114,6 +117,9 @@ const CreateReview = (props) => {
             setEventAttendees(attendeeInfo)
         }
     }
+
+    useEffect(() => {
+    }, [enableForm])
 
 
 
@@ -186,7 +192,13 @@ const CreateReview = (props) => {
                         </select>
                     </div>
                 </form>
+
                 <form className='max-w-[600px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
+                    {(enableForm !== undefined && !enableForm) ? (
+                        <div>
+                            <p className='text-med text-red-600 font-semibold justify-center'>Dayum, I know you're not trying to review an event that hasn't happened yet &#x1F440;</p>
+                        </div>) : (<div></div>)
+                    }
                     <fieldset disabled={!enableForm}>
                         <div className='flex flex-col text-gray-900 py-2'>
                             <label>Event Review</label>
@@ -218,7 +230,10 @@ const CreateReview = (props) => {
                             <input {...register('location_rating')} placeholder="Tell us about the location" className='rounded-lg bg-gray-300 mt-2 p-2  hover:bg-gray-400' type="textarea" />
                         </div>
                         <div className='flex justify-between item-center'>
-                            <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Submit</button>
+                            {(!enableForm) ? (
+                                <button className='w-full py-2 bg-gray-500 rounded-xl font-bold uppercase shadow-sm text-white'>Submit</button>
+                            ) : (<button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-500 shadow-sm text-white'>Submit</button>)
+                            }
                         </div>
                     </fieldset>
 

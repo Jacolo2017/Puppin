@@ -3,11 +3,16 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper'
 import { AnimatePresence, motion } from 'framer-motion'
 
-export default function ReviewsByEvent(props){
-    let [eventReviews, setEventReviews] = useState(["Loading"]);
+
+export default function ReviewsByAnyUser(props){
+
+    let [eventReviews, setEventReviews] = useState([]);
     let [gotToken, setGotToken] = useState(false);
-    let [accountId, setAccountId] = useState()
-    
+    let [accountId, setAccountId] = useState(props.userData);
+    let [isLoaded, setIsLoaded] = useState(false);
+
+
+    console.log("userdata status", props.userData)
     const openModel = () => {
         setOpen(true);
       };
@@ -15,19 +20,30 @@ export default function ReviewsByEvent(props){
       const closeModel = () => {
         setOpen(false);
       };
-
+  
     const [open, setOpen] = useState(false);
+    // if (userDataLoaded == null){
+    //     setUserDataLoaded(userdata)
+    //     console.log(userDataLoaded)
 
-    useEffect(()=>{
-        fetch(`http://localhost:8000/api/event/reviews/account=${accountId}`)
+      if (props.userData.length != 0 && isLoaded == false){
+        console.log("effected", props.userData)
+        fetch(`http://localhost:8000/api/event/reviews/account=${props.userData.account_id}`)
             .then(response => response.json())
             .then(response => setEventReviews(response));
+            setIsLoaded(true);}
         
-    }, []
-    )
 
     
-  
+    // if (props.userData && isLoaded == false) {
+    //     console.log("why is it fetching", props.userData);
+    //     fetch(`http://localhost:8000/api/event/reviews/account=${props.userData.account_id}`)
+    //         .then(response => response.json())
+    //         .then(response => setEventReviews(response));
+    //     setIsLoaded(true)
+    // }
+    
+    if (eventReviews != "loading"){
         return(
             <div className='w-screen py-20 ' id="about">
                 <div className='max-w-[1300px] mx-auto py-10 mt-1'>
@@ -58,5 +74,11 @@ export default function ReviewsByEvent(props){
                     </div>
                 </div>
             </div>
+          
           )
+    }
         }
+
+
+
+

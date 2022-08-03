@@ -10,13 +10,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Events from './components/Events';
 import { useToken } from './auth/Authentication';
 import LoggedinNav from './components/LoggedinNav';
-import ReviewsGivenSlide from './components/ReviewsSliderComponents/ReviewsByUser';
+import ReviewsGivenSlide from './components/ReviewsSliderComponents/ReviewsByCurrentUser';
 import Profile from './components/Profile';
 import ReviewsByEvent from './components/ReviewsSliderComponents/ReviewsForEvent';
 import CreateEvent from './components/CreateEvent';
 import DogUpdate from './components/DogUpdate';
 import CreateReview from './components/ReviewFrom';
 import PublicProfile from './components/PublicProfile';
+
 
 export default function App() {
   const [ token, login, logout] = useToken();

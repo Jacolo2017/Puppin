@@ -427,22 +427,39 @@ def update_dog(dog_id: str, dog: DogUpdate):
         with conn.cursor() as curr:
             curr.execute(
                 """
-                INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
-                    dog_gender, dog_photo, dog_temperament, dog_about,
-                    dog_size, dog_weight, spayed_neutered,
-                    vaccination_history)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    RETURNING dog_name, dog_breed, dog_age,
-                    dog_gender, dog_photo, dog_temperament, dog_about,
-                    dog_size, dog_weight, spayed_neutered,
-                    vaccination_history
+                UPDATE dogs
+                SET dog_name = %s,
+                    dog_breed = %s,
+                    dog_age = %s,
+                    dog_gender = %s,
+                    dog_photo = %s,
+                    dog_temperament = %s,
+                    dog_about = %s,
+                    dog_size = %s,
+                    dog_weight = %s,
+                    spayed_neutered = %s,
+                    vaccination_history = %s
+                WHERE dog_id = %s
+                RETURNING
+                    dog_name,
+                    dog_breed,
+                    dog_age,
+                    dog_gender,
+                    dog_photo,
+                    dog_temperament,
+                    dog_about,
+                    dog_size,
+                    dog_weight,
+                    spayed_neutered,
+                    vaccination_history;
                 """,
                 [dog.dog_name, dog.dog_breed, dog.dog_age,
                     dog.dog_gender, dog.dog_photo,
                     dog.dog_temperament, dog.dog_about,
-                    dog.dog_size, dog.dog_weight,
-                    dog.spayed_neutered, dog.vaccination_history]
+                    dog.dog_size, dog.dog_weight, dog.spayed_neutered,
+                    dog.vaccination_history, dog_id]
             )
+
             row = curr.fetchone()
             record = {}
             for i, column in enumerate(curr.description):

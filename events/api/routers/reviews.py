@@ -195,6 +195,33 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
+# @router.get("/api/event/{event_id}/reviews/")
+# def get_reviews_for_event(event_id: int, response: Response):
+#     try:
+#         with psycopg.connect() as conn:
+#             with conn.cursor() as curr:
+#                 cur.execute(
+#                     """
+#                     SELECT
+#                         review_id,
+#                         reviewer_username,
+#                         account_id,
+#                         review_event,
+#                         event_id,
+#                         attendee_rating,
+#                         review_description,
+#                         location_rating
+#                     FROM reviews
+#                     WHERE event_id= %s;
+#                     """, [event_id]
+#                 )
+#                 row = cur.fetchall()
+#                 record = {}
+
+#                 for i, column in enumerate(cur.description):
+#                     record[column.name] = row[i]
+#                 return record
+
 
 # --- Get all event reviews by account ID --- #
 @router.get("/api/event/reviews/account={account_id}")

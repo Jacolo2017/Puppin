@@ -12,7 +12,7 @@ class LoggedinNav extends React.Component{
         }
 
   return (
-    <nav className="flex fixed justify-between items-center bg-white shadow-lg w-screen">
+    <nav className="flex fixed justify-between items-center bg-white shadow-lg w-screen z-50">
             <div className='px-4 cursor-pointer'>
                 <h2 className="text-3xl text-gray-800 font-bold">P<span className="text-red-600">U</span>PP<span className="text-red-800">I</span><span className="text-green-800">N</span></h2>
             </div>
@@ -20,6 +20,7 @@ class LoggedinNav extends React.Component{
 
                 <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/event/home'>Events</Link>
                 <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/profile'>Profile</Link>
+                <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/profile/public'>PPProfile</Link>
                 <a href="http://localhost:3000/event/create" className="text-gray-600 hover:text-gray-800 hover:underline">Create Event</a>
 
                 <a href="https://gitlab.com/purely-puptonic/puppin" className="text-gray-600 hover:text-gray-800 hover:underline"><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' className='h-[20px]'></img></a>

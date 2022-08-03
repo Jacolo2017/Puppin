@@ -15,9 +15,19 @@ export default function Events(){
   let [userData, setUserData] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
+  let [storage, setStorage] = useState([])
   
-
+  function getWeaknesses(){
+    return Promise.all(
+    eventData.map((eventid) =>
+        fetch(`http://localhost:8000/api/event/${eventid.event_id}/reviews`)
+        .then(response => response.json())
+        
+        )
+    )
+}
   useEffect(() => {
+    
     fetch(`http://localhost:8000/api/events`)
     .then(res => res.json())
     .then(res => setEventData(res))
@@ -26,11 +36,43 @@ export default function Events(){
     .then(res2 => res2.json())
     .then(res2 => res2.flatMap(id => id.account_id))
     .then(res2=>setUserData(res2))
+
+    fetch(`http://localhost:8000/api/event/4/reviews/`)
+    
   }
- 
+  
   
   
   , [])
+// if eventid in eventData is the same as event id in reviews, add the corresponding review in that eventdata object
+  useEffect(()=> {
+    
+    // console.log(getWeaknesses())
+    getWeaknesses()
+      .then((res)=> {
+        for (const anEvent of eventData){
+          console.log("this is an eventid", anEvent.event_id)
+          for (let reviewlist of res){
+            for (const review of reviewlist){
+            console.log("this is a reviews event id", review.event_id)
+            console.log(reviewlist)
+              if (review.event_id == anEvent.event_id && anEvent["review"] == undefined ){
+                anEvent["review"] = []
+                console.log("shoudl be empty", anEvent["review"])
+                anEvent["review"].push(review);
+                
+                }
+              else if (review.event_id == anEvent.event_id){
+                anEvent["review"].push(review);
+              }
+            }
+            }
+          }
+        
+        });
+      
+   },
+  [eventData])
   
   
   // useEffect(() => {
@@ -40,7 +82,7 @@ export default function Events(){
   // }, [])
 
   
-  console.log(eventData)
+  
 
   return(
     <div className='w-screen py-20 flex' id="about">
@@ -71,7 +113,7 @@ export default function Events(){
                   }}
                   className='border rounded-xl shadow-md text-center p-6 bg-gray-100'
                   >
-                    <motion.h1>{item.event_name}</motion.h1>
+                    <motion.h1>{item.event_name} by {item.username}</motion.h1>
                     <motion.h2>{item.event_date_time}</motion.h2>
                     
                     {isOpen && (
@@ -81,7 +123,8 @@ export default function Events(){
                       transition={{duration: 1}}
                       layout
                       >
-                        <p>testing if this works please work omfg I will legit die for this</p>
+                        {item["review"] != null ? item.review.map(review => <motion.div>{review.reviewer_username} went! They says "{review.review_description}"</motion.div>): ""}
+                        
                       </motion.div>
                     )}
                   </motion.div>

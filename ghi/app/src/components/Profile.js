@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { FaDog } from 'react-icons/fa';
-import { BsBookHalf, BsCalendarEvent } from 'react-icons/bs';
-import Developers from './Developers';
 import { Link } from 'react-router-dom';
 import ProfileAbout from './profile page components/ProfileAbout'
 import ProfileDogs from './profile page components/ProfileDogs'
@@ -17,6 +14,7 @@ export default function Profile(props) {
   let [userDogData, setuserDogData] = useState();
   let [gotToken, setGotToken] = useState(false)
   let [dogsData, setDogsData] = useState();
+  let [eventsData, setEventsData] = useState();
 
   if (props.token && gotToken == false) {
     fetch(`http://localhost:8001/api/currentuser/${props.token}`)
@@ -30,6 +28,9 @@ export default function Profile(props) {
     fetch(`http://localhost:8001/api/accounts/${props.currentUser}/dogs`)
       .then(res1 => res1.json())
       .then(res1 => setuserDogData(res1))
+    fetch(`http://localhost:8001/api/accounts/${props.currentUser}/events`)
+    .then(response2 => response2.json())
+    .then(response2 => setEventsData(response2))
       
     setGotToken(true)
   }
@@ -41,9 +42,9 @@ export default function Profile(props) {
 
   const PageDisplay = () => {
     if (page === 0) {
-      return <ProfileReviews />
+      return <ProfileReviews currentUser={currentUser}/>
     } else if (page === 1) {
-      return <ProfileEvents />
+      return <ProfileEvents currentUser={currentUser } eventsData={eventsData}/>
     } else if (page === 2) {
       return <ProfileDogs userDogData={userDogData}/>
     } else {
@@ -69,8 +70,9 @@ function pageChange(index) {
           <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src='https://www.thesprucepets.com/thmb/YQzfza2oKOCzQIvX-K66BRi1DjI=/1080x1080/filters:no_upscale():max_bytes(150000):strip_icc()/30078352_448703938920062_6275637137232625664_n-5b0de8c443a1030036f9e15e.jpg' />
         </div>
       </div>
-      <div className='text-center mt-6 text-3xl text-fBlack font-bold'>
-        {userData ? userData.username : ''}
+      <div className='flex justify-center items-center'>
+        <div className='text-center mt-12 text-3xl text-fBlack font-bold'>{userData ? userData.username : ''}</div>
+        <Link to='/profile/update' className='flex px-6 bg-green-400 rounded-xl font-bold uppercase w-30 text-center mt-12 ml-6 hover:bg-green-500'>Edit</Link>
       </div>
       <div className='border border-gray-800 mt-6 border-opacity-30' />
       <div className='flex justify-center px-8'>

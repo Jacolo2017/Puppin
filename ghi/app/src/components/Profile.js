@@ -1,4 +1,8 @@
 import React, { useState, useEffect} from 'react';
+import {FaDog} from 'react-icons/fa';
+import {BsBookHalf, BsCalendarEvent} from 'react-icons/bs';
+import Developers from './Developers';
+import { Link } from 'react-router-dom';
 
 export default function Profile(props){
 
@@ -30,7 +34,12 @@ export default function Profile(props){
   
 
     return(
-        <div className="shadow">
+      <div>
+        
+      </div>
+    )
+}
+{/* <div className="shadow w-screen">
         <div className="h-[300px] flex justify-center">
           <div className="object-cover w-full h-full bg-[#FFB17A]"/>
           <div className=" flex absolute -bottom-8 gap-3">
@@ -44,7 +53,7 @@ export default function Profile(props){
             />
           </div>
         </div>
-        <div className='grid grid-cols-3'>
+        <div className='grid grid-cols-3 shadow-xl'>
             <div className='grid grid-rows-5 px-4 gap-4 py-8'>
                 <div className='font-bold uppercase'>{userData ? userData.username : ''}</div>
                 <div className='font-semibold text-gray-600'>{userData ? userData.gender : ''}</div>
@@ -65,8 +74,13 @@ export default function Profile(props){
               <button className=' rounded-xl uppercase font-semibold border border-gray-800 w-[130px] bg-[#4F4789] hover:bg-[#6a60b8] text-gray-200'>edit profile</button>
             </div>
         </div>
-      </div>
-
-      //comment
-    )
-}
+        <div className='pt-4 bg-gray-100'>
+          <div className='pt-3 flex items-center justify-center'>
+            <div className='flex space-x-4 gap-9'>
+              <div className=''>Reviews</div>
+              <div className=''>Events</div>
+              <div className=''>Dogs</div>
+            </div>
+          </div>
+        </div>
+      </div> */}

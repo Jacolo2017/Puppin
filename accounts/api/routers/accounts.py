@@ -306,7 +306,7 @@ def get_account(account_id: int, response: Response):
         print(exc.message)
 
 
-@router.get("/api/accounts/by_user/{username}")
+@router.get("/api/accounts/by_username/{username}")
 def get_account_by_username(username: str, response: Response):
     try:
         print("okay we tried")
@@ -314,8 +314,8 @@ def get_account_by_username(username: str, response: Response):
             with conn.cursor() as cur:
                 cur.execute(
                         """
-                        SELECT first_name, last_name, email, username,
-                        date_of_birth, city, state, gender,
+                        SELECT first_name, last_name, email, username, 
+                        date_of_birth, city, state, gender, account_id,
                             photo_url, about
                         FROM accounts
                         WHERE username = %s;
@@ -504,7 +504,7 @@ def get_account_dogs(account_id: int, response: Response):
             curr.execute("""
                 SELECT d.dog_id, d.dog_name, d.dog_about, d.dog_breed, d.dog_age,
                 d.dog_photo, d.dog_temperament, d.dog_size, d.dog_weight, d.spayed_neutered,
-                d.vaccination_history
+                d.vaccination_history, d.dog_gender
                 FROM public.dogs AS d
                     WHERE (d.account_id = %s)
             """, [account_id])

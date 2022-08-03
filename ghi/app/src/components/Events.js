@@ -4,8 +4,8 @@ import { FreeMode } from 'swiper'
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import { AnimatePresence, motion } from 'framer-motion'
-
-
+import { Link } from 'react-router-dom';
+import PublicProfile from './PublicProfile';
 
 
 export default function Events(){
@@ -105,7 +105,7 @@ export default function Events(){
 
                 <SwiperSlide className='pt-4 rounded-sm'>
                   <motion.div
-                  onClick={() => setIsOpen(!isOpen)}
+                  
                   transition={{ layout: {duration: 1, type: 'spring' }}}
                   layout
                   style={{
@@ -113,7 +113,8 @@ export default function Events(){
                   }}
                   className='border rounded-xl shadow-md text-center p-6 bg-gray-100'
                   >
-                    <motion.h1>{item.event_name} by {item.username}</motion.h1>
+                    <button onClick={() => setIsOpen(!isOpen)}>open </button>
+                    <motion.h1>{item.event_name} by <Link to={`/user/${item.username}`}>{item.username}</Link></motion.h1>
                     <motion.h2>{item.event_date_time}</motion.h2>
                     
                     {isOpen && (

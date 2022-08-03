@@ -17,7 +17,7 @@ export default function Events(){
   const [isOpen, setIsOpen] = useState(false);
   let [storage, setStorage] = useState([])
   
-  function getWeaknesses(){
+  function getReviewsFromEvents(){
     return Promise.all(
     eventData.map((eventid) =>
         fetch(`http://localhost:8000/api/event/${eventid.event_id}/reviews`)
@@ -48,7 +48,7 @@ export default function Events(){
   useEffect(()=> {
     
     // console.log(getWeaknesses())
-    getWeaknesses()
+    getReviewsFromEvents()
       .then((res)=> {
         for (const anEvent of eventData){
           console.log("this is an eventid", anEvent.event_id)

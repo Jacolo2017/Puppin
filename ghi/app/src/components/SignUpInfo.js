@@ -10,7 +10,6 @@ const SignUpInfo = ({formData, setFormData}) => {
         <label>Password</label>
         <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="password" value={formData.account_password} onChange={(event) => setFormData({...formData, account_password: event.target.value})}/>
     </div>
-    
   )
 }
 

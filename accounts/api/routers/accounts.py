@@ -301,7 +301,7 @@ def get_account(account_id: int, response: Response):
             with conn.cursor() as cur:
                 cur.execute(
                         """
-                        SELECT first_name, last_name, email, username,
+                        SELECT account_id, first_name, last_name, email, username,
                         date_of_birth, city, state, gender,
                             photo_url, about
                         FROM accounts

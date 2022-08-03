@@ -3,7 +3,7 @@ import { set } from 'react-hook-form';
 
 const AccountUpdate = (props) => {
     let [gotToken, setGotToken] = useState(false)
-    const [UserAccount, setUserAccount] = useState([])
+    const [UserAccount, setUserAccount] = useState()
     const [formData, setFormData] = useState({
         first_name: "",
         last_name: "",
@@ -33,7 +33,8 @@ const AccountUpdate = (props) => {
         event.preventDefault()
         const data = {...formData}
         const accountId = UserAccount
-        const accountUrl = `http://localhost:8001/api/accounts/update/${accountId}`
+        console.log(accountId)
+        const accountUrl = `http://localhost:8001/api/accounts/update/${accountId.account_id}`
         const fetchConfig = {
             method: 'put',
             body: JSON.stringify(data),

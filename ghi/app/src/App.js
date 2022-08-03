@@ -41,7 +41,6 @@ export default function App() {
             <Route path='registration'>
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>
-              <Route path="account/update" element={<AccountUpdate token={token}/>}/>
               <Route path="dog" element={<DogRegister token={token}/>}/>
               <Route path="dog/update" element={<DogUpdate token={token}/>}/>
             </Route>
@@ -50,7 +49,8 @@ export default function App() {
               <Route path='home'element={[<LoggedinNav logout={logout} token={token}/>, <Events/>, <ReviewsGivenSlide token={token}/>, <ReviewsByEvent/>]} />
             </Route>
             <Route path='profile'>
-              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile currentUser={currentUser} token={token}/>]} />          
+              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile currentUser={currentUser} token={token}/>]} />
+              <Route path="update" element={<AccountUpdate token={token}/>}/>         
             </Route>
             <Route path='user/:username' element={[ <PublicProfile/>]} />            
           </Routes>

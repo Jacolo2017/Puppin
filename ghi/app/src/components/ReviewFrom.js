@@ -12,31 +12,55 @@ const CreateReview = (props) => {
     const [existingReviews, setExistingReviews] = useState()
     const {register, handleSubmit} = useForm();
 
-
+    // checking conditions and calling loadUserToken
     if (props.token && gotToken == false){
         loadUserToken()
         }
         
+    // loads userInfo (id, username, account_password (hashed) based on token)    
     async function loadUserToken(){
         if (props.token && gotToken == false){
         await fetch(`http://localhost:8001/api/currentuser/${props.token}`)
             .then(response => response.json())
             .then(response => setUserInfo(response));
-        // fetch(`http://localhost:8001/api/currentuser/${props.token}`)
-        //     .then(response => response.json())
-        //     .then(response => fetch(`http://localhost:8000/api/events/myevents=${response.id}/`))
-        //     .then(response => response.json())
-        //     .then(response => setEvents(response));
         setGotToken(true);
         }
     }
+    // calls load existing reviews by user after the userInfo is loaded and if there is no existingReviews loaded
+    useEffect(() => {
+        if(userInfo && existingReviews == undefined){
+        loadExistingReviews()}
+    }, [userInfo])
+
+    // querries API and pulls in reviews already submitted by the user and turns data into a list of event IDs reviewed by user
+    const loadExistingReviews = async () =>{
+        const url = `http://localhost:8000/api/event/reviews/account=${userInfo.id}`
+        let fetchConfig = {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include"
+        }
+        let response = await fetch(url, fetchConfig)
+        if (response.ok) {
+            const data = await response.json()
+
+            let existing = []
+            for(let i of data){
+                existing.push(i['event_id'])
+            }
+            console.log("existing reviews: ", existing)
+            setExistingReviews(existing)
+    }}
     
+    // Calls the function to load the event selection menu, checks is existingReviews has loaded
     useEffect(() => {
         if(existingReviews){
         loadEventSelectionMenu()}
     }, [existingReviews])
     
-
+    // makes API call to get all events user is registered to and filters the events that have already been reviewed
     const loadEventSelectionMenu = async () => {
         const response = await fetch(`http://localhost:8000/api/events/myevents=${userInfo.id}/`)
         if(response.ok){
@@ -46,7 +70,7 @@ const CreateReview = (props) => {
             }
         }
 
-
+    // loads user selected event from the drop down table and pulls in the event details and loads the attendees at the event.
     const loadSelectedEvent = async (event) => {
         event.preventDefault();
         const eventId = event.target.value
@@ -79,35 +103,12 @@ const CreateReview = (props) => {
             }
     }
 
-    useEffect(() => {
-        if(userInfo && existingReviews == undefined){
-        loadExistingReviews()}
-    }, [userInfo])
+    
 
-    const loadExistingReviews = async () =>{
-        const url = `http://localhost:8000/api/event/reviews/account=${userInfo.id}`
-        let fetchConfig = {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include"
-        }
-        let response = await fetch(url, fetchConfig)
-        if (response.ok) {
-            const data = await response.json()
-
-            let existing = []
-            for(let i of data){
-                existing.push(i['event_id'])
-            }
-            console.log("existing reviews: ", existing)
-            setExistingReviews(existing)
-    }}
 
 
     const onSubmit = async (reviewData) =>{
-        // filter out the attendee ratings from the form data
+        // filtering out the attendee ratings from the form data
         let ratings ={}
         for (let i in reviewData){
             console.log(i)
@@ -135,7 +136,7 @@ const CreateReview = (props) => {
             const newReview = await response.json()
             console.log(newReview)
         }
-        // submitting data for each attendee
+        // submitting all attendee rating data for each attendee
         const reviewer = userInfo.id
         const eventId = selectedEvent.event_id
         const attendeeFetchConfig = {
@@ -160,7 +161,7 @@ const CreateReview = (props) => {
 return (
 <div className='flex flex-col text-gray-1000 py-2'>
     <div className='flex flex-col justify-center'>  
-            <form className='max-w-[600px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
+            <form className='max-w-[600px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl'>
                 <h2 className='text-3xl text-black uppercase font-semibold text-center'>Review My Events</h2>
                 <div className='flex flex-col text-gray-900 py-2'>
                     <label>Select Event to Review</label>
@@ -173,6 +174,9 @@ return (
                                 </option>)})} 
                     </select>
                 </div>
+            </form>
+            <form disabled="disabled" className='max-w-[600px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
+            <fieldset>
                 <div className='flex flex-col text-gray-900 py-2'>
                 <label>Event Review</label>
                 <input {...register("review_description")} placeholder = "Tell us about the event" id='the id' className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" />
@@ -203,6 +207,7 @@ return (
                 <div className='flex justify-between item-center'>
                   <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Submit</button>
                 </div>
+            </fieldset>
             </form>
     </div>
 </div>

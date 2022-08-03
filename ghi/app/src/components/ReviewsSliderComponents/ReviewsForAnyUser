@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 export default function ReviewsByEvent(props){
     let [eventReviews, setEventReviews] = useState(["Loading"]);
     let [gotToken, setGotToken] = useState(false);
-
+    let [accountId, setAccountId] = useState()
     
     const openModel = () => {
         setOpen(true);
@@ -19,7 +19,7 @@ export default function ReviewsByEvent(props){
     const [open, setOpen] = useState(false);
 
     useEffect(()=>{
-        fetch(`http://localhost:8000/api/event/4/reviews/`)
+        fetch(`http://localhost:8000/api/event/reviews/account=${accountId}`)
             .then(response => response.json())
             .then(response => setEventReviews(response));
         

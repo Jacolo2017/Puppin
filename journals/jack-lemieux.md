@@ -62,3 +62,7 @@ Last week to sprint through the final touches. Today I am finalizing all the CRU
 
 CRUD has been tested and is 100% operational (insert evil Palpatine laugh here). Now to dive into the front end and create the profile pages. the user view of their profile has run into a road bump. I need to map both accountData and dogData. I can't have two map functions without breaking the page. I'm working with the idea of flat mapping and I hope it will work out, but I am not really sure to be honest. I am planning on reaching out to Zhyn to see if she has some insights, her breathing JS and all.  
 
+## August 3, 2022
+
+Sometimes I just really need to slow down. I had the delete completely functional I was just missing one parameter. Roger is the cool headed leader I think our group really needed. In other news, Cooper and I spent almost an hour trying to map data in our profile page only to realize we were mapping an object not  an array. We realized, with the help of Tristen, we can use a ?: based function in our JSX directly. We just had to look back at how we made our project beta and called multiple data sets and used them in the JSX. 
+

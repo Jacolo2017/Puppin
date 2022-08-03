@@ -74,7 +74,6 @@ const DogUpdate = (props) => {
             const response = await fetch(dogUrl, fetchConfig)
             if (response.ok) {
                 const dogInfo = await response.json()
-                console.log(dogInfo)
                 setFormData(dogInfo)
                 setCheck(dogInfo.spayed_neutered)
             }
@@ -86,7 +85,7 @@ const DogUpdate = (props) => {
         const data = {...formData}
         const dogId = selectedDog
         data.spayed_neutered = check
-        // console.log(data)
+        console.log(JSON.stringify(data))
         const dogUrl = `http://localhost:8001/api/dog/${dogId}`
         const fetchConfig = {
             method: 'put',

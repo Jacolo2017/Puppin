@@ -77,7 +77,7 @@ class AccountUpdate(BaseModel):
     email: Optional[str] = None
     username: Optional[str] = None
     account_password: Optional[str] = None
-    date_of_birth: Optional[str] = None
+    # date_of_birth: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
     gender: Optional[str] = None
@@ -321,24 +321,42 @@ def get_account(account_id: int, response: Response):
         print(exc.message)
 
 
-@router.put("/api/accounts/{account_id}", response_model=AccountUpdate)
+@router.put("/api/accounts/update/{account_id}", response_model=AccountUpdate)
 def update_account(account_id: str, account: AccountUpdate):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             hashed_password = pwd_context.hash(account.account_password)
             curr.execute(
                     """
-                    INSERT INTO accounts (first_name, last_name, email,
-                        username, account_password, date_of_birth, city,
-                        state, gender, photo_url, about)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    UPDATE accounts
+                    SET first_name = %s,
+                        last_name = %s,
+                        email = %s,
+                        username = %s,
+                        account_password = %s,
+                        city = %s,
+                        state = %s,
+                        gender = %s,
+                        photo_url = %s,
+                        about = %s
+                    WHERE account_id = %s
+                    RETURNING
+                        first_name,
+                        last_name,
+                        email,
+                        username,
+                        account_password,
+                        city,
+                        state,
+                        gender,
+                        photo_url,
+                        about;
                     """,
                     [account.first_name, account.last_name,
                         account.email, account.username,
-                        hashed_password, account.date_of_birth,
-                        account.city, account.state,
+                        hashed_password, account.city, account.state,
                         account.gender, account.photo_url,
-                        account.about]
+                        account.about, account_id]
                 )
             row = curr.fetchone()
             record = {}
@@ -465,23 +483,44 @@ def get_dog(dog_id: int, response: Response):
 
 @router.put("/api/dog/{dog_id}", response_model=DogUpdate)
 def update_dog(dog_id: str, dog: DogUpdate):
+    print("ping")
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
             curr.execute(
                 """
-                INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
-                    dog_gender, dog_photo, dog_temperament, dog_about,
-                    dog_size, dog_weight, spayed_neutered,
-                    vaccination_history)
-                    )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                UPDATE dogs
+                SET dog_name = %s,
+                    dog_breed = %s,
+                    dog_age = %s,
+                    dog_gender = %s,
+                    dog_photo = %s,
+                    dog_temperament = %s,
+                    dog_about = %s,
+                    dog_size = %s,
+                    dog_weight = %s,
+                    spayed_neutered = %s,
+                    vaccination_history = %s
+                WHERE dog_id = %s
+                RETURNING
+                    dog_name,
+                    dog_breed,
+                    dog_age,
+                    dog_gender,
+                    dog_photo,
+                    dog_temperament,
+                    dog_about,
+                    dog_size,
+                    dog_weight,
+                    spayed_neutered,
+                    vaccination_history;
                 """,
                 [dog.dog_name, dog.dog_breed, dog.dog_age,
                     dog.dog_gender, dog.dog_photo,
                     dog.dog_temperament, dog.dog_about,
-                    dog.dog_size, dog.dog_weight,
-                    dog.vaccination_history]
+                    dog.dog_size, dog.dog_weight, dog.spayed_neutered,
+                    dog.vaccination_history, dog_id]
             )
+
             row = curr.fetchone()
             record = {}
             for i, column in enumerate(curr.description):

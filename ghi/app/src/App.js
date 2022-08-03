@@ -17,6 +17,9 @@ import CreateEvent from './components/CreateEvent';
 import DogUpdate from './components/DogUpdate';
 import CreateReview from './components/ReviewFrom';
 import React, { useState, useEffect } from 'react';
+import PublicProfile from './components/PublicProfile';
+import AccountUpdate from './components/AccountUpdate';
+
 
 export default function App() {
   const [ token, login, logout] = useToken();
@@ -38,15 +41,18 @@ export default function App() {
             <Route path='registration'>
               <Route path="login" element={<Login  login={login} token={token}/>}/>
               <Route path="create" element={<SignUp token={token}/>}/>
+              <Route path="account/update" element={<AccountUpdate token={token}/>}/>
               <Route path="dog" element={<DogRegister token={token}/>}/>
+              <Route path="dog/update" element={<DogUpdate token={token}/>}/>
             </Route>
             <Route path='event'>
             <Route path = 'create'element = {<CreateEvent token={token}/>}/>
               <Route path='home'element={[<LoggedinNav logout={logout} token={token}/>, <Events/>, <ReviewsGivenSlide token={token}/>, <ReviewsByEvent/>]} />
             </Route>
             <Route path='profile'>
-              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile currentUser={currentUser} token={token}/>]} />          
+              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile/>]} /> 
             </Route>
+            <Route path='user/:username' element={[ <PublicProfile/>]} />            
           </Routes>
     </BrowserRouter>
     </>

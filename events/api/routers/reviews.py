@@ -12,8 +12,8 @@ router = APIRouter()
 
 
 class EventReviewIn(BaseModel):
-    reviewer_username: str
     # review_event_id: int
+    reviewer_username: str
     review_event: str
     review_description: str
     location_rating: str
@@ -56,10 +56,10 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
             try:
                 cur.execute(
                     """ 
-                        INSERT INTO reviews 
-                        (reviewer_username,
-                        account_id,
+                        INSERT INTO reviews
+                        (account_id,
                         event_id,
+                        reviewer_username,
                         review_event,
                         review_description,
                         location_rating)
@@ -68,8 +68,8 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                         event_id, review_event, review_description, location_rating;
                     """,
                     [
-                        review.reviewer_username, account_id,
-                        event_id, review.review_event,
+                        account_id,
+                        event_id, review.reviewer_username, review.review_event,
                         review.review_description,
                         review.location_rating
                     ]
@@ -226,6 +226,7 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
 # --- Get all event reviews by account ID --- #
 @router.get("/api/event/reviews/account={account_id}")
 def get_event_reviews_for_account(account_id: int, response: Response):
+    print('get_event_reviews_for_account pinged')
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:

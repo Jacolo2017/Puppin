@@ -61,7 +61,7 @@ export default function ReviewsByAnyUser(props){
               slidesPerView={isOpen ? 1 : 3}
               spaceBetween={100}
               >
-                {eventReviews.map(item => (
+                {eventReviews?.map(item => (
 
                 <SwiperSlide className='pt-4 rounded-sm' onClick={() => setIsOpen(!isOpen)}>
                   <motion.div

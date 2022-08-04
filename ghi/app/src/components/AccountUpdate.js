@@ -21,7 +21,7 @@ const AccountUpdate = (props) => {
         console.log("yes token")
         fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`http://localhost:8001/api/accounts/${response.id}`)
+            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}`)
                 .then(response => response.json())
                 .then(response => setUserAccount(response)))
 

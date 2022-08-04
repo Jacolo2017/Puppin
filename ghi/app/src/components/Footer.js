@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { AiFillLinkedin, AiFillGithub } from 'react-icons/ai'
 const Footer = () => {
     return (
@@ -6,10 +7,10 @@ const Footer = () => {
             <div className='w-screen grid grid-cols-3 py-8 px-4'>
                 <div>
                     <h2 className='text-2xl font-semibold uppercase py-3'>Registration</h2>
-                    <ul>
-                        <li className='py-2'>Sign In</li>
-                        <li className='py-2'>Sign Up</li>
-                    </ul>
+                    <div className='grid grid-rows-2'>
+                        <Link className='py-2' to='/registration/login'>Sign In</Link>
+                        <Link className='py-2' to='/registration/create'>Sign Up</Link>
+                    </div>
                 </div>
                 <div className='grid grid-rows-1 gap-2 text-center'>
                     <h2 className='text-2xl font-semibold uppercase py-3'>Developers</h2>

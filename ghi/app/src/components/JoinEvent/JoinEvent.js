@@ -44,7 +44,7 @@ export default function JoinEvent(props){
     const onSubmit = async function(data){
         console.log("submit button hit")
         console.log(data)
-        const createeventURL = `http://localhost:8000/api/events/${currentUser}/${userSelectedDog}`
+        const joinEventURL = `http://localhost:8000/api/events/${params.event}/?dog_id=${userSelectedDog}&account_id=${currentUser}`
         const fetchConfig = {
           method: 'post',
           body: JSON.stringify(data),
@@ -52,7 +52,7 @@ export default function JoinEvent(props){
               'Content-Type': 'application/json',
           }
         }
-        const response = await fetch(createeventURL, fetchConfig);
+        const response = await fetch(joinEventURL, fetchConfig);
         if (response.ok){
             console.log("response ok")
             reset()

@@ -18,7 +18,7 @@ import DogUpdate from './components/DogUpdate';
 import CreateReview from './components/ReviewFrom';
 import React, { useState, useEffect } from 'react';
 import PublicProfile from './components/PublicProfile';
-
+import JoinEvent from './components/JoinEvent/JoinEvent';
 
 export default function App() {
   const [ token, login, logout] = useToken();
@@ -50,7 +50,8 @@ export default function App() {
             <Route path='profile'>
               <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile currentUser={currentUser} token={token}/>]} />          
             </Route>
-            <Route path='user/:username' element={[ <PublicProfile/>]} />            
+            <Route path='user/:username' element={[ <PublicProfile/>]} />
+            <Route path='join-event/:event' element={[ <JoinEvent token={token}/> ]} />                 
           </Routes>
     </BrowserRouter>
     </>

@@ -427,8 +427,38 @@ def accounts_list(page: int = 0):
             return results
 
 
+@router.get("/api/accounts/{account_id}/events/attended")
+def get_attended_events_of_user(account_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT eventsusersjunction.event_id, eventsusersjunction.account_id, events.event_name
+                FROM
+                eventsusersjunction
+                INNER JOIN
+                events
+                ON
+                events.event_id = eventsusersjunction.event_id
+                WHERE
+                eventsusersjunction.account_id = %s
+                """, [account_id]
+            )
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(cur.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
+
+
+
 @router.get("/api/accounts/{account_id}/events")
-def get_associated_events_of_user(account_id: int, response: Response):
+def get_hosted_events_of_user(account_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(

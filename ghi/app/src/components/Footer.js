@@ -14,16 +14,16 @@ const Footer = () => {
                 </div>
                 <div className='grid grid-rows-1 gap-2 text-center'>
                     <h2 className='text-2xl font-semibold uppercase py-3'>Developers</h2>
-                    <a>Mark</a>
-                    <a>Jack</a>
-                    <a>Roger</a>
-                    <a>Cooper</a>
+                    <a href='#contact'>Mark</a>
+                    <a href='#contact'>Jack</a>
+                    <a href='#contact'>Roger</a>
+                    <a href='#contact'>Cooper</a>
                 </div>
                 <div className='grid grid-rows-1text-center'>
                     <h2 className='text-2xl font-semibold uppercase py-3'>Navigation</h2>
-                    <a>Home</a>
-                    <a>About</a>
-                    <a>Developers</a>
+                    <a href=''>Home</a>
+                    <a href='#about'>About</a>
+                    <a href='#contact'>Developers</a>
                 </div>
             </div>
         </div>

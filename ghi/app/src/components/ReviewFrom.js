@@ -103,7 +103,7 @@ const CreateReview = (props) => {
             }
         };
 
-        const attendeeUrl = `http://localhost:8000/api/events/${eventId}/users`
+        const attendeeUrl = `http://localhost:8000/api/events/${eventId}/usersdogs`
         fetchConfig = {
             method: 'GET',
             headers: {

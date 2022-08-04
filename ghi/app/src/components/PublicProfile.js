@@ -13,16 +13,21 @@ export default function PublicProfile() {
     let [eventsData, setEventsData] = useState();
 
     useEffect(() => {
-        fetch(`http://localhost:8001/api/accounts/by_username/${params.username}`)
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/by_username/${params.username}`)
             .then(response => response.json())
             .then(response => setUserData(response))
-        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${userData.account_id}/dogs`)
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/by_username/${params.username}`)
+            .then(response => response.json())
+            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.account_id}/dogs`))
             .then(res1 => res1.json())
-            .then(res1 => setuserDogData(res1))
-        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${userData.account_id}/events`)
+            .then(res1 => setuserDogData(res1));
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/by_username/${params.username}`)
+            .then(response3 => response3.json())
+            .then(response3 => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response3.account_id}/events`))
             .then(response2 => response2.json())
             .then(response2 => setEventsData(response2))
     }, [])
+
 
     const [page, setPage] = useState(0);
     const pageTitles = ["Reviews", "Events", "Dogs", "About"]
@@ -38,9 +43,9 @@ export default function PublicProfile() {
         if (page === 0) {
             return <ReviewsByAnyUser userData={userData} />
         } else if (page === 1) {
-            return <ProfileEvents userData={userData} eventsData={eventsData}/>
+            return <ProfileEvents userData={userData} eventsData={eventsData} />
         } else if (page === 2) {
-            return <ProfileDogs userDogData={userDogData}/>
+            return <ProfileDogs userDogData={userDogData} />
         } else {
             return <ProfileAbout userData={userData} />
         }
@@ -48,18 +53,18 @@ export default function PublicProfile() {
     function pageChange(index) {
 
         const changePage = (e) => {
-          e.preventDefault()
-    
+            e.preventDefault()
+
         }
         setPage(index)
-      }
+    }
 
 
 
     return (
         <div className='px-44 bg-gray-50'>
             <div className='relative h-96 rounded-b flex justify-center'>
-                <img className='object-cover w-full h-full rounded-b shadow-sm' src='https://snappygoat.com/o/ddb9495535cdadf967535da29c8e058f2935a972/Paw-Prints-Background.jpg' />
+                <img className='object-cover w-full h-full rounded-b shadow-sm' src='https://img.freepik.com/premium-vector/seamless-pattern-with-black-white-doodle-dogs_102034-127.jpg?w=1060' />
                 <div className='absolute -bottom-6 '>
                     <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src={userData ? userData.photo_url : 'https://riverlegacy.org/wp-content/uploads/2021/07/blank-profile-photo.jpeg'} />
                 </div>

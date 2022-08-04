@@ -60,7 +60,7 @@ const DogRegister = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = { ...formData }
-    const dogUrl = "http://localhost:8001/api/dog/create"
+    const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/create`
     const fetchConfig = {
       method: 'post',
       body: JSON.stringify(data),

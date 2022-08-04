@@ -42,7 +42,7 @@ export default function Profile(props) {
 
   const PageDisplay = () => {
     if (page === 0) {
-      return <ReviewsByCurrentUser token={props.token}/>
+      return <ReviewsByCurrentUser token={props.token} />
     } else if (page === 1) {
       return <ProfileEvents currentUser={currentUser} eventsData={eventsData} />
     } else if (page === 2) {
@@ -65,7 +65,7 @@ export default function Profile(props) {
   return (
     <div className='px-44 bg-gray-50'>
       <div className='relative h-96 rounded-b flex justify-center'>
-        <img className='object-cover w-full h-full rounded-b shadow-sm' src='https://snappygoat.com/o/ddb9495535cdadf967535da29c8e058f2935a972/Paw-Prints-Background.jpg' />
+        <img className='object-cover w-full h-full rounded-b shadow-sm' src='https://img.freepik.com/premium-vector/seamless-pattern-with-heads-different-breeds-dogs_192280-226.jpg?w=826S' />
         <div className='absolute -bottom-6 '>
           <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src={userData ? userData.photo_url : ''} />
         </div>
@@ -90,7 +90,7 @@ export default function Profile(props) {
       <div className='py-4'>
         <PageDisplay />
       </div>
-      
+
     </div>
   )
 }

@@ -29,12 +29,12 @@ export default function ReviewsByCurrentUser(props) {
 
   if (props.token && gotToken == false) {
     console.log("yes token")
-    fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
-      .then(response => fetch(`http://localhost:8000/api/event/reviews/account=${response.id}`))
+      .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/event/reviews/account=${response.id}`))
       .then(response => response.json())
       .then(response => setUserReviews(response));
-    fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => setCurrentUser(response.username));
 
@@ -62,16 +62,13 @@ export default function ReviewsByCurrentUser(props) {
             slidesPerView={3}
             spaceBetween={100}
           >
-            {userReviews.map(item => (
-
+            {/* {userReviews.map(item => (
               <SwiperSlide className='pt-4 rounded-sm' >
                 <motion.div className='border rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px]' close={closeModel}>
                   <h2 className='text-xl font-semibold text-gray-800'>{item.review_event} by {currentUser}</h2>
                   <p className='text-gray-700 py-4'>{item.review_description}</p>
                 </motion.div>
-              </SwiperSlide>))}
-
-
+              </SwiperSlide>))} */}
           </Swiper>
         </div>
       </div>

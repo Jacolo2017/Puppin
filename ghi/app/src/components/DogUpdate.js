@@ -24,9 +24,9 @@ const DogUpdate = (props) => {
 
     if (props.token && gotToken == false) {
         console.log("yes token")
-        fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`http://localhost:8001/api/accounts/${response.id}/dogs`)
+            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`)
                 .then(response => response.json())
                 .then(response => setUserDogs(response)))
 
@@ -66,7 +66,7 @@ const DogUpdate = (props) => {
         event.preventDefault();
         const dog_Id = event.target.value
         setSelectedDog(event.target.value)
-        const dogUrl = `http://localhost:8001/api/dog/${dog_Id}`
+        const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dog_Id}`
         const fetchConfig = {
             method: 'GET',
             headers: {
@@ -90,7 +90,7 @@ const DogUpdate = (props) => {
         const dogId = selectedDog
         data.spayed_neutered = check
         console.log(JSON.stringify(data))
-        const dogUrl = `http://localhost:8001/api/dog/${dogId}`
+        const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dogId}`
         const fetchConfig = {
             method: 'put',
             body: JSON.stringify(data),

@@ -25,13 +25,13 @@ export default function ReviewsByCurrentUser(props) {
 
   }
   )
-
+  console.log(userReviews);
 
   if (props.token && gotToken == false) {
     console.log("yes token")
     fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
-      .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/event/reviews/account=${response.id}`))
+      .then(response => fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/event/reviews/account=${response.id}`))
       .then(response => response.json())
       .then(response => setUserReviews(response));
     fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
@@ -62,13 +62,14 @@ export default function ReviewsByCurrentUser(props) {
             slidesPerView={3}
             spaceBetween={100}
           >
-            {/* {userReviews.map(item => (
+            {userReviews.map(item => (
               <SwiperSlide className='pt-4 rounded-sm' >
                 <motion.div className='border rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px]' close={closeModel}>
-                  <h2 className='text-xl font-semibold text-gray-800'>{item.review_event} by {currentUser}</h2>
+                  <h2 className='text-xl font-semibold text-gray-800'>{item.review_event}</h2>
                   <p className='text-gray-700 py-4'>{item.review_description}</p>
+                  <p className='text-blue-700 py-4 font-bold text-3xl'>Rating: <span></span>{item.location_rating}</p>
                 </motion.div>
-              </SwiperSlide>))} */}
+              </SwiperSlide>))}
           </Swiper>
         </div>
       </div>

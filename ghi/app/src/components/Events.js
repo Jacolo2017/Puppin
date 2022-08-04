@@ -5,7 +5,7 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import PublicProfile from './PublicProfile';
 
 
@@ -17,7 +17,7 @@ export default function Events(){
 
   const [isOpen, setIsOpen] = useState(false);
   let [storage, setStorage] = useState([])
-  
+  const [joinEventOpen, setJoinEventOpen] = useState(false)
   function getReviewsFromEvents(){
     return Promise.all(
     eventData.map((eventid) =>
@@ -38,7 +38,7 @@ export default function Events(){
     .then(res2 => res2.flatMap(id => id.account_id))
     .then(res2=>setUserData(res2))
 
-    fetch(`http://localhost:8000/api/event/4/reviews/`)
+    
     
   }
   
@@ -52,14 +52,10 @@ export default function Events(){
     getReviewsFromEvents()
       .then((res)=> {
         for (const anEvent of eventData){
-          console.log("this is an eventid", anEvent.event_id)
           for (let reviewlist of res){
             for (const review of reviewlist){
-            console.log("this is a reviews event id", review.event_id)
-            console.log(reviewlist)
               if (review.event_id == anEvent.event_id && anEvent["review"] == undefined ){
                 anEvent["review"] = []
-                console.log("shoudl be empty", anEvent["review"])
                 anEvent["review"].push(review);
                 
                 }
@@ -75,6 +71,18 @@ export default function Events(){
    },
   [eventData])
   
+  function EventPastChecker(event){
+    const date = Date.parse(event)
+            console.log("now", Date.now())
+            console.log("event time", event)
+            if (Date.now() < date) {
+                console.log("event completed")
+                return true}
+            else {
+                return false
+            }
+  }
+  console.log(eventData)
   
   // useEffect(() => {
   //   fetch(`http://localhost:8001/api/accounts/${eventData}`)
@@ -82,7 +90,9 @@ export default function Events(){
   //   .then(res1 => setUserData(res1))
   // }, [])
 
-  
+  function JoinForm(){
+    return <Navigate to='/registration/login'/>
+  }
   
 
   return(
@@ -102,7 +112,7 @@ export default function Events(){
               slidesPerView={isOpen ? 1 : 3}
               spaceBetween={100}
               >
-                {eventData.map(item => (
+                {eventData.map((item, index) => (
 
                 <SwiperSlide className='pt-4 rounded-sm'>
                   <motion.div
@@ -118,7 +128,7 @@ export default function Events(){
                     <motion.h1>{item.event_name} by <Link to={`/user/${item.username}`}>{item.username}</Link></motion.h1>
                     <motion.h2>{item.event_date_time}</motion.h2>
                     <motion.h2>Hosted by : {item.username}</motion.h2>
-                    
+                    {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}><button className = "h-10 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" >Join this event </button></Link>: <div className = "text-xs">Event finished.</div>}
                     {isOpen && (
                       <motion.div
                       initial={{opacity: 0}}
@@ -130,6 +140,12 @@ export default function Events(){
                         
                       </motion.div>
                     )}
+                    {joinEventOpen && ( <motion.div
+                      initial={{opacity: 0}}
+                      animate={{opacity: 1}}
+                      transition={{duration: 1}}
+                      layout
+                      > hello </motion.div>)}
                   </motion.div>
                 </SwiperSlide>
                 ))}

@@ -3,11 +3,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode } from 'swiper'
 import { AnimatePresence, motion } from 'framer-motion'
 
-export default function ReviewsGivenSlide(props){
+export default function ReviewsByCurrentUser(props){
     let [userReviews, setUserReviews] = useState(["Loading"]);
     let [gotToken, setGotToken] = useState(false);
     let [currentUser, setCurrentUser] = useState();
     
+
     const openModel = () => {
         setOpen(true);
       };
@@ -43,8 +44,9 @@ export default function ReviewsGivenSlide(props){
         console.log("NONONO")
     }
         return(
-            <div className='w-screen py-20 ' id="about">
-                <div className='max-w-[1300px] mx-auto py-10 mt-1'>
+      
+            <div className='py-20 ' id="about">
+                <div className='w-full max-w-[1300px] mx-auto py-10 mt-1'>
                     <div className='text-center'>
                         <h2 className='text-2xl font-bold uppercase'>Your Reviews</h2>
                     </div>
@@ -72,6 +74,7 @@ export default function ReviewsGivenSlide(props){
                     </div>
                 </div>
             </div>
+         
           )
         }
         

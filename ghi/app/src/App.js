@@ -20,6 +20,7 @@ import React, { useState, useEffect } from 'react';
 import PublicProfile from './components/PublicProfile';
 import AccountUpdate from './components/AccountUpdate';
 
+import JoinEvent from './components/JoinEvent/JoinEvent';
 
 export default function App() {
   const [ token, login, logout] = useToken();
@@ -52,7 +53,8 @@ export default function App() {
               <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile currentUser={currentUser} token={token}/>]} />
               <Route path="update" element={<AccountUpdate token={token}/>}/>         
             </Route>
-            <Route path='user/:username' element={[ <PublicProfile/>]} />            
+            <Route path='user/:username' element={[ <PublicProfile/>]} />
+            <Route path='join-event/:event' element={[ <JoinEvent token={token}/> ]} />                 
           </Routes>
     </BrowserRouter>
     </>

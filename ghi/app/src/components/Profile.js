@@ -4,7 +4,7 @@ import ProfileAbout from './profile page components/ProfileAbout'
 import ProfileDogs from './profile page components/ProfileDogs'
 import ProfileEvents from './profile page components/ProfileEvents'
 import ProfileReviews from './profile page components/ProfileReviews'
-
+import ReviewsByCurrentUser from './ReviewsSliderComponents/ReviewsByCurrentUser';
 
 
 export default function Profile(props) {
@@ -42,7 +42,7 @@ export default function Profile(props) {
 
   const PageDisplay = () => {
     if (page === 0) {
-      return <ProfileReviews currentUser={currentUser}/>
+      return <ReviewsByCurrentUser token={props.token}/>
     } else if (page === 1) {
       return <ProfileEvents currentUser={currentUser } eventsData={eventsData}/>
     } else if (page === 2) {
@@ -90,6 +90,7 @@ function pageChange(index) {
       <div className='py-4'>
         <PageDisplay/>
       </div>
+      
     </div>
   )
 }

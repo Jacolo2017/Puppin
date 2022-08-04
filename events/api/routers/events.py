@@ -120,7 +120,7 @@ def get_all_users_and_dogs_from_event(event_id: int, response: Response):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT euj.account_id, accounts.first_name, dogs.dog_name, dogs.dog_photo, dogs.dog_id
+                SELECT euj.account_id, accounts.first_name, dogs.dog_name, dogs.dog_photo, dogs.dog_id, accounts.username, euj.event_id
                 FROM eventsusersjunction AS euj
                 INNER JOIN accounts ON euj.account_id = accounts.account_id
                 INNER JOIN dogsinevents ON euj.account_id = dogsinevents.account_id
@@ -230,8 +230,16 @@ def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
                     return record
                 except psycopg.errors.UniqueViolation:
                     return {"duplicate join"}
+            elif dog_id not in list_of_all_dogs_user_has and dog_id in list_of_all_dogs_in_event and account_id in list_of_all_users_in_event:
+                return {"You don't own this dog, wt* u doin! ALSO the dog IS ALREADY IN THE EVENT.YOURE ALSO ALREADY IN IT DUDE. Uyou messed up! THIS A RARE error. "}
+            elif account_id in list_of_all_users_in_event:
+                return {"you're already in the DANG event"}
+            elif dog_id in list_of_all_dogs_user_has:
+                return {"THIS AIINT YOOOOO DOOGGGG"}
+            elif dog_id in list_of_all_dogs_in_event:
+                return {"this. dog. is. ALREADY IN THIS EVENT"}
             else:
-                return {"You don't own this dog, wt* u doin! Or maybe this dog already in the event. Either way you messed up!"}
+                return {"I take it back, this is the rarest error. I dont even know how you get it."}
 
 @router.get("/api/events/{event_id}/dogs")
 def dogs_from_events(event_id: int, response: Response):

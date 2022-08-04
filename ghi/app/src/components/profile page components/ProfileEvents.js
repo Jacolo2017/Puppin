@@ -29,7 +29,7 @@ const ProfileEvents = (props) => {
             {props.eventsData.map(event =>
               <SwiperSlide>
                 <div className='border border-gray-300 py-10 rounded-xl shadow-lg text-center w-[300px] mb-4 bg-gray-200'>
-                  <h1 className='text-blue-600 text-2xl font-semibold mt-4'>{event.event_name}</h1>
+                  <h1 className='text-blue-600 text-xl font-semibold mt-4'>{event.event_name}</h1>
                 </div>
               </SwiperSlide>
             )}

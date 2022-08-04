@@ -131,7 +131,7 @@ export default function Events() {
           <h2 className='text-2xl font-bold uppercase'>Events</h2>
           <h3 className='text-xl font-semibold text-zinc-700'> swipe to see more <span className='text-red-500 text-md'>or..</span> <Link to='/event/create' className='font-bold text-blue-700'>create an event?</Link></h3>
         </div>
-
+        <div className='border border-gray-800 mt-6 border-opacity-30' />
         <div className='flex py-10'>
           <Swiper
             freeMode={true}
@@ -157,7 +157,7 @@ export default function Events() {
                   <motion.h2>{item.event_date_time}</motion.h2>
                   <motion.h2 className='font-semibold text-lg'>Hosted by : <Link className='text-green-600' to={`/user/${item.username}`}>{item.username}</Link></motion.h2>
 
-                  {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}><button className="h-10 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" >Join this event </button></Link> : <div className="text-xs">Event finished.</div>}
+                  {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}><button className="h-10 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" >Join this event </button></Link> : <div className="text-lg">Event finished.</div>}
                   {isOpen && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -166,7 +166,7 @@ export default function Events() {
                       layout
                     >
                       <motion.div><b>Attendees:</b>{item["users"] != null ? item.users.map(user => <motion.div>{user.username}</motion.div>) : ""}</motion.div>
-                      {item["review"] != null ? item.review.map(review => <motion.div>{review.reviewer_username} went! They said "{review.review_description}"</motion.div>) : ""}
+                      {item["review"] != null ? item.review.map(review => <motion.div className='font-semibold'><span className='font-bold text-green-700'>{review.reviewer_username}</span> went! They said "<span className='text-purple-700'>{review.review_description}</span>"</motion.div>) : ""}
 
                     </motion.div>
                   )}

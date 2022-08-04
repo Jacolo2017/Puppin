@@ -24,9 +24,11 @@ class LoggedinNav extends React.Component {
                 </div>
 
                 <div className='px-8 py-2'>
-                    <button className='border border-blue-200 bg-blue-200 rounded-md h-[50px] w-[100px] font-semibold uppercase hover:bg-blue-300' onClick={this.props.logout}>Sign out</button>
+                    <Link to="/registration/login" className="px-9 py-2.5 relative rounded group overflow-hidden font-medium bg-blue-50 text-blue-800 inline-block">
+                        <span className="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-blue-600 group-hover:h-full opacity-90"></span>
+                        <span className="relative group-hover:text-white" onClick={this.props.logout}>Logout</span>
+                    </Link>
                 </div>
-
             </nav>
         )
     }

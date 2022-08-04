@@ -17,46 +17,46 @@ export default function Profile(props) {
   let [eventsData, setEventsData] = useState();
 
   if (props.token && gotToken == false) {
-    fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => setCurrentUser(response.id))
 
 
-    fetch(`http://localhost:8001/api/accounts/${props.currentUser}`)
+    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.currentUser}`)
       .then(res => res.json())
       .then(res => setUserData(res))
-    fetch(`http://localhost:8001/api/accounts/${props.currentUser}/dogs`)
+    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.currentUser}/dogs`)
       .then(res1 => res1.json())
       .then(res1 => setuserDogData(res1))
-    fetch(`http://localhost:8001/api/accounts/${props.currentUser}/events`)
-    .then(response2 => response2.json())
-    .then(response2 => setEventsData(response2))
-      
+    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.currentUser}/events`)
+      .then(response2 => response2.json())
+      .then(response2 => setEventsData(response2))
+
     setGotToken(true)
   }
 
 
 
   const [page, setPage] = useState(0);
-  const pageTitles = ["Reviews" , "Events", "Dogs", "About"]
+  const pageTitles = ["Reviews", "Events", "Dogs", "About"]
 
   const PageDisplay = () => {
     if (page === 0) {
       return <ReviewsByCurrentUser token={props.token}/>
     } else if (page === 1) {
-      return <ProfileEvents currentUser={currentUser } eventsData={eventsData}/>
+      return <ProfileEvents currentUser={currentUser} eventsData={eventsData} />
     } else if (page === 2) {
-      return <ProfileDogs userDogData={userDogData}/>
+      return <ProfileDogs userDogData={userDogData} />
     } else {
-      return <ProfileAbout userData={userData}/>
+      return <ProfileAbout userData={userData} />
     }
   };
 
-function pageChange(index) {
+  function pageChange(index) {
 
-  const changePage = (e) => {
-    e.preventDefault()
-    
+    const changePage = (e) => {
+      e.preventDefault()
+
     }
     setPage(index)
   }
@@ -67,9 +67,9 @@ function pageChange(index) {
       <div className='relative h-96 rounded-b flex justify-center'>
         <img className='object-cover w-full h-full rounded-b shadow-sm' src='https://snappygoat.com/o/ddb9495535cdadf967535da29c8e058f2935a972/Paw-Prints-Background.jpg' />
         <div className='absolute -bottom-6 '>
-          <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src='https://www.thesprucepets.com/thmb/YQzfza2oKOCzQIvX-K66BRi1DjI=/1080x1080/filters:no_upscale():max_bytes(150000):strip_icc()/30078352_448703938920062_6275637137232625664_n-5b0de8c443a1030036f9e15e.jpg' />
+          <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src={userData ? userData.photo_url : ''} />
         </div>
-    
+
       </div>
       <div className='flex justify-center items-center'>
         <div className='text-center mt-12 text-3xl text-fBlack font-bold'>{userData ? userData.username : ''}</div>
@@ -79,16 +79,16 @@ function pageChange(index) {
       <div className='flex justify-center px-8'>
         <div className='flex gap-3'>
           {pageTitles.map((pages, index) =>
-          <div 
-          onClick={() => {pageChange(index);}}
-          className='px-4 py-5 text-blue-800 hover:bg-gray-300 '>
-            {pages}
-          </div>
+            <div
+              onClick={() => { pageChange(index); }}
+              className='px-4 py-5 text-blue-800 hover:bg-gray-300 '>
+              {pages}
+            </div>
           )}
         </div>
       </div>
       <div className='py-4'>
-        <PageDisplay/>
+        <PageDisplay />
       </div>
       
     </div>

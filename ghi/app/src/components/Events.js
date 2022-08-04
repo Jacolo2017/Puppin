@@ -12,7 +12,7 @@ import PublicProfile from './PublicProfile';
 export default function Events(){
   
   let [eventData, setEventData] = useState([]);
-
+  
   let [userData, setUserData] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -27,16 +27,23 @@ export default function Events(){
         )
     )
 }
+function getUsersFromEvents(){
+  return Promise.all(
+  eventData.map((eventid) =>
+      fetch(`http://localhost:8000/api/events/${eventid.event_id}/usersdogs`)
+      .then(response => response.json())
+      
+      )
+  )
+}
+
   useEffect(() => {
     
     fetch(`http://localhost:8000/api/events`)
     .then(res => res.json())
     .then(res => setEventData(res))
 
-    fetch(`http://localhost:8000/api/events`)
-    .then(res2 => res2.json())
-    .then(res2 => res2.flatMap(id => id.account_id))
-    .then(res2=>setUserData(res2))
+    
 
     
     
@@ -47,8 +54,6 @@ export default function Events(){
   , [])
 // if eventid in eventData is the same as event id in reviews, add the corresponding review in that eventdata object
   useEffect(()=> {
-    
-    // console.log(getWeaknesses())
     getReviewsFromEvents()
       .then((res)=> {
         for (const anEvent of eventData){
@@ -67,7 +72,30 @@ export default function Events(){
           }
         
         });
-      
+      console.log(eventData)
+      getUsersFromEvents()
+      .then((res)=> {
+        for (const anEvent of eventData){
+            for (const userlist of res){
+              for (const user of userlist){
+              
+              if (user.event_id == anEvent.event_id && anEvent["users"] == undefined){
+                console.log(user.event_id)
+                anEvent["users"] = []
+                anEvent["users"].push(user)
+  
+                console.log(user.username)
+              }
+              else if (user.event_id == anEvent.event_id && (anEvent["users"].map(eventinneruser => eventinneruser["username"])).includes(user.username) == false && anEvent["users"] != undefined){
+                console.log(user.username)
+                console.log(anEvent["users"].map(eventinneruser => eventinneruser["username"]))
+                anEvent["users"].push(user);
+              }
+            }
+            }
+          }
+  });
+        
    },
   [eventData])
   
@@ -128,6 +156,7 @@ export default function Events(){
                     <motion.h1>{item.event_name} by <Link to={`/user/${item.username}`}>{item.username}</Link></motion.h1>
                     <motion.h2>{item.event_date_time}</motion.h2>
                     <motion.h2>Hosted by : {item.username}</motion.h2>
+                    
                     {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}><button className = "h-10 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" >Join this event </button></Link>: <div className = "text-xs">Event finished.</div>}
                     {isOpen && (
                       <motion.div
@@ -136,6 +165,7 @@ export default function Events(){
                       transition={{duration: 1}}
                       layout
                       >
+                        <motion.div><b>Attendees:</b>{item["users"] != null ? item.users.map(user => <motion.div>{user.username}</motion.div>):""}</motion.div>
                         {item["review"] != null ? item.review.map(review => <motion.div>{review.reviewer_username} went! They says "{review.review_description}"</motion.div>): ""}
                         
                       </motion.div>

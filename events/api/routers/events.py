@@ -114,13 +114,13 @@ def get_event(event_id: int, response: Response):
     except psycopg.InterfaceError as exc:
         print(exc.message)
 
-@router.get("/api/events/{event_id}/users")
+@router.get("/api/events/{event_id}/usersdogs")
 def get_all_users_and_dogs_from_event(event_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT euj.account_id, accounts.first_name, dogs.dog_name, dogs.dog_photo
+                SELECT euj.account_id, accounts.first_name, dogs.dog_name, dogs.dog_photo, dogs.dog_id, accounts.username, euj.event_id
                 FROM eventsusersjunction AS euj
                 INNER JOIN accounts ON euj.account_id = accounts.account_id
                 INNER JOIN dogsinevents ON euj.account_id = dogsinevents.account_id
@@ -142,6 +142,18 @@ def get_all_users_and_dogs_from_event(event_id: int, response: Response):
                 print("get_all_users_from_event output: ", results)
             return results
 
+
+# @router.get("/api/events/{event_id}/users")
+# def get_all_users_from_event(event_id: int, response: Response):
+#     with psycopg.connect() as conn:
+#         with conn.cursor() as cur:
+#             cur.execute(
+#                 """
+#                 SELECT euj.account_id, accounts.username
+#                 FROM eventsusersjunction AS euj
+#                 INNER JOIN accounts ON accounts.account_id = euj.event_id
+                
+#                 """
 
 # do we need this?
 @router.get("/api/events/myevents={account_id}/")
@@ -194,8 +206,12 @@ def get_all_events_by_user(
 def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
-            list_of_all_dogvalues = [value for elem in get_account_dogs(account_id, response) for value in elem.values()]
-            if dog_id in list_of_all_dogvalues:
+            list_of_all_dogs_user_has = [value for elem in get_account_dogs(account_id, response) for value in elem.values()]
+            # list_of_all_dogs_in_event = [d['dog_id'] for d in get_all_users_and_dogs_from_event(event_id, response) if 'dog_id' in d]
+            list_of_all_dogs_in_event = [value for elem in dogs_from_events(event_id, response) for value in elem.values()]
+            list_of_all_users_in_event = [value for elem in accounts_in_events(event_id, response) for value in elem.values()]
+            print("this is a print", list_of_all_dogs_in_event)
+            if dog_id in list_of_all_dogs_user_has and dog_id not in list_of_all_dogs_in_event and account_id not in list_of_all_users_in_event:
                 try:
                     cur.execute(
                         """
@@ -214,8 +230,63 @@ def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
                     return record
                 except psycopg.errors.UniqueViolation:
                     return {"duplicate join"}
+            elif dog_id not in list_of_all_dogs_user_has and dog_id in list_of_all_dogs_in_event and account_id in list_of_all_users_in_event:
+                return {"You don't own this dog, wt* u doin! ALSO the dog IS ALREADY IN THE EVENT.YOURE ALSO ALREADY IN IT DUDE. Uyou messed up! THIS A RARE error. "}
+            elif account_id in list_of_all_users_in_event:
+                return {"you're already in the DANG event"}
+            elif dog_id in list_of_all_dogs_user_has:
+                return {"THIS AIINT YOOOOO DOOGGGG"}
+            elif dog_id in list_of_all_dogs_in_event:
+                return {"this. dog. is. ALREADY IN THIS EVENT"}
             else:
-                return {"You don't own this dog, wtf u doin!"}
+                return {"I take it back, this is the rarest error. I dont even know how you get it."}
+
+@router.get("/api/events/{event_id}/dogs")
+def dogs_from_events(event_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT dogsinevents.dog_id
+                FROM public.dogsinevents
+                WHERE (dogsinevents.event_id = %s)
+                """, [event_id]
+            )
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(cur.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
+
+@router.get("/api/events/{event_id}/attendees")
+def accounts_in_events(event_id: int, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT eventsusersjunction.account_id
+                FROM public.eventsusersjunction
+                WHERE (eventsusersjunction.event_id = %s)
+                """, [event_id]
+            )
+            results = []
+            for row in cur.fetchall():
+                record = {}
+                print("whatever")
+                for i, column in enumerate(cur.description):
+                    print(i)
+                    record[column.name] = row[i]
+                    print(record)
+                results.append(record)
+            return results
+                
+                
+            
 
 @router.post("/api/events/{event_id}/dogs")
 def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response):

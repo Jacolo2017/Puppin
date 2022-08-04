@@ -25,7 +25,7 @@ CREATE TABLE public.dogs(
     dog_breed character varying(50) NOT NULL,
     dog_age int NOT NULL,
     dog_gender character varying(30) NOT NULL,
-    dog_photo character varying(100) NOT NULL,
+    dog_photo character varying(300) NOT NULL,
     dog_temperament character varying(300) NOT NULL,
     dog_about character varying(750) NOT NULL,
     dog_size character varying(15) NOT NULL,

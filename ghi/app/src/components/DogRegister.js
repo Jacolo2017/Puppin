@@ -3,11 +3,6 @@ import DogAbout from './DogAbout';
 import DogBasicInfo from './DogBasicInfo';
 import { useNavigate } from 'react-router-dom';
 
-function setDocumentTitle() {
-  useEffect(() => {
-    document.title = 'Dog Registration';
-  });
-}
 
 const DogRegister = () => {
   const [breedOptions, setBreedOptions] = useState([]);

@@ -23,40 +23,43 @@ import AccountUpdate from './components/AccountUpdate';
 import JoinEvent from './components/JoinEvent/JoinEvent';
 
 export default function App() {
-  const [ token, login, logout] = useToken();
+  const [token, login, logout] = useToken();
   let [currentUser, setCurrentUser] = useState()
-  
+
 
 
 
   fetch(`http://localhost:8001/api/currentuser/${token}`)
-  .then(response => response.json())
-  .then(response => setCurrentUser(response.id))
-  
+    .then(response => response.json())
+    .then(response => setCurrentUser(response.id))
+
   return (
     <>
-    <BrowserRouter>
-          <Routes>
-            <Route path="" element={[ <Navbar/>,<Hero />, <About/>, <Developers/>, <Footer/> ]}/>
-              <Route path="myreviews/submit" element={<CreateReview token={token}/>}/>
-            <Route path='registration'>
-              <Route path="login" element={<Login  login={login} token={token}/>}/>
-              <Route path="create" element={<SignUp token={token}/>}/>
-              <Route path="dog" element={<DogRegister token={token}/>}/>
-              <Route path="dog/update" element={<DogUpdate token={token}/>}/>
-            </Route>
-            <Route path='event'>
-            <Route path = 'create'element = {<CreateEvent token={token}/>}/>
-              <Route path='home'element={[<LoggedinNav logout={logout} token={token}/>, <Events/>, <ReviewsGivenSlide token={token}/>, <ReviewsByEvent/>]} />
-            </Route>
-            <Route path='profile'>
-              <Route path=''element={[<LoggedinNav logout={logout} token={token}/>, <Profile currentUser={currentUser} token={token}/>]} />
-              <Route path="update" element={<AccountUpdate token={token}/>}/>         
-            </Route>
-            <Route path='user/:username' element={[ <PublicProfile/>]} />
-            <Route path='join-event/:event' element={[ <JoinEvent token={token}/> ]} />                 
-          </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path="" element={[<Navbar />, <Hero />, <About />, <Developers />, <Footer />]} />
+          <Route path="myreviews/submit" element={<CreateReview token={token} />} />
+          <Route path='registration'>
+            <Route path="login" element={<Login login={login} token={token} />} />
+            <Route path="create" element={<SignUp token={token} />} />
+            <Route path="dog" element={<DogRegister token={token} />} />
+            <Route path="dog/update" element={<DogUpdate token={token} />} />
+          </Route>
+          <Route path='event'>
+            <Route path='create' element={<CreateEvent token={token} />} />
+            <Route path='home' element={[<LoggedinNav logout={logout} token={token} />, <Events />, <ReviewsGivenSlide token={token} />, <ReviewsByEvent />]} />
+          </Route>
+          <Route path='profile'>
+            <Route path='' element={[<LoggedinNav logout={logout} token={token} />, <Profile currentUser={currentUser} token={token} />]} />
+            <Route path="update" element={<AccountUpdate token={token} />} />
+          </Route>
+          <Route path='reviews'>
+            <Route path="submit" element={<CreateReview token={token} />} />
+          </Route>
+          <Route path='user/:username' element={[<PublicProfile />]} />
+          <Route path='join-event/:event' element={[<JoinEvent token={token} />]} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

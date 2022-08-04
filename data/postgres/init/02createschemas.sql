@@ -14,7 +14,7 @@ CREATE TABLE public.accounts(
     city character varying(20) NOT NULL,
     state character varying(15) NOT NULL,
     gender character varying(20) NOT NULL,
-    photo_url character varying(100) NOT NULL,
+    photo_url character varying(400) NOT NULL,
     about character varying(750) NOT NULL,
     UNIQUE(username)
 );

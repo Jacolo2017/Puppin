@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { set, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom';
+
 
 
 const CreateReview = (props) => {
-    // const [eventData, setEventData] = useState([]);
     let [gotToken, setGotToken] = useState(false)
     const [selectedEvent, setSelectedEvent] = useState([])
     const [userEvents, setSelectionMenu] = useState([])
@@ -12,6 +13,7 @@ const CreateReview = (props) => {
     const [existingReviews, setExistingReviews] = useState()
     const [enableForm, setEnableForm] = useState()
     const { register, handleSubmit } = useForm();
+    let navigate = useNavigate();
 
     // checking conditions and calling loadUserToken
     if (props.token && gotToken == false) {
@@ -53,7 +55,6 @@ const CreateReview = (props) => {
             for (let i of data) {
                 existing.push(i['event_id'])
             }
-            console.log("existing reviews: ", existing)
             setExistingReviews(existing)
         }
     }
@@ -93,10 +94,7 @@ const CreateReview = (props) => {
             setSelectedEvent(eventInfo);
             // check to see if selected event is an hour or more after the event time therefore the form can be submitted
             const date = Date.parse(eventInfo.event_date_time)
-            console.log(Date.now() + 360000)
-            console.log(date)
             if (Date.now() + 360000 > date) {
-                console.log("event completed")
                 setEnableForm(true)
             } else {
                 setEnableForm(false)
@@ -127,17 +125,14 @@ const CreateReview = (props) => {
         // filtering out the attendee ratings from the form data
         let ratings = {}
         for (let i in reviewData) {
-            console.log(i)
             if (!isNaN(i) && ratings[i] === undefined) {
                 ratings[i] = reviewData[i]
                 delete reviewData[i]
             }
         }
-        console.log(ratings)
         // // submitting review data
         reviewData["review_event"] = selectedEvent.event_name
         reviewData["reviewer_username"] = userInfo.username
-        console.log("submitted data body: ", JSON.stringify(reviewData))
         const reviewUrl = `http://localhost:8000/api/event/${selectedEvent.event_id}/reviews/create?account_id=${userInfo.id}`
         const reviewFetchConfig = {
             method: 'post',
@@ -150,7 +145,6 @@ const CreateReview = (props) => {
         const response = await fetch(reviewUrl, reviewFetchConfig)
         if (response.ok) {
             const newReview = await response.json()
-            console.log(newReview)
         }
         // submitting all attendee rating data for each attendee
         const reviewer = userInfo.id
@@ -167,9 +161,9 @@ const CreateReview = (props) => {
             const response = await fetch(attendeeRatingUrl, attendeeFetchConfig)
             if (response.ok) {
                 const newReview = await response.json()
-                console.log(newReview)
             }
         }
+        navigate("/profile");
     }
 
 
@@ -177,7 +171,7 @@ const CreateReview = (props) => {
     return (
         <div className='flex flex-col text-gray-1000 py-2'>
             <div className='flex flex-col justify-center'>
-                <form className='max-w-[600px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl'>
+                <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl border-spacing-2'>
                     <h2 className='text-3xl text-black uppercase font-semibold text-center'>Review My Events</h2>
                     <div className='flex flex-col text-gray-900 py-2'>
                         <label>Select Event to Review</label>
@@ -193,10 +187,10 @@ const CreateReview = (props) => {
                     </div>
                 </form>
 
-                <form className='max-w-[600px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
+                <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
                     {(enableForm !== undefined && !enableForm) ? (
                         <div>
-                            <p className='text-med text-red-600 font-semibold justify-center'>Dayum, I know you're not trying to review an event that hasn't happened yet &#x1F440;</p>
+                            <p className='text-med text-red-600 font-semibold justify-center'> This event hasn't happened yet, but let us know when you get that time machine working and we'll let you review it. </p>
                         </div>) : (<div></div>)
                     }
                     <fieldset disabled={!enableForm}>

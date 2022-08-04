@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {Navigate} from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 let internalToken = null;
 
 export function getToken() {
@@ -17,7 +17,7 @@ async function getTokenInternal() {
       internalToken = data.token;
       return internalToken;
     }
-  } catch (e) {}
+  } catch (e) { }
   return false;
 }
 
@@ -36,17 +36,17 @@ export function useToken() {
   async function logout() {
     if (token) {
       const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
-      await fetch(url, {method: 'DELETE', credentials: 'include'});
+      await fetch(url, { method: 'DELETE', credentials: 'include' });
       internalToken = null;
       setToken(null);
     }
   }
 
-  async function login(username, password) {
+  async function login(username, account_password) {
     const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
     const form = new FormData();
     form.append('username', username);
-    form.append('password', password);
+    form.append('password', account_password);
     const response = await fetch(url, {
       method: 'post',
       credentials: 'include',

@@ -2,30 +2,57 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ReviewsByAnyUser from './ReviewsSliderComponents/ReviewsByAnyUser';
 import { Link } from 'react-router-dom';
+import ProfileAbout from './profile page components/ProfileAbout'
+import ProfileDogs from './profile page components/ProfileDogs'
+import ProfileEvents from './profile page components/ProfileEvents'
 
 
 export default function PublicProfile() {
     let [userData, setUserData] = useState([])
+    let [userDogData, setuserDogData] = useState();
+    let [eventsData, setEventsData] = useState();
 
     useEffect(() => {
         fetch(`http://localhost:8001/api/accounts/by_username/${params.username}`)
             .then(response => response.json())
             .then(response => setUserData(response))
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${userData.account_id}/dogs`)
+            .then(res1 => res1.json())
+            .then(res1 => setuserDogData(res1))
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${userData.account_id}/events`)
+            .then(response2 => response2.json())
+            .then(response2 => setEventsData(response2))
     }, [])
 
     const [page, setPage] = useState(0);
     const pageTitles = ["Reviews", "Events", "Dogs", "About"]
     let params = useParams();
 
-    console.log(userData)
+    console.log(eventsData, "this is the events data");
+    console.log(userDogData, "this is the dogs data");
+    console.log(params, "this is the p[arams] data");
 
 
 
     const PageDisplay = () => {
         if (page === 0) {
-        //   return <ReviewsByAnyUser userData={userData} />
+            return <ReviewsByAnyUser userData={userData} />
+        } else if (page === 1) {
+            return <ProfileEvents userData={userData} eventsData={eventsData}/>
+        } else if (page === 2) {
+            return <ProfileDogs userDogData={userDogData}/>
+        } else {
+            return <ProfileAbout userData={userData} />
         }
-      };
+    };
+    function pageChange(index) {
+
+        const changePage = (e) => {
+          e.preventDefault()
+    
+        }
+        setPage(index)
+      }
 
 
 
@@ -34,13 +61,13 @@ export default function PublicProfile() {
             <div className='relative h-96 rounded-b flex justify-center'>
                 <img className='object-cover w-full h-full rounded-b shadow-sm' src='https://snappygoat.com/o/ddb9495535cdadf967535da29c8e058f2935a972/Paw-Prints-Background.jpg' />
                 <div className='absolute -bottom-6 '>
-                    <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src='' />
+                    <img className='object-cover w-40 h-40 rounded-full border-4 border-gray-300 shadow-md' src={userData ? userData.photo_url : 'https://riverlegacy.org/wp-content/uploads/2021/07/blank-profile-photo.jpeg'} />
                 </div>
 
             </div>
             <div className='flex justify-center items-center'>
-                <div className='text-center mt-12 text-3xl text-fBlack font-bold'></div>
-                <Link to='/profile/update' className='flex px-6 bg-green-400 rounded-xl font-bold uppercase w-30 text-center mt-12 ml-6 hover:bg-green-500'>Edit</Link>
+                <div className='text-center mt-12 text-3xl text-fBlack font-bold'>{userData ? userData.username : ''}</div>
+
             </div>
             <div className='border border-gray-800 mt-6 border-opacity-30' />
             <div className='flex justify-center px-8'>

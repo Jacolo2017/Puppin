@@ -9,8 +9,10 @@ import { Link } from 'react-router-dom';
 
 
 const ProfileDogs = (props) => {
-  
-  console.log(props.userDogData)
+  let [isLoaded, setIsLoaded] = useState(false);
+
+  // if (props.userDogData.length != 0 && isLoaded == false) {
+
   return (
     <div className='py-20' id="about">
         <div className='w-full mx-auto py-10 mt-1'>

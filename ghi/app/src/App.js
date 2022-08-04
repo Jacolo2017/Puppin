@@ -38,7 +38,6 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="" element={[<Navbar />, <Hero />, <About />, <Developers />, <Footer />]} />
-          <Route path="myreviews/submit" element={<CreateReview token={token} />} />
           <Route path='registration'>
             <Route path="login" element={<Login login={login} token={token} />} />
             <Route path="create" element={<SignUp token={token} />} />

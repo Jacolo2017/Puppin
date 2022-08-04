@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { set } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 const AccountUpdate = (props) => {
     let [gotToken, setGotToken] = useState(false)
@@ -16,6 +17,7 @@ const AccountUpdate = (props) => {
         photo_url: "",
         about: "",
     });
+    let navigate = useNavigate()
 
     if (props.token && gotToken == false){
         console.log("yes token")
@@ -60,6 +62,7 @@ const AccountUpdate = (props) => {
                 photo_url: "",
                 about: "",
             })
+            navigate("/profile");
         }
     }
 

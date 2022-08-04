@@ -62,7 +62,13 @@ Last week to sprint through the final touches. Today I am finalizing all the CRU
 
 CRUD has been tested and is 100% operational (insert evil Palpatine laugh here). Now to dive into the front end and create the profile pages. the user view of their profile has run into a road bump. I need to map both accountData and dogData. I can't have two map functions without breaking the page. I'm working with the idea of flat mapping and I hope it will work out, but I am not really sure to be honest. I am planning on reaching out to Zhyn to see if she has some insights, her breathing JS and all.  
 
-## August 3, 2022
+## August 2, 2022
 
 Sometimes I just really need to slow down. I had the delete completely functional I was just missing one parameter. Roger is the cool headed leader I think our group really needed. In other news, Cooper and I spent almost an hour trying to map data in our profile page only to realize we were mapping an object not  an array. We realized, with the help of Tristen, we can use a ?: based function in our JSX directly. We just had to look back at how we made our project beta and called multiple data sets and used them in the JSX. 
+
+## August 3, 2022
+
+Oh my god. You ever make a api view that doesn't return the data you needed, and try to use that to get that data back? I had a fully functioning Account Update form set since around 12:45 cohort time, just needed to add in account_id to my api view... I'll take it as a win. We have a full profile page, showing all the proper information. Our reviews are set and associate with accounts and events. The project is almost done but it feels like there is so much left to do.
+
+Much of the stuff that we want to still implement are stretch goals but we all managed to forget to make it possible to join an event LOL. Cooper is a CSS god to say the least, and when both of us get together we make some of the cleanest UIs I have ever seen (just tooting our horn a little lol).
 

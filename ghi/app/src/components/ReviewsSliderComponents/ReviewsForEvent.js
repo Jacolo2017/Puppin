@@ -47,7 +47,7 @@ export default function ReviewsByEvent(props) {
             {eventReviews.map(item => (
 
               <SwiperSlide className='pt-4 rounded-sm' >
-                <motion.div className='border rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px]' close={closeModel}>
+                <motion.div className='border rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px] mb-5' close={closeModel}>
                   <h2 className='text-xl font-semibold text-gray-800'>{item.review_event} by {item.reviewer_username}</h2>
                   <p className='text-gray-700 py-4'>{item.review_description}</p>
                 </motion.div>

@@ -38,7 +38,7 @@ export default function PublicProfileEvents(props){
 
   return (
     <div className='py-20 flex' id="about">
-      <div className='max-w-[1300px] mx-auto py-10 mt-1 mb-4'>
+      <div className='max-w-[1300px] mx-auto py-10 mt-1 mb-6'>
         <div className='text-center'>
           <h2 className='text-2xl font-bold uppercase'>Events</h2>
           <h3 className='text-xl font-semibold text-zinc-700'> swipe to see <span className='text-red-500 text-md'>more!</span></h3>

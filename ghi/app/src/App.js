@@ -46,7 +46,7 @@ export default function App() {
           </Route>
           <Route path='event'>
             <Route path='create' element={<CreateEvent token={token} />} />
-            <Route path='home' element={[<LoggedinNav logout={logout} token={token} />, <Events />, <ReviewsGivenSlide token={token} />, <ReviewsByEvent />]} />
+            <Route path='home' element={[<LoggedinNav logout={logout} token={token} />, <Events />, <ReviewsGivenSlide token={token} />]} />
           </Route>
           <Route path='profile'>
             <Route path='' element={[<LoggedinNav logout={logout} token={token} />, <Profile currentUser={currentUser} token={token} />]} />

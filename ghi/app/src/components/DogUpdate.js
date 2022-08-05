@@ -3,6 +3,7 @@ import { set } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 
+
 const DogUpdate = (props) => {
     const [breedOptions, setBreedOptions] = useState([]);
     let [gotToken, setGotToken] = useState(false)
@@ -18,6 +19,7 @@ const DogUpdate = (props) => {
         dog_about: "",
         dog_size: "",
         dog_weight: "",
+        spayed_neutered: null,
         vaccination_history: "",
         account_id: "",
     });
@@ -127,9 +129,8 @@ const DogUpdate = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = { ...formData }
-        delete data[account_id]
+        delete data['account_id']
         const dogId = selectedDog
-        data.spayed_neutered = check
         console.log(JSON.stringify(data))
         const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dogId}`
         const fetchConfig = {
@@ -158,15 +159,10 @@ const DogUpdate = (props) => {
                 vaccination_history: "",
                 account_id: "",
             })
-            navigate("/profile");
+            navigate("/profile", { state: { page: 2 } });
         }
     }
 
-
-    const toggleCheck = () => {
-        console.log("toggled")
-        setCheck(!check);
-    }
 
     return (
         <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[50px]'>

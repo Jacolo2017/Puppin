@@ -1,9 +1,9 @@
-
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer
 from routers import accounts
 from fastapi.middleware.cors import CORSMiddleware
 import os
+
 app = FastAPI()
 
 
@@ -19,7 +19,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 
 app.include_router(accounts.router)

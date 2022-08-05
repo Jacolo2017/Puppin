@@ -176,7 +176,6 @@ export default function Events(props) {
                 >
                   <motion.h1 className='font-bold text-xl'>{item.event_name} </motion.h1>
                   <motion.h2>{item.event_date_time}</motion.h2>
-                  <motion.h2>{index}</motion.h2>
                   <motion.h2 className='font-semibold text-lg'>Hosted by : <Link className='text-green-600' to={`/user/${item.username}`}>{item.username}</Link></motion.h2>
 
                   {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}>{conditionalButtonRender(item)}</Link> : 

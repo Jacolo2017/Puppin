@@ -8,8 +8,39 @@ from fastapi.testclient import TestClient
 
 
 class FakeAccountQueries(TestCase):
-    def get_account_by_username(self, username):
-        return {"username": " Kwisatz"}
+    def insert_account(
+        self,
+        first_name,
+        last_name,
+        email,
+        username,
+        account_password,
+        date_of_birth,
+        city,
+        state,
+        gender,
+        photo_url,
+        about,
+        ):
+        return {    # assert res.json() == {
+        "account_id": 17,
+        "first_name": "Paul",
+        "last_name": "Atreides",
+        "email": "houseatreides@email.com",
+        "date_of_birth": "01/15/2001",
+        "city": "Atreides",
+        "state": "AR",
+        "gender": "Male",
+        "photo_url": "photo.url",
+        "about": "I am the Kwisatz Haderach. That is reason enough."
+    }
+
+
+        def get_user(self, account_id, username, account_password):
+            return {"account_id": 17,
+                    "username": "Kwisatz",
+                    "account_password": "HouseAtredeis4lyfe" 
+                    }
 
 #  first_name": "Paul", "last_name": "Atreides", "email": "houseatreides@email.com", "date_of_birth": "01/15/2001", "city": "Atreides", "state": "AR", "gender": "Male", "account_id": 17, "photo_url": "photo.url", "about": "I am the Kwisatz Haderach. That is reason enough."
 
@@ -32,12 +63,25 @@ def test_get_dog_200():
 
 def test_get_account_200():
     app.dependency_overrides[AccountQueries] = FakeAccountQueries
-    res = client.get("/api/accounts/by_username/Kwisatz")
+    res = client.get("/api/accounts/17")
     assert res.status_code == 200
 
     app.dependency_overrides = {}
 
 
+
+    # assert res.json() == {
+    #     "account_id": 17,
+    #     "first_name": "Paul",
+    #     "last_name": "Atreides",
+    #     "email": "houseatreides@email.com",
+    #     "date_of_birth": "01/15/2001",
+    #     "city": "Atreides",
+    #     "state": "AR",
+    #     "gender": "Male",
+    #     "photo_url": "photo.url",
+    #     "about": "I am the Kwisatz Haderach. That is reason enough."
+    # }
 
 # def test_login_failure():
 #     app.dependency_overrides[AccountQueries] = AccountData

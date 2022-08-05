@@ -23,9 +23,9 @@ export default function PublicProfile() {
 
     const PageDisplay = () => {
         if (page === 0) {
-        //   return <ReviewsByAnyUser userData={userData} />
+            //   return <ReviewsByAnyUser userData={userData} />
         }
-      };
+    };
 
 
 

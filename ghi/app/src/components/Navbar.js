@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Navbar = () => {
-  return (
+    return (
         <nav class="flex fixed justify-between items-center bg-white shadow-lg w-screen">
             <div className='px-4 cursor-pointer'>
                 <h2 className="text-3xl text-gray-800 font-bold">P<span className="text-red-600">U</span>PP<span className="text-red-800">I</span><span className="text-green-800">N</span></h2>
@@ -19,7 +19,7 @@ const Navbar = () => {
                 </a>
             </div>
         </nav>
-  )
+    )
 }
 
 export default Navbar

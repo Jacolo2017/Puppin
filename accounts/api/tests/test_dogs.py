@@ -1,3 +1,4 @@
+from django.test import TestCase
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from ..main import app
@@ -9,13 +10,13 @@ from db.dogs import DogQueries
 print("look at me!")
 
 
-class EmptyDogQueries:
+class EmptyDogQueries(TestCase):
     def get_dog(self, dog_id):
         print("can see me?")
         return None
 
 
-class FakeDogQueries:
+class FakeDogQueries(TestCase):
     def get_dog(self, dog_id):
         return {
             "dog_name": "Mary_Puppins",

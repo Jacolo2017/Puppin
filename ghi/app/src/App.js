@@ -15,7 +15,7 @@ import Profile from './components/Profile';
 import ReviewsByEvent from './components/ReviewsSliderComponents/ReviewsForEvent';
 import CreateEvent from './components/CreateEvent';
 import DogUpdate from './components/DogUpdate';
-import CreateReview from './components/ReviewFrom';
+import CreateReview from './components/ReviewForm';
 import React, { useState, useEffect } from 'react';
 import PublicProfile from './components/PublicProfile';
 import AccountUpdate from './components/AccountUpdate';

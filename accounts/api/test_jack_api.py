@@ -7,20 +7,11 @@ from .main import app
 from fastapi.testclient import TestClient
 
 
-client = TestClient(app)
-
-
 class FakeAccountQueries(TestCase):
-    def get_account_by_username(self, account_id):
-        return [17]
+    def get_account_by_username(self, username):
+        return {"username": " Kwisatz"}
 
-
-def override_update_account():
-    return {
-        "account_id": 17,
-        "first_name": "ABC",
-        "last_name": "CDE",  
-    }
+#  first_name": "Paul", "last_name": "Atreides", "email": "houseatreides@email.com", "date_of_birth": "01/15/2001", "city": "Atreides", "state": "AR", "gender": "Male", "account_id": 17, "photo_url": "photo.url", "about": "I am the Kwisatz Haderach. That is reason enough."
 
 
 class FakeDogQueries(TestCase):
@@ -37,6 +28,15 @@ def test_get_dog_200():
     assert res.status_code == 200
 
     app.dependency_overrides = {}
+
+
+def test_get_account_200():
+    app.dependency_overrides[AccountQueries] = FakeAccountQueries
+    res = client.get("/api/accounts/by_username/Kwisatz")
+    assert res.status_code == 200
+
+    app.dependency_overrides = {}
+
 
 
 # def test_login_failure():

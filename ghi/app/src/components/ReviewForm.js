@@ -24,7 +24,7 @@ const CreateReview = (props) => {
     // loads userInfo (id, username, account_password (hashed) based on token)    
     async function loadUserToken() {
         if (props.token && gotToken == false) {
-            await fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+            await fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
                 .then(response => response.json())
                 .then(response => setUserInfo(response));
             setGotToken(true);
@@ -39,7 +39,7 @@ const CreateReview = (props) => {
 
     // querries API and pulls in reviews already submitted by the user and turns data into a list of event IDs reviewed by user
     const loadExistingReviews = async () => {
-        const url = `http://localhost:8000/api/event/reviews/account=${userInfo.id}`
+        const url = `${process.env.REACT_APP_EVENTS_HOST}/api/event/reviews/account=${userInfo.id}`
         let fetchConfig = {
             method: 'GET',
             headers: {
@@ -68,7 +68,7 @@ const CreateReview = (props) => {
 
     // makes API call to get all events user is registered to and filters the events that have already been reviewed
     const loadEventSelectionMenu = async () => {
-        const response = await fetch(`http://localhost:8000/api/events/myevents=${userInfo.id}/`)
+        const response = await fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events/myevents=${userInfo.id}/`)
         if (response.ok) {
             const registeredEvents = await response.json()
             const events = registeredEvents.filter(event => (!existingReviews.includes(event['event_id'])))
@@ -80,7 +80,7 @@ const CreateReview = (props) => {
     const loadSelectedEvent = async (event) => {
         event.preventDefault();
         const eventId = event.target.value
-        const eventUrl = `http://localhost:8000/api/events/${eventId}`
+        const eventUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${eventId}`
         let fetchConfig = {
             method: 'GET',
             headers: {
@@ -101,7 +101,7 @@ const CreateReview = (props) => {
             }
         };
 
-        const attendeeUrl = `http://localhost:8000/api/events/${eventId}/usersdogs`
+        const attendeeUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${eventId}/usersdogs`
         fetchConfig = {
             method: 'GET',
             headers: {
@@ -133,7 +133,7 @@ const CreateReview = (props) => {
         // // submitting review data
         reviewData["review_event"] = selectedEvent.event_name
         reviewData["reviewer_username"] = userInfo.username
-        const reviewUrl = `http://localhost:8000/api/event/${selectedEvent.event_id}/reviews/create?account_id=${userInfo.id}`
+        const reviewUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/event/${selectedEvent.event_id}/reviews/create?account_id=${userInfo.id}`
         const reviewFetchConfig = {
             method: 'post',
             body: JSON.stringify(reviewData),
@@ -157,7 +157,7 @@ const CreateReview = (props) => {
             credentials: "include"
         }
         for (let i in ratings) {
-            let attendeeRatingUrl = `http://localhost:8000/api/event/${eventId}/reviews/${i}/${reviewer}?rating=${ratings[i]}`
+            let attendeeRatingUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/event/${eventId}/reviews/${i}/${reviewer}?rating=${ratings[i]}`
             const response = await fetch(attendeeRatingUrl, attendeeFetchConfig)
             if (response.ok) {
                 const newReview = await response.json()
@@ -169,10 +169,9 @@ const CreateReview = (props) => {
 
 
     return (
-        <div className='flex flex-col text-gray-1000 py-2'>
-            <div className='flex flex-col justify-center'>
-                <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl border-spacing-2'>
-                    <h2 className='text-3xl text-black uppercase font-semibold text-center'>Review My Events</h2>
+        <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c]'>
+            <div className='flex flex-col justify-center pt-4 pb-1'>
+                <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl'>
                     <div className='flex flex-col text-gray-900 py-2'>
                         <label>Select Event to Review</label>
                         <select onChange={event => loadSelectedEvent(event)} id="dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
@@ -186,8 +185,10 @@ const CreateReview = (props) => {
                         </select>
                     </div>
                 </form>
-
+            </div>
+            <div className='flex flex-col justify-center py-1'>
                 <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
+                    <h2 className='text-3xl text-black uppercase font-semibold text-center'>Review My Events</h2>
                     {(enableForm !== undefined && !enableForm) ? (
                         <div>
                             <p className='text-med text-red-600 font-semibold justify-center'> This event hasn't happened yet, but let us know when you get that time machine working and we'll let you review it. </p>
@@ -196,7 +197,7 @@ const CreateReview = (props) => {
                     <fieldset disabled={!enableForm}>
                         <div className='flex flex-col text-gray-900 py-2'>
                             <label>Event Review</label>
-                            <input {...register("review_description")} placeholder="Tell us about the event" id='the id' className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" />
+                            <textarea {...register("review_description")} placeholder="Tell us about the event" id='the id' className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" />
                             <label className='py-3'>Would you meetup with these Dog/Owner pairs again?</label>
                             {eventAttendees && eventAttendees.map(attendee => {
                                 if (attendee.account_id != userInfo.id) {
@@ -221,7 +222,7 @@ const CreateReview = (props) => {
                                 }
                             })}
                             <label className='py-2'>Location Rating</label>
-                            <input {...register('location_rating')} placeholder="Tell us about the location" className='rounded-lg bg-gray-300 mt-2 p-2  hover:bg-gray-400' type="textarea" />
+                            <textarea {...register('location_rating')} placeholder="Tell us about the location" className='rounded-lg bg-gray-300 mt-2 p-2  hover:bg-gray-400' type="textarea" />
                         </div>
                         <div className='flex justify-between item-center'>
                             {(!enableForm) ? (

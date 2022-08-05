@@ -15,7 +15,7 @@ import Profile from './components/Profile';
 import ReviewsByEvent from './components/ReviewsSliderComponents/ReviewsForEvent';
 import CreateEvent from './components/CreateEvent';
 import DogUpdate from './components/DogUpdate';
-import CreateReview from './components/ReviewFrom';
+import CreateReview from './components/ReviewForm';
 import React, { useState, useEffect } from 'react';
 import PublicProfile from './components/PublicProfile';
 import AccountUpdate from './components/AccountUpdate';
@@ -29,7 +29,7 @@ export default function App() {
 
 
 
-  fetch(`http://localhost:8001/api/currentuser/${token}`)
+  fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${token}`)
     .then(response => response.json())
     .then(response => setCurrentUser(response.id))
 
@@ -38,7 +38,6 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="" element={[<Navbar />, <Hero />, <About />, <Developers />, <Footer />]} />
-          <Route path="myreviews/submit" element={<CreateReview token={token} />} />
           <Route path='registration'>
             <Route path="login" element={<Login login={login} token={token} />} />
             <Route path="create" element={<SignUp token={token} />} />
@@ -47,7 +46,7 @@ export default function App() {
           </Route>
           <Route path='event'>
             <Route path='create' element={<CreateEvent token={token} />} />
-            <Route path='home' element={[<LoggedinNav logout={logout} token={token} />, <Events />, <ReviewsGivenSlide token={token} />, <ReviewsByEvent />]} />
+            <Route path='home' element={[<LoggedinNav logout={logout} token={token} />, <Events token={token}/>, <ReviewsGivenSlide token={token} />]} />
           </Route>
           <Route path='profile'>
             <Route path='' element={[<LoggedinNav logout={logout} token={token} />, <Profile currentUser={currentUser} token={token} />]} />

@@ -21,9 +21,9 @@ const AccountUpdate = (props) => {
 
     if (props.token && gotToken == false) {
         console.log("yes token")
-        fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`http://localhost:8001/api/accounts/${response.id}`)
+            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}`)
                 .then(response => response.json())
                 .then(response => setUserAccount(response)))
 
@@ -36,7 +36,7 @@ const AccountUpdate = (props) => {
         const data = { ...formData }
         const accountId = UserAccount
         console.log(accountId)
-        const accountUrl = `http://localhost:8001/api/accounts/update/${accountId.account_id}`
+        const accountUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/update/${accountId.account_id}`
         const fetchConfig = {
             method: 'put',
             body: JSON.stringify(data),

@@ -11,7 +11,7 @@ client = TestClient(app)
 
 class FakeDogQueries(TestCase):
     def get_dog(self):
-        return {"dog_id": 10, "dog_name": "Lillie", "dog_gender": "Female"}
+        return {"dog_id": 1000, "dog_name": "Lillie", "dog_gender": "Female"}
 
 
 def test_get_dog_422():

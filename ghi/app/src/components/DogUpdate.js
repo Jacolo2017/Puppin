@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { set } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 
 const DogUpdate = (props) => {
     const [breedOptions, setBreedOptions] = useState([]);
     let [gotToken, setGotToken] = useState(false)
-    const [check, setCheck] = useState(false)
     const [userDogs, setUserDogs] = useState([])
+    const [check, setCheck] = useState([])
     const [selectedDog, setSelectedDog] = useState("")
     const [formData, setFormData] = useState({
         dog_name: "",
@@ -19,19 +20,22 @@ const DogUpdate = (props) => {
         dog_size: "",
         dog_weight: "",
         vaccination_history: "",
+        account_id: "",
     });
     let navigate = useNavigate();
 
     if (props.token && gotToken == false) {
         console.log("yes token")
-        fetch(`http://localhost:8001/api/currentuser/${props.token}`)
+        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`http://localhost:8001/api/accounts/${response.id}/dogs`)
+            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`)
                 .then(response => response.json())
                 .then(response => setUserDogs(response)))
 
         setGotToken(true)
     };
+
+
 
     function breedConvert(breed_object) {
         let breedList = []
@@ -66,7 +70,7 @@ const DogUpdate = (props) => {
         event.preventDefault();
         const dog_Id = event.target.value
         setSelectedDog(event.target.value)
-        const dogUrl = `http://localhost:8001/api/dog/${dog_Id}`
+        const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dog_Id}`
         const fetchConfig = {
             method: 'GET',
             headers: {
@@ -84,13 +88,51 @@ const DogUpdate = (props) => {
 
     }
 
+    const deleteDog = async (event) => {
+        event.preventDefault()
+        console.log("delete requested")
+        const dogId = selectedDog
+        const accountId = formData.account_id
+        console.log(accountId)
+        const dogDeleteUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/${accountId}/dog/${dogId}`
+        const fetchConfig = {
+            method: 'delete',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include"
+        }
+        const response = await fetch(dogDeleteUrl, fetchConfig)
+        if (response.ok) {
+            const dogDeleteConfirm = await response.json()
+            console.log(dogDeleteConfirm)
+            setFormData({
+                dog_name: "",
+                dog_breed: "",
+                dog_age: "",
+                dog_gender: "",
+                dog_photo: "",
+                dog_temperament: "",
+                dog_about: "",
+                dog_size: "",
+                dog_weight: "",
+                spayed_neutered: false,
+                vaccination_history: "",
+                account_id: "",
+            })
+            navigate("/profile");
+        }
+
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = { ...formData }
+        delete data.account_id
         const dogId = selectedDog
         data.spayed_neutered = check
         console.log(JSON.stringify(data))
-        const dogUrl = `http://localhost:8001/api/dog/${dogId}`
+        const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dogId}`
         const fetchConfig = {
             method: 'put',
             body: JSON.stringify(data),
@@ -99,7 +141,6 @@ const DogUpdate = (props) => {
             },
             credentials: "include"
         }
-
         const response = await fetch(dogUrl, fetchConfig)
         if (response.ok) {
             const newDog = await response.json()
@@ -116,19 +157,20 @@ const DogUpdate = (props) => {
                 dog_weight: "",
                 spayed_neutered: false,
                 vaccination_history: "",
+                account_id: "",
             })
             navigate("/profile");
         }
     }
+
 
     const toggleCheck = () => {
         console.log("toggled")
         setCheck(!check);
     }
 
-
     return (
-        <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[50px]'>
+        <div className='items-center h-[1400px] w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-10'>
             <div className='flex flex-col justify-center'>
                 <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
                     <h2 className='text-3xl text-black uppercase font-semibold text-center'>Update Dog</h2>
@@ -190,11 +232,11 @@ const DogUpdate = (props) => {
                         <label className='pt-2'>Spayed or Neutered?</label>
                         <div className='grid gap-4 grid-cols-3 grid-row-1 py-2 items-center justify-items-left' onChange={(event) => setFormData({ ...formData, spayed_neutered: event.target.value })}>
                             <div>
-                                <input value='true' defaultChecked={formData.spayed_neutered === 'true' ? "true" : "false"} name='spayed-neutered check' className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-500 checked:border-blue-500 first-line:focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" />
+                                <input value='true' name='spayed-neutered check' className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-500 checked:border-blue-500 first-line:focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" />
                                 <label className="form-check-label inline-block text-gray-800" htmlFor="inlineCheckbox1">Yes</label>
                             </div>
                             <div>
-                                <input value="false" defaultChecked={formData.spayed_neutered === 'true' ? "true" : "false"} name='spayed-neutered check' className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" />
+                                <input value="false" name='spayed-neutered check' className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" />
                                 <label className="form-check-label inline-block text-gray-800" htmlFor="inlineCheckbox1">No</label>
                             </div>
                         </div>
@@ -207,12 +249,13 @@ const DogUpdate = (props) => {
                         <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Update</button>
                     </div>
                     <div className='flex justify-between item-center'>
-                        <button className='w-full py-2 bg-red-500 rounded-xl font-bold uppercase hover:bg-red-400 shadow-sm text-white'>Delete</button>
+                        <button className='w-full py-2 bg-red-500 rounded-xl font-bold uppercase hover:bg-red-400 shadow-sm text-white' onClick={deleteDog}>Delete</button>
                     </div>
                 </form>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
+
 
 export default DogUpdate;

@@ -3,11 +3,6 @@ import DogAbout from './DogAbout';
 import DogBasicInfo from './DogBasicInfo';
 import { useNavigate } from 'react-router-dom';
 
-function setDocumentTitle() {
-  useEffect(() => {
-    document.title = 'Dog Registration';
-  });
-}
 
 const DogRegister = () => {
   const [breedOptions, setBreedOptions] = useState([]);
@@ -60,7 +55,7 @@ const DogRegister = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = { ...formData }
-    const dogUrl = "http://localhost:8001/api/dog/create"
+    const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/create`
     const fetchConfig = {
       method: 'post',
       body: JSON.stringify(data),
@@ -130,16 +125,17 @@ const DogRegister = () => {
             {PageDisplay()}
           </div>
           <div className='container flex justify-around  gap-2 mt-3 mb-3 py-2'>
-            <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
-              value='previous'
-              disabled={page == 0}
-              onClick={changePage}
-            >previous</button>
-            <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
+
+            {(page === 0) ? (<button disabled={page == 0} className='w-full py-2 bg-gray-500 rounded-xl font-bold uppercase hover:bg-gray-400 shadow-sm text-white' value='previous' onClick={changePage} >Previous</button>)
+              : (<button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white' value='previous' onClick={changePage} >Previous</button>)}
+
+            {(page === FormTitles.length - 1) ? (<button disabled={page == FormTitles.length - 1} className='w-full py-2 bg-gray-500 rounded-xl font-bold uppercase hover:bg-gray-400 shadow-sm text-white' value='next' onClick={changePage} >Next</button>)
+              : (<button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white' value='next' onClick={changePage} >Next</button>)}
+            {/* <button className='w-full py-2 bg-blue-500 rounded-xl font-bold uppercase hover:bg-blue-300 shadow-sm text-white'
               value='next'
               disabled={page == FormTitles.length - 1}
               onClick={changePage}
-            >{page === FormTitles.length - 1 ? "" : "Next"}</button>
+            >{page === FormTitles.length - 1 ? "" : "Next"}</button> */}
           </div>
           <div className='flex justify-between item-center pb-2'>
             <button className='w-full py-2 bg-green-500 rounded-xl font-bold uppercase hover:bg-green-400 shadow-sm text-white'>Register</button>

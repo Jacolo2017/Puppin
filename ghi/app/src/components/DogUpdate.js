@@ -7,6 +7,7 @@ const DogUpdate = (props) => {
     const [breedOptions, setBreedOptions] = useState([]);
     let [gotToken, setGotToken] = useState(false)
     const [userDogs, setUserDogs] = useState([])
+    const [check, setCheck] = useState([])
     const [selectedDog, setSelectedDog] = useState("")
     const [formData, setFormData] = useState({
         dog_name: "",
@@ -126,7 +127,7 @@ const DogUpdate = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = { ...formData }
-        delete data[account_id]
+        delete data.account_id
         const dogId = selectedDog
         data.spayed_neutered = check
         const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dogId}`
@@ -187,7 +188,7 @@ const DogUpdate = (props) => {
                         <label className='pt-2'>Age (Human years please!) </label>
                         <input className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' placeholder='age' type="text" value={formData.dog_age} onChange={(event) => setFormData({ ...formData, dog_age: event.target.value })} />
                         <label className='pt-2'>Gender </label>
-                        <div hidden='true' className='grid gap-4 grid-cols-3 grid-row-1 py-2 items-center justify-items-left' onChange={(event) => setFormData({ ...formData, dog_gender: event.target.value })}>
+                        <div className='grid gap-4 grid-cols-3 grid-row-1 py-2 items-center justify-items-left' onChange={(event) => setFormData({ ...formData, dog_gender: event.target.value })}>
                             <div>
                                 <input value="male" name='gender button' className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-500 checked:border-blue-500 first-line:focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" />
                                 <label className="form-check-label inline-block text-gray-800" htmlFor="inlineCheckbox1">Male</label>

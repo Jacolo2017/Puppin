@@ -9,7 +9,7 @@ import { Link, Navigate } from 'react-router-dom';
 import PublicProfile from './PublicProfile';
 
 
-export default function Events() {
+export default function Events(props) {
 
   const [eventData, setEventData] = useState([]);
   const [userData, setUserData] = useState([]);
@@ -29,6 +29,20 @@ export default function Events() {
     setMyIndex(index);
     setIsOpen(!isOpen);
   };
+
+
+  let [currentUser, setCurrentUser] = useState();
+  let [gotToken, setGotToken] = useState(false)
+
+
+
+  if (props.token && gotToken == false) {
+  fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+  .then(response => response.json())
+  .then(response => setCurrentUser(response.username));
+
+  setGotToken(true)
+}
 
 
   function getReviewsFromEvents() {
@@ -55,8 +69,8 @@ export default function Events() {
     fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events`)
       .then(res => res.json())
       .then(res => setEventData(res))
-  }, [])
-  
+  }
+    , [])
   // if eventid in eventData is the same as event id in reviews, add the corresponding review in that eventdata object
   useEffect(() => {
     getReviewsFromEvents()
@@ -108,6 +122,7 @@ export default function Events() {
       return false
     }
   }
+  console.log("praise", eventData.map(eventinneruser => eventinneruser["account_id"]))
 
   // useEffect(() => {
   //   fetch(`http://localhost:8001/api/accounts/${eventData}`)
@@ -119,6 +134,15 @@ export default function Events() {
     return <Navigate to='/registration/login' />
   }
 
+  function conditionalButtonRender(item){
+    
+    if (item["users"] != null){
+      console.log("curr user", currentUser)
+      console.log("check this item", item) 
+      return (item.users.map(eventinneruser => eventinneruser["username"]).includes(currentUser) ? 
+      "You have joined" : <button className="h-10 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" >Join this event </button>)
+    }
+  }
 
   return (
     <div className='w-screen py-20 flex' id="about">
@@ -155,7 +179,8 @@ export default function Events() {
                   <motion.h2>{index}</motion.h2>
                   <motion.h2 className='font-semibold text-lg'>Hosted by : <Link className='text-green-600' to={`/user/${item.username}`}>{item.username}</Link></motion.h2>
 
-                  {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}><button className="h-10 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" >Join this event </button></Link> : <div className="text-lg">Event finished.</div>}
+                  {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}>{conditionalButtonRender(item)}</Link> : 
+                  <div className="text-lg">Event finished.</div>}
                   {isOpen && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -164,7 +189,8 @@ export default function Events() {
                       layout
                     >
                       <motion.div><b>Attendees:</b>{item["users"] != null ? item.users.map(user => <motion.div>{user.username}</motion.div>) : ""}</motion.div>
-                      {item["review"] != null ? item.review.map(review => <motion.div className='font-semibold'><span className='font-bold text-green-700'>{review.reviewer_username}</span> went! They said "<span className='text-purple-700'>{review.review_description}</span>"</motion.div>) : ""}
+                      {item["review"] != null ? item.review.map(review => <motion.div className='font-semibold'><span className='font-bold text-green-700'>
+                        {review.reviewer_username}</span> went! They said "<span className='text-purple-700'>{review.review_description}</span>"</motion.div>) : ""}
 
                     </motion.div>
                   )}

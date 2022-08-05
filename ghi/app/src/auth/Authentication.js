@@ -42,7 +42,7 @@ export function useToken() {
     }
   }
 
-  async function login(username, account_password) {
+  async function login(username, account_password, navigate = ()=>null) {
     const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
     const form = new FormData();
     form.append('username', username);
@@ -55,38 +55,13 @@ export function useToken() {
     if (response.ok) {
       const token = await getTokenInternal();
       setToken(token);
+      navigate();
       return;
     }
     let error = await response.json();
-    return error.detail;
+    
+    return {error: error.detail, response};
   }
-
-  // async function signup(username, email, dob, password) {
-  //   const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
-  //   const response = await fetch(url, {
-  //     credentials: 'include',
-  //     method: 'post',
-  //     body: JSON.stringify({
-  //       username,
-  //       password,
-  //       date_of_birth: dob,
-  //       email,
-  //       first_name: '',
-  //       last_name: '',
-  //       location: '',
-  //       interested: {
-  //         interested: [],
-  //       }
-  //     }),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     }
-  //   });
-  //   if (response.ok) {
-  //     await login(username, password);
-  //   }
-  //   return false;
-  // }
 
   return [token, login, logout];
 }

@@ -5,6 +5,8 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
 export default function PublicProfileEvents(props) {
   const [associatedEvents, setAssociatedEvents] = useState(null);
   const [storage, setStorage] = useState([]);
@@ -37,19 +39,18 @@ export default function PublicProfileEvents(props) {
   // }
 
   return (
+
     <div className="grid grid-rows-2">
       <div>
         <div className="w-full py-10 flex" id="about">
           <div className="max-w-[1200px] mx-auto py-10 mt-1">
             <div className="text-center">
-              <h2 className="text-2xl font-bold uppercase">Events</h2>
+              <h2 className="text-2xl font-bold uppercase">Events Hosting/Hosted</h2>
               <h3 className="text-xl font-semibold text-zinc-700">
                 {" "}
-                swipe to see more{" "}
-                <span className="text-red-500 text-md">or..</span>{" "}
-                <Link to="/event/create" className="font-bold text-blue-700">
-                  create an event?
-                </Link>
+                swipe to see {" "}
+                <span className="text-purple-500 text-md">more</span>{" "}
+
               </h3>
             </div>
             <div className="flex py-10">
@@ -79,14 +80,12 @@ export default function PublicProfileEvents(props) {
           <div className="w-full py-10 flex" id="about">
             <div className="max-w-[1200px] mx-auto py-10 mt-1">
               <div className="text-center">
-                <h2 className="text-2xl font-bold uppercase">Events</h2>
+                <h2 className="text-2xl font-bold uppercase">Events Attending/Attended</h2>
                 <h3 className="text-xl font-semibold text-zinc-700">
                   {" "}
-                  swipe to see more{" "}
-                  <span className="text-red-500 text-md">or..</span>{" "}
-                  <Link to="/event/create" className="font-bold text-blue-700">
-                    create an event?
-                  </Link>
+                  swipe to see {" "}
+                  <span className="text-red-500 text-md">more</span>{" "}
+
                 </h3>
               </div>
               <div className="flex py-10">

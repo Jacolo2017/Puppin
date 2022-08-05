@@ -20,7 +20,7 @@ export default function Events(props) {
   const sliderRef = useRef();
 
   useEffect(() => {
-    sliderRef.current.swiper.slideTo(myIndex);
+    sliderRef.current?.swiper.slideTo(myIndex);
   }, [myIndex]);
 
 
@@ -144,7 +144,8 @@ export default function Events(props) {
     }
   }
 
-  return (
+  return ( 
+    props.token?
     <div className='w-screen py-20 flex' id="about">
       <div className='max-w-[1400px] mx-auto py-10 mt-1'>
         <div className='text-center'>
@@ -206,6 +207,6 @@ export default function Events(props) {
           </Swiper>
         </div>
       </div>
-    </div>
-  )
+    </div> : <Navigate to='/registration/login'/>
+  ) 
 }

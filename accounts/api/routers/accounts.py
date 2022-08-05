@@ -267,9 +267,9 @@ def create_account(account: AccountIn, response: Response):
                     """INSERT INTO accounts (first_name, last_name, email, username,
                         account_password, date_of_birth, city, state, gender,
                         photo_url, about)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING account_id;
-                """,
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING account_id;
+                    """,
                     [
                         account.first_name,
                         account.last_name,
@@ -461,7 +461,8 @@ def get_attended_events_of_user(account_id: int, response: Response):
                 events.event_id = eventsusersjunction.event_id
                 WHERE
                 eventsusersjunction.account_id = %s
-                """, [account_id]
+                """,
+                [account_id],
             )
             results = []
             for row in cur.fetchall():
@@ -473,7 +474,6 @@ def get_attended_events_of_user(account_id: int, response: Response):
                     print(record)
                 results.append(record)
             return results
-
 
 
 @router.get("/api/accounts/{account_id}/events")
@@ -539,30 +539,37 @@ def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
 
 
 @router.get("/api/dog/{dog_id}")
-def get_dog(dog_id: int, response: Response):
-    try:
-        with psycopg.connect() as conn:
-            with conn.cursor() as curr:
-                curr.execute(
-                    """SELECT dog_name, dog_breed, dog_age, dog_gender,
-                                dog_photo, dog_temperament, dog_about,
-                                dog_size, dog_weight, spayed_neutered,
-                                vaccination_history, account_id
-                        FROM dogs
-                        WHERE dog_id = %s;""",
-                    [dog_id],
-                )
-                row = curr.fetchone()
-                print(row)
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "Dog not found"}
-                record = {}
-                for i, column in enumerate(curr.description):
-                    record[column.name] = row[i]
-                return record
-    except psycopg.InterfaceError as exc:
-        print(exc)
+def get_dog(dog_id: int, response: Response, query=Depends(DogQueries)):
+    record = query.get_dog(dog_id)
+    print("from router: ", record)
+    if record is None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "Dog not found"}
+    return record
+
+
+#     with psycopg.connect() as conn:
+#         with conn.cursor() as curr:
+#             curr.execute(
+#                 """SELECT dog_name, dog_breed, dog_age, dog_gender,
+#                             dog_photo, dog_temperament, dog_about,
+#                             dog_size, dog_weight, spayed_neutered,
+#                             vaccination_history, account_id
+#                     FROM dogs
+#                     WHERE dog_id = %s;""",
+#                 [dog_id],
+#             )
+#             row = curr.fetchone()
+#             print(row)
+#             if row is None:
+#                 response.status_code = status.HTTP_404_NOT_FOUND
+#                 return {"message": "Dog not found"}
+#             record = {}
+#             for i, column in enumerate(curr.description):
+#                 record[column.name] = row[i]
+#             return record
+# except psycopg.InterfaceError as exc:
+#     print(exc)
 
 
 @router.put("/api/dog/{dog_id}", response_model=DogUpdate)

@@ -116,7 +116,7 @@ def test_create_account_200():
                         "gender": "Male",
                         "photo_url": "photo.url",
                         "about": "I am the Kwisatz Haderach. That is reason enough.",
-                        "account_id": 3,
+                        "account_id": 3,      
                     })
     print(res.json())
     assert res.status_code == 200

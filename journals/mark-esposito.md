@@ -66,11 +66,9 @@ Continued to work on the reviews form, which has lead me down a path of solving 
 Day started with some git issues, seems that some of the merge commits were overwritting changes made my previous commits. This caused the dog-updat form and all the fixes I implemented to be overridden in the main branch pulls. Finally starting to git the hang of git and the workflow needed to be in place when working in a "large" group. Luckily we have all our changes in branches and in the gitlab web interface so easily fixed. Phew. Working on the creat review form again. I was stumped most of the day and explaining to the team and even the SEIRS. However tonight I finally got the attendee submissions working and the review submissions working!!! Great progress. Roger came thru with a great suggestion to implement a useForm hook, never heard of it but it made the process so much easier, holy crap. After that I was able to get the core functionality up in about 1.5 hrs. Now I have to do a check to make sure the user doesn't see events already reviewed or can submit reviews if the event is not complete.
 
 ## Aug 03 2022
-integration
-dog update/create UX updates
+Mostly working on tying in everyones work into a cohesive project. I worked on upgrading the UX experience on the Dog Update and create forms. The update form now autofills the existing data into the form. Also learned more about ternary expressions, learned more about all the specific hooks in react such as useNavigate, and getting the hang of the CSS. Tomorrows plan is to start the unittests, more testing of the overall site, and chasing bugs as always. It really time to stop adding new features and just improve what we already have. Late night with Roger and Coop trying to knock this stuff out. Really hoping our project meet the MVP. 
+
 
 
 ## Aug 04
-dog delete
-Updating docs
-unit test
+Its funny how long software development takes compared to how long you think it will take. We idenitified tons of issues and still working on some of the basic functionality. Luckily my team works well together and are extremely helpful. I worked on creating the dog delete function which I thought would take 20 minutes max, but chasing bugs always increased that to about an hour. Chasing the samll bugs that trip up the functionality that we have like button that are still active but do nothing, or wierd renders of the elements in the components. I started working on the unit tests but ran into a blocker. The pytest wouldn't import modules on files that are able to import outside of the pytest. It stumped Dalonte and the SEIRs. Zynh even stayed extra late to help, shes the GOAT even though we couldn't solve it, going to have to message Curtis.Tonight, I started to work on updating the docs which was also funny to see how optimistic our goals were in the beginning.

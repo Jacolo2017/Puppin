@@ -5,8 +5,6 @@ from ..main import app
 
 print("look at me!")
 
-client = TestClient(app)
-
 
 def test_read_main():
     print("look at me!")

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Controller, set, useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
-
+import {useNavigate} from 'react-router-dom'
 
 import "react-datepicker/dist/react-datepicker.css";
+
 //abcd
 
 
@@ -13,6 +14,7 @@ export default function CreateEvent(props) {
   let [currentUser, setCurrentUser] = useState()
   let [userSelectedDog, setUserSelectedDog] = useState()
   const { control, register, handleSubmit, watch, reset, formState: { errors } } = useForm();
+  let navigate = useNavigate();
   useEffect(() => {
 
 
@@ -36,6 +38,7 @@ export default function CreateEvent(props) {
     if (response.ok) {
       console.log("response ok")
       reset()
+      navigate("/event/home");
     }
     else {
       console.log("nonononono")

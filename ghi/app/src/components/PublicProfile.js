@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import ReviewsByAnyUser from './ReviewsSliderComponents/ReviewsByAnyUser';
 import { Link } from 'react-router-dom';
 import ProfileAbout from './profile page components/ProfileAbout'
-import ProfileDogs from './profile page components/ProfileDogs'
-import ProfileEvents from './profile page components/ProfileEvents'
+import PublicProfileDogs from './profile page components/PublicProfileDogs'
+import PublicProfileEvents from './profile page components/PublicProfileEvents'
 
 
 export default function PublicProfile() {
@@ -43,9 +43,9 @@ export default function PublicProfile() {
         if (page === 0) {
             return <ReviewsByAnyUser userData={userData} />
         } else if (page === 1) {
-            return <ProfileEvents userData={userData} eventsData={eventsData} />
+            return <PublicProfileEvents userData={userData} eventsData={eventsData} />
         } else if (page === 2) {
-            return <ProfileDogs userDogData={userDogData} />
+            return <PublicProfileDogs userDogData={userDogData} />
         } else {
             return <ProfileAbout userData={userData} />
         }

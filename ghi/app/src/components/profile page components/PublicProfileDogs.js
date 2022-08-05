@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 
 
-const ProfileDogs = (props) => {
+const PublicProfileDogs = (props) => {
   let [isLoaded, setIsLoaded] = useState(false);
 
   // if (props.userDogData.length != 0 && isLoaded == false) {
@@ -16,9 +16,8 @@ const ProfileDogs = (props) => {
   return (
     <div className='py-20' id="about">
       <div className='w-full mx-auto py-10 mt-1'>
-        <div className=''>
-          <h2 className='text-2xl font-bold uppercase text-left'>Dogs</h2>
-          <h3 className='text-lg font-semibold'>Would you like to <Link className='text-green-500 font-semibold' to='/registration/dog'>add your dog?</Link> <span className='text-md text-red-600'> or....</span> <Link to='/registration/dog/update' className='text-purple-600'>update your dogs?</Link></h3>
+        <div className='text-center'>
+          <h2 className='text-4xl font-bold uppercase'>D<span className='text-green-600'>O</span><span className='text-orange-600'>G</span><span className='text-purple-600'>S</span></h2>
         </div>
       </div>
       <div className='flex py-4'>
@@ -60,4 +59,4 @@ const ProfileDogs = (props) => {
   )
 }
 
-export default ProfileDogs
+export default PublicProfileDogs

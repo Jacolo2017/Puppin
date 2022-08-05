@@ -95,7 +95,7 @@ const DogUpdate = (props) => {
         const dogId = selectedDog
         const accountId = formData.account_id
         console.log(accountId)
-        const dogDeleteUrl = `http://localhost:8001/api/${accountId}/dog/${dogId}`
+        const dogDeleteUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/${accountId}/dog/${dogId}`
         const fetchConfig = {
             method: 'delete',
             headers: {
@@ -165,7 +165,7 @@ const DogUpdate = (props) => {
 
 
     return (
-        <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-[50px]'>
+        <div className='items-center h-[1400px] w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-10'>
             <div className='flex flex-col justify-center'>
                 <form className='max-w-[400px] w-full mx-auto bg-gray-200 p-8 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit}>
                     <h2 className='text-3xl text-black uppercase font-semibold text-center'>Update Dog</h2>

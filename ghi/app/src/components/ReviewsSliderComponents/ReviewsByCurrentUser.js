@@ -25,13 +25,13 @@ export default function ReviewsByCurrentUser(props) {
 
   }
   )
-
+  console.log(userReviews);
 
   if (props.token && gotToken == false) {
     console.log("yes token")
     fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
-      .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/event/reviews/account=${response.id}`))
+      .then(response => fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/event/reviews/account=${response.id}`))
       .then(response => response.json())
       .then(response => setUserReviews(response));
     fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
@@ -49,8 +49,8 @@ export default function ReviewsByCurrentUser(props) {
     <div className='py-20 ' id="about">
       <div className='w-full max-w-[1300px] mx-auto py-10 mt-1'>
         <div className='text-center'>
-          <h2 className='text-2xl font-bold uppercase'>Your Reviews</h2>
-          <Link to='/reviews/submit'> Create a review? </Link>
+          <h2 className='text-3xl font-bold uppercase'>Your Reviews</h2>
+          <Link to='/reviews/submit' className='font-semibold text-lg'> Create a <span className='text-red-600'>review?</span> </Link>
         </div>
 
         <div className=' grid-flow-row gap-10 px-4 py-20 text-center'>
@@ -62,13 +62,14 @@ export default function ReviewsByCurrentUser(props) {
             slidesPerView={3}
             spaceBetween={100}
           >
-            {/* {userReviews.map(item => (
+            {userReviews.map(item => (
               <SwiperSlide className='pt-4 rounded-sm' >
-                <motion.div className='border rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px]' close={closeModel}>
-                  <h2 className='text-xl font-semibold text-gray-800'>{item.review_event} by {currentUser}</h2>
-                  <p className='text-gray-700 py-4'>{item.review_description}</p>
+                <motion.div className='border border-gray-300 rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px] mb-8 ' close={closeModel}>
+                  <h2 className='text-2xl font-bold text-gray-800'>{item.review_event}</h2>
+                  <p className='text-gray-900 py-4 font-medium'>{item.review_description}</p>
+                  <p className='text-blue-700 py-4 font-bold text-xl'>Rating: <span className='text-red-600'>{item.location_rating}</span></p>
                 </motion.div>
-              </SwiperSlide>))} */}
+              </SwiperSlide>))}
           </Swiper>
         </div>
       </div>

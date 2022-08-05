@@ -1,6 +1,7 @@
 import psycopg
 from psycopg.errors import UniqueViolation
 from db.dogs import DogQueries
+from db.accounts import AccountQueries
 from unittest import TestCase
 from .main import app
 from fastapi.testclient import TestClient
@@ -9,18 +10,33 @@ from fastapi.testclient import TestClient
 client = TestClient(app)
 
 
+class FakeAccountQueries(TestCase):
+    def get_account_by_username(self, account_id):
+        return [17]
+
+
+def override_update_account():
+    return {
+        "account_id": 17,
+        "first_name": "ABC",
+        "last_name": "CDE",  
+    }
+
+
 class FakeDogQueries(TestCase):
     def get_dog(self):
-        return {"dog_id": 1000, "dog_name": "Lillie", "dog_gender": "Female"}
+        return {"dog_id": 1}
 
 
-def test_get_dog_422():
+client = TestClient(app)
+
+
+def test_get_dog_200():
     app.dependency_overrides[DogQueries] = FakeDogQueries
-    res = client.get("/api/dog/{dog_id}")
-    assert res.status_code == 422
+    res = client.get("/api/dog/1")
+    assert res.status_code == 200
 
     app.dependency_overrides = {}
-
 
 
 # def test_login_failure():
@@ -34,6 +50,3 @@ def test_get_dog_422():
 #         }
 #     )
 #     data = route.json()
-
-
-

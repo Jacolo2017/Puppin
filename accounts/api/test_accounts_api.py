@@ -1,9 +1,8 @@
-from db.dogs import DogQueries
 from db.accounts import AccountQueries
 from unittest import TestCase
 from main import app
 from fastapi.testclient import TestClient
-from routers.accounts import create_account, get_account, get_account_by_username
+from routers.accounts import create_account, get_account_by_username
 
 
 async def get_fake_account():
@@ -99,7 +98,6 @@ def test_get_user_200():
     print("HERE:", res)
     assert res.status_code == 200
     app.dependency_overrides = {}
-#  python -m pytest test_jack_api.py
 
 def test_create_account_200():
     app.dependency_overrides[create_fake_account] = create_account

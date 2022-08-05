@@ -53,7 +53,6 @@ class AccountQueries:
                 except UniqueViolation:
                     raise DuplicateUsername
 
-
     def get_account_from_username(self, username: str):
         with pool.connection() as connection:
             with connection.cursor() as cursor:

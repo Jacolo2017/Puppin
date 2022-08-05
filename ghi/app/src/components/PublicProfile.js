@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ReviewsByAnyUser from './ReviewsSliderComponents/ReviewsByAnyUser';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import ProfileAbout from './profile page components/ProfileAbout'
 import PublicProfileDogs from './profile page components/PublicProfileDogs'
 import PublicProfileEvents from './profile page components/PublicProfileEvents'

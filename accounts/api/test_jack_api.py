@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 class FakeAccountQueries(TestCase):
     def insert_account(
         self,
+        account_id,
         first_name,
         last_name,
         email,
@@ -23,24 +24,25 @@ class FakeAccountQueries(TestCase):
         about,
         ):
         return {    # assert res.json() == {
-        "account_id": 17,
-        "first_name": "Paul",
-        "last_name": "Atreides",
-        "email": "houseatreides@email.com",
-        "date_of_birth": "01/15/2001",
-        "city": "Atreides",
-        "state": "AR",
-        "gender": "Male",
-        "photo_url": "photo.url",
-        "about": "I am the Kwisatz Haderach. That is reason enough."
-    }
+            account_id: 1,
+            first_name: "Paul",
+            last_name: "Atreides",
+            email: "houseatreides@email.com",
+            username: "Kwisatz",
+            account_password: "HouseAtredeis4lyfe",
+            date_of_birth: "01/15/2001",
+            city: "Atreides",
+            state: "AR",
+            gender: "Male",
+            photo_url: "photo.url",
+            about: "I am the Kwisatz Haderach. That is reason enough."
+            }
 
-
-        def get_user(self, account_id, username, account_password):
-            return {"account_id": 17,
-                    "username": "Kwisatz",
-                    "account_password": "HouseAtredeis4lyfe" 
-                    }
+    def get_user(self, account_id, username, account_password):
+        return {account_id: 1,
+                username: "Kwisatz",
+                account_password: "HouseAtredeis4lyfe",
+                }
 
 #  first_name": "Paul", "last_name": "Atreides", "email": "houseatreides@email.com", "date_of_birth": "01/15/2001", "city": "Atreides", "state": "AR", "gender": "Male", "account_id": 17, "photo_url": "photo.url", "about": "I am the Kwisatz Haderach. That is reason enough."
 
@@ -58,15 +60,18 @@ def test_get_dog_200():
     res = client.get("/api/dog/1")
     assert res.status_code == 200
 
-    app.dependency_overrides = {}
+
+app.dependency_overrides = {}
 
 
 def test_get_account_200():
     app.dependency_overrides[AccountQueries] = FakeAccountQueries
-    res = client.get("/api/accounts/17")
+    res = client.get("/api/accounts/1")
+    print(res)
     assert res.status_code == 200
 
-    app.dependency_overrides = {}
+
+app.dependency_overrides = {}
 
 
 

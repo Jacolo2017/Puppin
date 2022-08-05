@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import ProfileAbout from './profile page components/ProfileAbout'
 import ProfileDogs from './profile page components/ProfileDogs'
 import ProfileEvents from './profile page components/ProfileEvents'
@@ -63,6 +63,7 @@ export default function Profile(props) {
 
 
   return (
+    props.token?
     <div className='px-44 bg-gray-50'>
       <div className='relative h-96 rounded-b flex justify-center'>
         <img className='object-cover w-full h-full rounded-b shadow-sm' src='https://img.freepik.com/premium-vector/seamless-pattern-with-heads-different-breeds-dogs_192280-226.jpg?w=826S' />
@@ -91,6 +92,6 @@ export default function Profile(props) {
         <PageDisplay />
       </div>
 
-    </div>
+    </div> : <Navigate to='/registration/login'/>
   )
 }

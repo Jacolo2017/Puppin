@@ -27,7 +27,7 @@ const DogUpdate = (props) => {
     let navigate = useNavigate();
 
     if (props.token && gotToken == false) {
-        console.log("yes token")
+        
         fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
             .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`)
@@ -55,7 +55,7 @@ const DogUpdate = (props) => {
 
     useEffect(() => {
         async function getBreeds() {
-            // console.log("hello")
+            
             const breedUrl = 'https://dog.ceo/api/breeds/list/all'
             const response = await fetch(breedUrl);
             if (response.ok) {
@@ -92,10 +92,10 @@ const DogUpdate = (props) => {
 
     const deleteDog = async (event) => {
         event.preventDefault()
-        console.log("delete requested")
+        
         const dogId = selectedDog
         const accountId = formData.account_id
-        console.log(accountId)
+        
         const dogDeleteUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/${accountId}/dog/${dogId}`
         const fetchConfig = {
             method: 'delete',
@@ -107,7 +107,6 @@ const DogUpdate = (props) => {
         const response = await fetch(dogDeleteUrl, fetchConfig)
         if (response.ok) {
             const dogDeleteConfirm = await response.json()
-            console.log(dogDeleteConfirm)
             setFormData({
                 dog_name: "",
                 dog_breed: "",
@@ -132,7 +131,7 @@ const DogUpdate = (props) => {
         const data = { ...formData }
         delete data.account_id
         const dogId = selectedDog
-        console.log(JSON.stringify(data))
+        data.spayed_neutered = check
         const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dogId}`
         const fetchConfig = {
             method: 'put',
@@ -145,7 +144,6 @@ const DogUpdate = (props) => {
         const response = await fetch(dogUrl, fetchConfig)
         if (response.ok) {
             const newDog = await response.json()
-            console.log(newDog)
             setFormData({
                 dog_name: "",
                 dog_breed: "",
@@ -160,7 +158,7 @@ const DogUpdate = (props) => {
                 vaccination_history: "",
                 account_id: "",
             })
-            navigate("/profile", { state: { page: 2 } });
+            navigate("/profile");
         }
     }
 

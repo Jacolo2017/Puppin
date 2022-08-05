@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Swiper, SwiperSlide, slideTo } from 'swiper/react';
 import { FreeMode } from 'swiper'
 import 'swiper/css';
 import 'swiper/css/free-mode';
@@ -11,13 +11,26 @@ import PublicProfile from './PublicProfile';
 
 export default function Events(props) {
 
-  let [eventData, setEventData] = useState([]);
-
-  let [userData, setUserData] = useState([]);
-
+  const [eventData, setEventData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  let [storage, setStorage] = useState([])
+  const [storage, setStorage] = useState([])
   const [joinEventOpen, setJoinEventOpen] = useState(false)
+  const [myIndex, setMyIndex] = useState();
+  const sliderRef = useRef();
+
+  useEffect(() => {
+    sliderRef.current.swiper.slideTo(myIndex);
+  }, [myIndex]);
+
+
+  const handleExpand = (e, index) => {
+    e.preventDefault();
+    setMyIndex(index);
+    setIsOpen(!isOpen);
+  };
+
+
   let [currentUser, setCurrentUser] = useState();
   let [gotToken, setGotToken] = useState(false)
 
@@ -78,7 +91,6 @@ export default function Events(props) {
         }
 
       });
-    console.log(eventData)
     getUsersFromEvents()
       .then((res) => {
         for (const anEvent of eventData) {
@@ -86,15 +98,11 @@ export default function Events(props) {
             for (const user of userlist) {
 
               if (user.event_id == anEvent.event_id && anEvent["users"] == undefined) {
-                console.log(user.event_id)
                 anEvent["users"] = []
                 anEvent["users"].push(user)
 
-                console.log(user.username)
               }
               else if (user.event_id == anEvent.event_id && (anEvent["users"].map(eventinneruser => eventinneruser["username"])).includes(user.username) == false && anEvent["users"] != undefined) {
-                console.log(user.username)
-                console.log(anEvent["users"].map(eventinneruser => eventinneruser["username"]))
                 anEvent["users"].push(user);
               }
             }
@@ -107,10 +115,7 @@ export default function Events(props) {
 
   function EventPastChecker(event) {
     const date = Date.parse(event)
-    console.log("now", Date.now())
-    console.log("event time", event)
     if (Date.now() < date) {
-      console.log("event completed")
       return true
     }
     else {
@@ -149,6 +154,7 @@ export default function Events(props) {
         <div className='border border-gray-800 mt-6 border-opacity-30' />
         <div className='flex py-10'>
           <Swiper
+            ref={sliderRef}
             freeMode={true}
             grabCursor={false}
             modules={[FreeMode]}
@@ -157,10 +163,10 @@ export default function Events(props) {
             spaceBetween={100}
           >
             {eventData.map((item, index) => (
-              
-              <SwiperSlide className='pt-4 rounded-sm mb-6'>
+
+              <SwiperSlide className='pt-4 rounded-sm mb-6' key={index}>
                 <motion.div
-                  onClick={() => setIsOpen(!isOpen)}
+                  onClick={e => { handleExpand(e, index) }}
                   transition={{ layout: { duration: 1, type: 'spring' } }}
                   layout
                   style={{

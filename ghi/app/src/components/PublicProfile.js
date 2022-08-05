@@ -33,9 +33,6 @@ export default function PublicProfile() {
     const pageTitles = ["Reviews", "Events", "Dogs", "About"]
     let params = useParams();
 
-    console.log(eventsData, "this is the events data");
-    console.log(userDogData, "this is the dogs data");
-    console.log(params, "this is the p[arams] data");
 
 
 

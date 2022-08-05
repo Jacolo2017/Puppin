@@ -12,7 +12,6 @@ export default function ReviewsByAnyUser(props) {
   let [isLoaded, setIsLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log("userdata status", props.userData)
   const openModel = () => {
     setOpen(true);
   };
@@ -44,7 +43,6 @@ export default function ReviewsByAnyUser(props) {
   //     setIsLoaded(true)
   // }
 
-  console.log(eventReviews)
 
   if (eventReviews != "loading") {
     return (

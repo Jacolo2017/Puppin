@@ -47,3 +47,9 @@ Wow...Just wow. I feel like I did alot and so little at the same time. I did a t
 also felt uncertain how useful it was. I'm also making more endpoints to get those validation checks since we didn't have what I wanted. Somewhat worried about clogging up the api in an unorganized fashion. Getting people to show up on event cards was TOUGH. I had to make another promise.all fetch and map it out to merge with the eventData. The thing is though, I had to use list comprehension, 
 and list comprehension is much different in js than python. I forgot that .includes() exists. I keep thinking if there is a better way than merging relevant info into states in front-end, but you can't make lists as an attribute type
 in tables. I thought about that when I first started this project actually. Is there a better way than what I'm doing though? Can't say, but I had a vision and that vision came through. Does javascript really not have an "if x in list"? Am I going crazy? Stay tuned next time. I believe I also worked on review sliders today and got them working. 
+
+aug 5:
+
+Made it so the page validates that you are already in the event before showing a join button. Had to do a conditional function for a ternary to even activate. That ternary required a check which required something which loaded is very fast. Wondering if theres a better way to ensure something is loaded before executing rather than nailing in planks on every leak, but it seems to be standard. 
+
+aug 6: Things are going but unit tests seem to be harder than they should be. Also thinking of making the whole project a monolith because right now it seems weird at best and damaging at worst. 

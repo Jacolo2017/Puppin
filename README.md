@@ -57,4 +57,8 @@ In order to run the project in a development environment, it requires that two v
 * postgres-data
 * pg-admin
 
+##
+
+In order to test make sure to be in the accounts micro-service cli. Then run pytest. Dog functionality can be tested by using test_dog.py and accounts can be tested via test__account_api.py  
+
 

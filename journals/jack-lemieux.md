@@ -1,6 +1,6 @@
 ## August 5, 2022
 
-Final project day. Let's get this project set and in the bag! 
+Final project day. Let's get this project set and in the bag! I hate unit tests. They are cold and heartless, but they work and that's all that matters. I think I really do get how to use fast api now but after this project I'm not sure I would ever like to use it again. Django is simply more straight forward, condensed, and a time saver. Fast Api everything seemed to take u pto two days longer than django apps. But that's also due to more practice right? Still even with that I feel like if we had been practicing fast api for as long it still would have taken longer. I am so happy to have had Roger, Cooper, and Mark in my group. It was amazing to work with them and learn alongside them. Without them, this project would have been much more tedious. Enjoy our app, don't forget to let Cooper know his CSS design skills are off the hook lol <3.
 
 ## August 4, 2022
 

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { AiFillLinkedin, AiFillGithub } from 'react-icons/ai'
 const Footer = () => {
     return (
-        <div className='w-screen mt-[750px] bg-black text-gray-300 justify-between items-center text-center py-3'>
+        <div className='w-screen mt-[1200px] bg-black text-gray-300 justify-between items-center text-center py-3'>
             <div className='w-screen grid grid-cols-3 py-8 px-4'>
                 <div>
                     <h2 className='text-2xl font-semibold uppercase py-3'>Registration</h2>

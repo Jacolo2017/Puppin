@@ -69,7 +69,7 @@ function ProfileEvents(props) {
           <div className="w-full py-10 flex" id="about">
             <div className="max-w-[1200px] mx-auto py-10 mt-1">
               <div className='text-center'>
-                <h2 className='text-2xl font-bold uppercase'>Events that you've attended</h2>
+                <h2 className='text-2xl font-bold uppercase'>Events that you've <span className='text-orange-700'>Attended</span><span className='text-green-600'>/Attending</span></h2>
               </div>
               <div className="flex py-10">
                 {associatedEvents ? (

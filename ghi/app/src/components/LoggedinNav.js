@@ -7,14 +7,11 @@ class LoggedinNav extends React.Component {
 
 
     render() {
-        if (!this.props.token) {
-            return <Navigate to='/registration/login' />
-        }
 
         return (
             <nav className="flex fixed justify-between items-center bg-white shadow-lg w-screen z-50">
                 <div className='px-4 cursor-pointer'>
-                    <Link to='/'><h2 className="text-3xl text-gray-800 font-bold">P<span className="text-red-600">U</span>PP<span className="text-red-800">I</span><span className="text-green-800">N</span></h2></Link>
+                    <Link to='/event/home'><h2 className="text-3xl text-gray-800 font-bold">P<span className="text-red-600">U</span>PP<span className="text-red-800">I</span><span className="text-green-800">N</span></h2></Link>
                 </div>
                 <div className="flex items-center space-x-10 font-semibold capitalize px-4">
 

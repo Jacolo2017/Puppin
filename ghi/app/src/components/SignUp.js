@@ -4,6 +4,7 @@ import PersonalInfo from './PersonalInfo';
 import AboutInfo from './AboutInfo';
 import Other from './Otherinfo';
 import { Link, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const SignUp = () => {
@@ -20,6 +21,7 @@ const SignUp = () => {
     photo_url: "",
     about: "",
   })
+  let navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,6 +51,7 @@ const SignUp = () => {
         photo_url: "",
         about: "",
       })
+      navigate("/registration/login");
     }
   }
 

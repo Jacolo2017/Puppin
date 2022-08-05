@@ -169,10 +169,9 @@ const CreateReview = (props) => {
 
 
     return (
-        <div className='flex flex-col text-gray-1000 py-2'>
-            <div className='flex flex-col justify-center'>
-                <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl border-spacing-2'>
-                    <h2 className='text-3xl text-black uppercase font-semibold text-center'>Review My Events</h2>
+        <div className='items-center h-screen w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c]'>
+            <div className='flex flex-col justify-center pt-4 pb-1'>
+                <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl'>
                     <div className='flex flex-col text-gray-900 py-2'>
                         <label>Select Event to Review</label>
                         <select onChange={event => loadSelectedEvent(event)} id="dog-select" className="form-select bg-blue-700 hover:bg-slate-700 py-2 px-4 rounded font-bold uppercase hover:bg-blue-300 shadow-sm text-white">
@@ -186,8 +185,10 @@ const CreateReview = (props) => {
                         </select>
                     </div>
                 </form>
-
+            </div>
+            <div className='flex flex-col justify-center py-1'>
                 <form className='max-w-[600px] w-full mx-auto bg-gray-200 py-4 px-8 rounded-lg shadow-xl' onSubmit={handleSubmit(onSubmit)}>
+                    <h2 className='text-3xl text-black uppercase font-semibold text-center'>Review My Events</h2>
                     {(enableForm !== undefined && !enableForm) ? (
                         <div>
                             <p className='text-med text-red-600 font-semibold justify-center'> This event hasn't happened yet, but let us know when you get that time machine working and we'll let you review it. </p>
@@ -196,7 +197,7 @@ const CreateReview = (props) => {
                     <fieldset disabled={!enableForm}>
                         <div className='flex flex-col text-gray-900 py-2'>
                             <label>Event Review</label>
-                            <input {...register("review_description")} placeholder="Tell us about the event" id='the id' className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" />
+                            <textarea {...register("review_description")} placeholder="Tell us about the event" id='the id' className='rounded-lg bg-gray-300 mt-2 p-2 hover:bg-gray-400' type="textarea" />
                             <label className='py-3'>Would you meetup with these Dog/Owner pairs again?</label>
                             {eventAttendees && eventAttendees.map(attendee => {
                                 if (attendee.account_id != userInfo.id) {
@@ -221,7 +222,7 @@ const CreateReview = (props) => {
                                 }
                             })}
                             <label className='py-2'>Location Rating</label>
-                            <input {...register('location_rating')} placeholder="Tell us about the location" className='rounded-lg bg-gray-300 mt-2 p-2  hover:bg-gray-400' type="textarea" />
+                            <textarea {...register('location_rating')} placeholder="Tell us about the location" className='rounded-lg bg-gray-300 mt-2 p-2  hover:bg-gray-400' type="textarea" />
                         </div>
                         <div className='flex justify-between item-center'>
                             {(!enableForm) ? (

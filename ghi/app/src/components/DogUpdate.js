@@ -3,6 +3,7 @@ import { set } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 
+
 const DogUpdate = (props) => {
     const [breedOptions, setBreedOptions] = useState([]);
     let [gotToken, setGotToken] = useState(false)
@@ -19,6 +20,7 @@ const DogUpdate = (props) => {
         dog_about: "",
         dog_size: "",
         dog_weight: "",
+        spayed_neutered: null,
         vaccination_history: "",
         account_id: "",
     });
@@ -160,10 +162,6 @@ const DogUpdate = (props) => {
         }
     }
 
-
-    const toggleCheck = () => {
-        setCheck(!check);
-    }
 
     return (
         <div className='items-center h-[1400px] w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-10'>

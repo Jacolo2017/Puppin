@@ -22,7 +22,6 @@ class Login extends React.Component{
         e.preventDefault()
         const error = await this.props.login(this.state.username, this.state.account_password);
         this.setState({ error: error })
-        console.log(this.state)
         this.setState({
             username: '',
             account_password: '',

@@ -3,6 +3,7 @@ import { set } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 
+
 const DogUpdate = (props) => {
     const [breedOptions, setBreedOptions] = useState([]);
     let [gotToken, setGotToken] = useState(false)
@@ -19,13 +20,14 @@ const DogUpdate = (props) => {
         dog_about: "",
         dog_size: "",
         dog_weight: "",
+        spayed_neutered: null,
         vaccination_history: "",
         account_id: "",
     });
     let navigate = useNavigate();
 
     if (props.token && gotToken == false) {
-        console.log("yes token")
+        
         fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
             .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`)
@@ -53,7 +55,7 @@ const DogUpdate = (props) => {
 
     useEffect(() => {
         async function getBreeds() {
-            // console.log("hello")
+            
             const breedUrl = 'https://dog.ceo/api/breeds/list/all'
             const response = await fetch(breedUrl);
             if (response.ok) {
@@ -90,10 +92,10 @@ const DogUpdate = (props) => {
 
     const deleteDog = async (event) => {
         event.preventDefault()
-        console.log("delete requested")
+        
         const dogId = selectedDog
         const accountId = formData.account_id
-        console.log(accountId)
+        
         const dogDeleteUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/${accountId}/dog/${dogId}`
         const fetchConfig = {
             method: 'delete',
@@ -105,7 +107,6 @@ const DogUpdate = (props) => {
         const response = await fetch(dogDeleteUrl, fetchConfig)
         if (response.ok) {
             const dogDeleteConfirm = await response.json()
-            console.log(dogDeleteConfirm)
             setFormData({
                 dog_name: "",
                 dog_breed: "",
@@ -131,7 +132,6 @@ const DogUpdate = (props) => {
         delete data.account_id
         const dogId = selectedDog
         data.spayed_neutered = check
-        console.log(JSON.stringify(data))
         const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dogId}`
         const fetchConfig = {
             method: 'put',
@@ -144,7 +144,6 @@ const DogUpdate = (props) => {
         const response = await fetch(dogUrl, fetchConfig)
         if (response.ok) {
             const newDog = await response.json()
-            console.log(newDog)
             setFormData({
                 dog_name: "",
                 dog_breed: "",
@@ -163,11 +162,6 @@ const DogUpdate = (props) => {
         }
     }
 
-
-    const toggleCheck = () => {
-        console.log("toggled")
-        setCheck(!check);
-    }
 
     return (
         <div className='items-center h-[1400px] w-screen bg-gradient-to-bl bg-[#eeb359] from-[#f5c57c] py-10'>

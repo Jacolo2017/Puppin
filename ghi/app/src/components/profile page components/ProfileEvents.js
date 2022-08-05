@@ -11,17 +11,14 @@ function ProfileEvents(props) {
 
 
 
-  console.log("currhoe", props.currentUser)
   function eventsAttendedByThisUser() {
     return fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.currentUser}/events/attended`)
       .then(res => res.json())
       .then(res => setAssociatedEvents(res));
   }
-  console.log(props.eventsData)
 
   if (doneOnce == false) {
     eventsAttendedByThisUser()
-    console.log("associ", associatedEvents)
     setdoneOnce(true)
   }
   useEffect(() => {

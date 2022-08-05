@@ -24,8 +24,8 @@ export default function CreateEvent(props) {
   )
 
   const onSubmit = async function (data) {
-    console.log("submit button hit")
-    console.log(data)
+    
+    
     const createeventURL = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${currentUser}/${userSelectedDog}`
     const fetchConfig = {
       method: 'post',
@@ -36,18 +36,18 @@ export default function CreateEvent(props) {
     }
     const response = await fetch(createeventURL, fetchConfig);
     if (response.ok) {
-      console.log("response ok")
+      
       reset()
       navigate("/event/home");
     }
     else {
-      console.log("nonononono")
+      
     }
 
   }
 
   if (props.token && gotToken == false) {
-    console.log("yes token")
+    
     fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`))

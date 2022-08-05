@@ -24,7 +24,6 @@ const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = { ...formData }
-    console.log(data)
     const accountUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts`
     const fetchConfig = {
       method: 'post',
@@ -37,7 +36,6 @@ const SignUp = () => {
     const response = await fetch(accountUrl, fetchConfig)
     if (response.ok) {
       const newAccount = await response.json()
-      console.log(newAccount)
       setFormData({
         first_name: "",
         last_name: "",

@@ -50,5 +50,11 @@ Registered and Logged In
 *[Intergrations](docs/intergrations.md)
 *[Project Design Diagram](docs/wireframe/puppin_design.png)
 
+##
+
+In order to run the project in a development environment, it requires that two volumes be built. The volumes names are the following:
+
+* postgres-data
+* pg-admin
 
 

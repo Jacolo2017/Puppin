@@ -10,7 +10,8 @@ from fastapi import (
     Request,
 )
 from pydantic import BaseModel
-from models.common import ErrorMessage
+
+# from models.common import ErrorMessage
 from typing import Union, Optional
 import psycopg
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -28,7 +29,7 @@ COOKIE_NAME = "fastapi_access_token"
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token",  auto_error=False)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 
 class HttpError(BaseModel):
@@ -170,9 +171,7 @@ def create_access_token(data: dict):
 @router.get("/api/currentuser/{cookie_token}")
 async def get_current_user(
     bearer_token: Optional[str] = Depends(oauth2_scheme),
-    cookie_token: Optional[str] | None = (
-        Cookie(default=None, alias=COOKIE_NAME)
-    ),
+    cookie_token: Optional[str] | None = (Cookie(default=None, alias=COOKIE_NAME)),
     repo: AccountQueries = Depends(),
 ):
     credentials_exception = HTTPException(
@@ -241,10 +240,7 @@ async def get_token(request: Request):
 async def logout(request: Request, response: Response):
     samesite = "none"
     secure = True
-    if (
-        "origin" in request.headers
-        and "localhost" in request.headers["origin"]
-    ):
+    if "origin" in request.headers and "localhost" in request.headers["origin"]:
         samesite = "lax"
         secure = False
     response.delete_cookie(
@@ -253,6 +249,7 @@ async def logout(request: Request, response: Response):
         samesite=samesite,
         secure=secure,
     )
+
 
 # @router.post("/api/create-user/{user_id}")
 # def createAccount(user_id: int, username: str, password: str):
@@ -270,15 +267,22 @@ def create_account(account: AccountIn, response: Response):
                     """INSERT INTO accounts (first_name, last_name, email, username,
                         account_password, date_of_birth, city, state, gender,
                         photo_url, about)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING account_id;
-                """,
-                    [account.first_name, account.last_name,
-                        account.email, account.username,
-                        hashed_password, account.date_of_birth,
-                        account.city, account.state,
-                        account.gender, account.photo_url,
-                        account.about]
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING account_id;
+                    """,
+                    [
+                        account.first_name,
+                        account.last_name,
+                        account.email,
+                        account.username,
+                        hashed_password,
+                        account.date_of_birth,
+                        account.city,
+                        account.state,
+                        account.gender,
+                        account.photo_url,
+                        account.about,
+                    ],
                 )
             except psycopg.errors.UniqueViolation:
                 # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
@@ -309,7 +313,8 @@ def get_account(account_id: int, response: Response):
                             photo_url, about
                         FROM accounts
                         WHERE account_id = %s;
-                        """, [account_id],
+                        """,
+                    [account_id],
                 )
                 row = cur.fetchone()
                 print("lookhere", (cur.description))
@@ -337,7 +342,8 @@ def get_account_by_username(username: str, response: Response):
                             photo_url, about
                         FROM accounts
                         WHERE username = %s;
-                        """, [username],
+                        """,
+                    [username],
                 )
                 row = cur.fetchone()
                 print("lookhere", (cur.description))
@@ -383,11 +389,19 @@ def update_account(account_id: str, account: AccountUpdate):
                         photo_url,
                         about;
                     """,
-                [account.first_name, account.last_name,
-                 account.email, account.username,
-                 hashed_password, account.city, account.state,
-                 account.gender, account.photo_url,
-                 account.about, account_id]
+                [
+                    account.first_name,
+                    account.last_name,
+                    account.email,
+                    account.username,
+                    hashed_password,
+                    account.city,
+                    account.state,
+                    account.gender,
+                    account.photo_url,
+                    account.about,
+                    account_id,
+                ],
             )
             row = curr.fetchone()
             record = {}
@@ -447,7 +461,8 @@ def get_attended_events_of_user(account_id: int, response: Response):
                 events.event_id = eventsusersjunction.event_id
                 WHERE
                 eventsusersjunction.account_id = %s
-                """, [account_id]
+                """,
+                [account_id],
             )
             results = []
             for row in cur.fetchall():
@@ -461,7 +476,6 @@ def get_attended_events_of_user(account_id: int, response: Response):
             return results
 
 
-
 @router.get("/api/accounts/{account_id}/events")
 def get_hosted_events_of_user(account_id: int, response: Response):
     with psycopg.connect() as conn:
@@ -473,7 +487,8 @@ def get_hosted_events_of_user(account_id: int, response: Response):
                 WHERE
                 events.account_id = %s
 
-                """, [account_id]
+                """,
+                [account_id],
             )
             results = []
             for row in cur.fetchall():
@@ -501,12 +516,20 @@ def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %b, %s, %s)
                     RETURNING dog_id;
                 """,
-                [dog.dog_name, dog.dog_breed, dog.dog_age,
-                    dog.dog_gender, dog.dog_photo,
-                    dog.dog_temperament, dog.dog_about,
-                    dog.dog_size, dog.dog_weight, dog.spayed_neutered,
+                [
+                    dog.dog_name,
+                    dog.dog_breed,
+                    dog.dog_age,
+                    dog.dog_gender,
+                    dog.dog_photo,
+                    dog.dog_temperament,
+                    dog.dog_about,
+                    dog.dog_size,
+                    dog.dog_weight,
+                    dog.spayed_neutered,
                     dog.vaccination_history,
-                    user['id']]
+                    user["id"],
+                ],
             )
             row = curr.fetchone()
             record = {}
@@ -516,30 +539,13 @@ def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
 
 
 @router.get("/api/dog/{dog_id}")
-def get_dog(dog_id: int, response: Response):
-    try:
-        with psycopg.connect() as conn:
-            with conn.cursor() as curr:
-                curr.execute(
-                    """SELECT dog_name, dog_breed, dog_age, dog_gender,
-                                dog_photo, dog_temperament, dog_about,
-                                dog_size, dog_weight, spayed_neutered,
-                                vaccination_history, account_id
-                        FROM dogs
-                        WHERE dog_id = %s;""",
-                    [dog_id],
-                )
-                row = curr.fetchone()
-                print(row)
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "Dog not found"}
-                record = {}
-                for i, column in enumerate(curr.description):
-                    record[column.name] = row[i]
-                return record
-    except psycopg.InterfaceError as exc:
-        print(exc)
+def get_dog(dog_id: int, response: Response, query=Depends(DogQueries)):
+    record = query.get_dog(dog_id)
+    print("from router: ", record)
+    if record is None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "Dog not found"}
+    return record
 
 
 @router.put("/api/dog/{dog_id}", response_model=DogUpdate)
@@ -575,11 +581,20 @@ def update_dog(dog_id: str, dog: DogUpdate):
                     spayed_neutered,
                     vaccination_history;
                 """,
-                [dog.dog_name, dog.dog_breed, dog.dog_age,
-                    dog.dog_gender, dog.dog_photo,
-                    dog.dog_temperament, dog.dog_about,
-                    dog.dog_size, dog.dog_weight, dog.spayed_neutered,
-                    dog.vaccination_history, dog_id]
+                [
+                    dog.dog_name,
+                    dog.dog_breed,
+                    dog.dog_age,
+                    dog.dog_gender,
+                    dog.dog_photo,
+                    dog.dog_temperament,
+                    dog.dog_about,
+                    dog.dog_size,
+                    dog.dog_weight,
+                    dog.spayed_neutered,
+                    dog.vaccination_history,
+                    dog_id,
+                ],
             )
 
             row = curr.fetchone()
@@ -593,13 +608,16 @@ def update_dog(dog_id: str, dog: DogUpdate):
 def get_account_dogs(account_id: int, response: Response):
     with psycopg.connect() as conn:
         with conn.cursor() as curr:
-            curr.execute("""
+            curr.execute(
+                """
                 SELECT d.dog_id, d.dog_name, d.dog_about, d.dog_breed, d.dog_age,
                 d.dog_photo, d.dog_temperament, d.dog_size, d.dog_weight, d.spayed_neutered,
                 d.vaccination_history, d.dog_gender, d.account_id
                 FROM public.dogs AS d
                     WHERE (d.account_id = %s)
-            """, [account_id])
+            """,
+                [account_id],
+            )
             results = []
             for row in curr.fetchall():
                 record = {}

@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom';
 const ProfileEvents = (props) => {
 
-  console.log(props.eventsData)
 
   return (
     <div className='py-20 flex' id="about">

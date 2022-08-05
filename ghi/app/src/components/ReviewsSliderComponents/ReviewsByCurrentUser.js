@@ -25,10 +25,8 @@ export default function ReviewsByCurrentUser(props) {
 
   }
   )
-  console.log(userReviews);
 
   if (props.token && gotToken == false) {
-    console.log("yes token")
     fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/event/reviews/account=${response.id}`))
@@ -42,7 +40,6 @@ export default function ReviewsByCurrentUser(props) {
     setGotToken(true);
   }
   else {
-    console.log("NONONO")
   }
   return (
 
@@ -64,7 +61,7 @@ export default function ReviewsByCurrentUser(props) {
           >
             {userReviews.map(item => (
               <SwiperSlide className='pt-4 rounded-sm' >
-                <motion.div className='border border-gray-300 rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px] mb-8 ' close={closeModel}>
+                <motion.div className='border border-gray-300 rounded-xl shadow-md text-center p-6 bg-gray-100 w-[350px] mb-8 ' onClick={closeModel}>
                   <h2 className='text-2xl font-bold text-gray-800'>{item.review_event}</h2>
                   <p className='text-gray-900 py-4 font-medium'>{item.review_description}</p>
                   <p className='text-blue-700 py-4 font-bold text-xl'>Rating: <span className='text-red-600'>{item.location_rating}</span></p>

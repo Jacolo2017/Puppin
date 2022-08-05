@@ -15,7 +15,6 @@ export default function JoinEvent(props) {
   const { control, register, handleSubmit, watch, reset, formState: { errors } } = useForm();
 
   if (props.token && gotToken == false) {
-    console.log("yes token")
     fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`))
@@ -33,7 +32,6 @@ export default function JoinEvent(props) {
     setGotToken(true)
   }
   useEffect(() => {
-    console.log(params)
     fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events/${params.event}`)
       .then(res => res.json())
       .then(res => setEventData(res))
@@ -42,8 +40,6 @@ export default function JoinEvent(props) {
   )
 
   const onSubmit = async function (data) {
-    console.log("submit button hit")
-    console.log(data)
     const joinEventURL = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${params.event}/?dog_id=${userSelectedDog}&account_id=${currentUser}`
     const fetchConfig = {
       method: 'post',
@@ -54,11 +50,10 @@ export default function JoinEvent(props) {
     }
     const response = await fetch(joinEventURL, fetchConfig);
     if (response.ok) {
-      console.log("response ok")
       reset()
     }
     else {
-      console.log("nonononono")
+      alert('alert')
     }
 
   }

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Swiper, SwiperSlide, slideTo } from 'swiper/react';
 import { FreeMode } from 'swiper'
 import 'swiper/css';
 import 'swiper/css/free-mode';
@@ -11,13 +11,26 @@ import PublicProfile from './PublicProfile';
 
 export default function Events() {
 
-  let [eventData, setEventData] = useState([]);
-
-  let [userData, setUserData] = useState([]);
-
+  const [eventData, setEventData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  let [storage, setStorage] = useState([])
+  const [storage, setStorage] = useState([])
   const [joinEventOpen, setJoinEventOpen] = useState(false)
+  const [myIndex, setMyIndex] = useState();
+  const sliderRef = useRef();
+
+  useEffect(() => {
+    sliderRef.current.swiper.slideTo(myIndex);
+  }, [myIndex]);
+
+
+  const handleExpand = (e, index) => {
+    e.preventDefault();
+    setMyIndex(index);
+    setIsOpen(!isOpen);
+  };
+
+
   function getReviewsFromEvents() {
     return Promise.all(
       eventData.map((eventid) =>
@@ -42,16 +55,8 @@ export default function Events() {
     fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events`)
       .then(res => res.json())
       .then(res => setEventData(res))
-
-
-
-
-
-  }
-
-
-
-    , [])
+  }, [])
+  
   // if eventid in eventData is the same as event id in reviews, add the corresponding review in that eventdata object
   useEffect(() => {
     getReviewsFromEvents()
@@ -72,7 +77,6 @@ export default function Events() {
         }
 
       });
-    console.log(eventData)
     getUsersFromEvents()
       .then((res) => {
         for (const anEvent of eventData) {
@@ -80,15 +84,11 @@ export default function Events() {
             for (const user of userlist) {
 
               if (user.event_id == anEvent.event_id && anEvent["users"] == undefined) {
-                console.log(user.event_id)
                 anEvent["users"] = []
                 anEvent["users"].push(user)
 
-                console.log(user.username)
               }
               else if (user.event_id == anEvent.event_id && (anEvent["users"].map(eventinneruser => eventinneruser["username"])).includes(user.username) == false && anEvent["users"] != undefined) {
-                console.log(user.username)
-                console.log(anEvent["users"].map(eventinneruser => eventinneruser["username"]))
                 anEvent["users"].push(user);
               }
             }
@@ -101,17 +101,13 @@ export default function Events() {
 
   function EventPastChecker(event) {
     const date = Date.parse(event)
-    console.log("now", Date.now())
-    console.log("event time", event)
     if (Date.now() < date) {
-      console.log("event completed")
       return true
     }
     else {
       return false
     }
   }
-  console.log(eventData)
 
   // useEffect(() => {
   //   fetch(`http://localhost:8001/api/accounts/${eventData}`)
@@ -134,6 +130,7 @@ export default function Events() {
         <div className='border border-gray-800 mt-6 border-opacity-30' />
         <div className='flex py-10'>
           <Swiper
+            ref={sliderRef}
             freeMode={true}
             grabCursor={false}
             modules={[FreeMode]}
@@ -143,9 +140,9 @@ export default function Events() {
           >
             {eventData.map((item, index) => (
 
-              <SwiperSlide className='pt-4 rounded-sm mb-6'>
+              <SwiperSlide className='pt-4 rounded-sm mb-6' key={index}>
                 <motion.div
-                  onClick={() => setIsOpen(!isOpen)}
+                  onClick={e => { handleExpand(e, index) }}
                   transition={{ layout: { duration: 1, type: 'spring' } }}
                   layout
                   style={{
@@ -155,6 +152,7 @@ export default function Events() {
                 >
                   <motion.h1 className='font-bold text-xl'>{item.event_name} </motion.h1>
                   <motion.h2>{item.event_date_time}</motion.h2>
+                  <motion.h2>{index}</motion.h2>
                   <motion.h2 className='font-semibold text-lg'>Hosted by : <Link className='text-green-600' to={`/user/${item.username}`}>{item.username}</Link></motion.h2>
 
                   {EventPastChecker(item.event_date_time) == true ? <Link to={`/join-event/${item.event_id}`}><button className="h-10 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" >Join this event </button></Link> : <div className="text-lg">Event finished.</div>}

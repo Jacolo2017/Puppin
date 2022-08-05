@@ -18,7 +18,7 @@ const AccountUpdate = (props) => {
     });
 
     if (props.token && gotToken == false) {
-        console.log("yes token")
+        
         fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
             .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}`)
@@ -33,7 +33,6 @@ const AccountUpdate = (props) => {
         event.preventDefault()
         const data = { ...formData }
         const accountId = UserAccount
-        console.log(accountId)
         const accountUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/update/${accountId.account_id}`
         const fetchConfig = {
             method: 'put',
@@ -47,7 +46,6 @@ const AccountUpdate = (props) => {
         const res = await fetch(accountUrl, fetchConfig)
         if (res.ok) {
             const updatedAccount = await res.json()
-            console.log(updatedAccount)
             setFormData({
                 first_name: "",
                 last_name: "",

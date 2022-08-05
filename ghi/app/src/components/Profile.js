@@ -44,7 +44,7 @@ export default function Profile(props) {
     if (page === 0) {
       return <ReviewsByCurrentUser token={props.token} />
     } else if (page === 1) {
-      return <ProfileEvents currentUser={currentUser} eventsData={eventsData} />
+      return <ProfileEvents currentUser={currentUser} eventsData={eventsData} token={props.token} />
     } else if (page === 2) {
       return <ProfileDogs userDogData={userDogData} />
     } else {

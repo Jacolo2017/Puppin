@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 export default function PublicProfileEvents(props){
 
   const [associatedEvents, setAssociatedEvents] = useState(null)
-  const [storage, setStorage] = useState([])
   const [doneOnce, setdoneOnce] = useState(false)
  
 

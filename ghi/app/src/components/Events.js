@@ -207,6 +207,6 @@ export default function Events(props) {
           </Swiper>
         </div>
       </div>
-    </div> : <Navigate to='/registration/login'/>
+    </div> : <Navigate to='/event/home'/>
   ) 
 }

@@ -4,22 +4,6 @@ volumes:
     pg-admin:
         external: true
 services:
-  events-api:
-    build:
-      context: ./events/api
-      dockerfile: ./Dockerfile.dev
-    ports:
-    - "8000:8000"
-    volumes:
-      - ./events/api:/app
-    depends_on:
-      - postgres
-    environment:
-      SIGNING_KEY: e7eb3ee8f8e8045c8497e605849804d14d3979cb4922b476b67e199448b6b00b
-      PGHOST: postgres
-      PGDATABASE: puppin
-      PGUSER: puppin
-      PGPASSWORD: puppin
   react:
     image: node:lts-bullseye
     command: /bin/bash run.sh
@@ -32,16 +16,15 @@ services:
         HOST_OS: ${OS}
         NODE_ENV: development
         HOST: "0.0.0.0"
-        REACT_APP_ACCOUNTS_HOST: http://localhost:8001
-        REACT_APP_EVENTS_HOST: http://localhost:8000
-  accounts-api:
+        REACT_APP_PUPPIN_HOST: http://localhost:8001
+  puppin:
     build:
-      context: ./accounts/api
+      context: ./puppin/api
       dockerfile: ./Dockerfile.dev
     ports: 
     - "8001:8000"
     volumes:
-      - ./accounts/api:/app
+      - ./puppin/api:/app
     depends_on:
       - postgres
     environment:

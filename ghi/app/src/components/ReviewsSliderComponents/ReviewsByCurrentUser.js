@@ -27,12 +27,12 @@ export default function ReviewsByCurrentUser(props) {
   )
 
   if (props.token && gotToken == false) {
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
-      .then(response => fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/event/reviews/account=${response.id}`))
+      .then(response => fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/event/reviews/account=${response.id}`))
       .then(response => response.json())
       .then(response => setUserReviews(response));
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => setCurrentUser(response.username));
 

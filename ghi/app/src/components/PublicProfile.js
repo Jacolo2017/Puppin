@@ -13,17 +13,17 @@ export default function PublicProfile(props) {
     let [eventsData, setEventsData] = useState();
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/by_username/${params.username}`)
+        fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/by_username/${params.username}`)
             .then(response => response.json())
             .then(response => setUserData(response))
-        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/by_username/${params.username}`)
+        fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/by_username/${params.username}`)
             .then(response => response.json())
-            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.account_id}/dogs`))
+            .then(response => fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response.account_id}/dogs`))
             .then(res1 => res1.json())
             .then(res1 => setuserDogData(res1));
-        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/by_username/${params.username}`)
+        fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/by_username/${params.username}`)
             .then(response3 => response3.json())
-            .then(response3 => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response3.account_id}/events`))
+            .then(response3 => fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response3.account_id}/events`))
             .then(response2 => response2.json())
             .then(response2 => setEventsData(response2))
     }, [])

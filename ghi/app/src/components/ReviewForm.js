@@ -24,7 +24,7 @@ const CreateReview = (props) => {
     // loads userInfo (id, username, account_password (hashed) based on token)    
     async function loadUserToken() {
         if (props.token && gotToken == false) {
-            await fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+            await fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
                 .then(response => response.json())
                 .then(response => setUserInfo(response));
             setGotToken(true);
@@ -39,7 +39,7 @@ const CreateReview = (props) => {
 
     // querries API and pulls in reviews already submitted by the user and turns data into a list of event IDs reviewed by user
     const loadExistingReviews = async () => {
-        const url = `${process.env.REACT_APP_EVENTS_HOST}/api/event/reviews/account=${userInfo.id}`
+        const url = `${process.env.REACT_APP_PUPPIN_HOST}/api/event/reviews/account=${userInfo.id}`
         let fetchConfig = {
             method: 'GET',
             headers: {
@@ -68,7 +68,7 @@ const CreateReview = (props) => {
 
     // makes API call to get all events user is registered to and filters the events that have already been reviewed
     const loadEventSelectionMenu = async () => {
-        const response = await fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events/myevents=${userInfo.id}/`)
+        const response = await fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/events/myevents=${userInfo.id}/`)
         if (response.ok) {
             const registeredEvents = await response.json()
             const events = registeredEvents.filter(event => (!existingReviews.includes(event['event_id'])))
@@ -80,7 +80,7 @@ const CreateReview = (props) => {
     const loadSelectedEvent = async (event) => {
         event.preventDefault();
         const eventId = event.target.value
-        const eventUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${eventId}`
+        const eventUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/events/${eventId}`
         let fetchConfig = {
             method: 'GET',
             headers: {
@@ -101,7 +101,7 @@ const CreateReview = (props) => {
             }
         };
 
-        const attendeeUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${eventId}/usersdogs`
+        const attendeeUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/events/${eventId}/usersdogs`
         fetchConfig = {
             method: 'GET',
             headers: {
@@ -133,7 +133,7 @@ const CreateReview = (props) => {
         // // submitting review data
         reviewData["review_event"] = selectedEvent.event_name
         reviewData["reviewer_username"] = userInfo.username
-        const reviewUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/event/${selectedEvent.event_id}/reviews/create?account_id=${userInfo.id}`
+        const reviewUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/event/${selectedEvent.event_id}/reviews/create?account_id=${userInfo.id}`
         const reviewFetchConfig = {
             method: 'post',
             body: JSON.stringify(reviewData),
@@ -157,7 +157,7 @@ const CreateReview = (props) => {
             credentials: "include"
         }
         for (let i in ratings) {
-            let attendeeRatingUrl = `${process.env.REACT_APP_EVENTS_HOST}/api/event/${eventId}/reviews/${i}/${reviewer}?rating=${ratings[i]}`
+            let attendeeRatingUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/event/${eventId}/reviews/${i}/${reviewer}?rating=${ratings[i]}`
             const response = await fetch(attendeeRatingUrl, attendeeFetchConfig)
             if (response.ok) {
                 const newReview = await response.json()

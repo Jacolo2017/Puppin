@@ -27,7 +27,7 @@ export default function ReviewsByAnyUser(props) {
 
   if (props.userData.length != 0 && isLoaded == false) {
     console.log("effected", props.userData)
-    fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/event/reviews/account=${props.userData.account_id}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/event/reviews/account=${props.userData.account_id}`)
       .then(response => response.json())
       .then(response => setEventReviews(response));
     setIsLoaded(true);

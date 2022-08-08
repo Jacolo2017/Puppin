@@ -26,7 +26,7 @@ const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = { ...formData }
-    const accountUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts`
+    const accountUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/accounts`
     const fetchConfig = {
       method: 'post',
       body: JSON.stringify(data),

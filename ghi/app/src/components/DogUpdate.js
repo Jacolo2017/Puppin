@@ -28,9 +28,9 @@ const DogUpdate = (props) => {
 
     if (props.token && gotToken == false) {
         
-        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+        fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`)
+            .then(response => fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response.id}/dogs`)
                 .then(response => response.json())
                 .then(response => setUserDogs(response)))
 
@@ -72,7 +72,7 @@ const DogUpdate = (props) => {
         event.preventDefault();
         const dog_Id = event.target.value
         setSelectedDog(event.target.value)
-        const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dog_Id}`
+        const dogUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/dog/${dog_Id}`
         const fetchConfig = {
             method: 'GET',
             headers: {
@@ -96,7 +96,7 @@ const DogUpdate = (props) => {
         const dogId = selectedDog
         const accountId = formData.account_id
         
-        const dogDeleteUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/${accountId}/dog/${dogId}`
+        const dogDeleteUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/${accountId}/dog/${dogId}`
         const fetchConfig = {
             method: 'delete',
             headers: {
@@ -132,7 +132,7 @@ const DogUpdate = (props) => {
         delete data.account_id
         const dogId = selectedDog
         data.spayed_neutered = check
-        const dogUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/dog/${dogId}`
+        const dogUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/dog/${dogId}`
         const fetchConfig = {
             method: 'put',
             body: JSON.stringify(data),

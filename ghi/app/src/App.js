@@ -29,7 +29,7 @@ export default function App() {
 
 
 
-  fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${token}`)
+  fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${token}`)
     .then(response => response.json())
     .then(response => setCurrentUser(response.id))
 

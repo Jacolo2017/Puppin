@@ -24,28 +24,28 @@ export default function JoinEvent(props) {
   if (props.token && gotToken == false) {
     console.log("yes token");
     fetch(
-      `${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`
+      `${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`
     )
       .then((response) => response.json())
       .then((response) =>
         fetch(
-          `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`
+          `${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response.id}/dogs`
         )
       )
       .then((response) => response.json())
       .then((response) => setUserDogs(response));
     fetch(
-      `${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`
+      `${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`
     )
       .then((response) => response.json())
       .then((response) => setCurrentUser(response.id));
     fetch(
-      `${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`
+      `${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`
     )
       .then((response) => response.json())
       .then((response) =>
         fetch(
-          `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`
+          `${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response.id}/dogs`
         )
       )
       .then((response) => response.json())
@@ -55,7 +55,7 @@ export default function JoinEvent(props) {
   }
   useEffect(() => {
     console.log(params);
-    fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events/${params.event}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/events/${params.event}`)
       .then((res) => res.json())
       .then((res) => setEventData(res));
   }, [params]);
@@ -63,7 +63,7 @@ export default function JoinEvent(props) {
   const onSubmit = async function (data) {
     console.log("submit button hit");
     console.log(data);
-    const joinEventURL = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${params.event}/?dog_id=${userSelectedDog}&account_id=${currentUser}`;
+    const joinEventURL = `${process.env.REACT_APP_PUPPIN_HOST}/api/events/${params.event}/?dog_id=${userSelectedDog}&account_id=${currentUser}`;
     const fetchConfig = {
       method: "post",
       body: JSON.stringify(data),

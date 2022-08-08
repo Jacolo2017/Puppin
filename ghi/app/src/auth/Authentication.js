@@ -7,7 +7,7 @@ export function getToken() {
 }
 
 async function getTokenInternal() {
-  const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
+  const url = `${process.env.REACT_APP_PUPPIN_HOST}/token`;
   try {
     const response = await fetch(url, {
       credentials: 'include',
@@ -35,7 +35,7 @@ export function useToken() {
 
   async function logout() {
     if (token) {
-      const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
+      const url = `${process.env.REACT_APP_PUPPIN_HOST}/token`;
       await fetch(url, { method: 'DELETE', credentials: 'include' });
       internalToken = null;
       setToken(null);
@@ -43,7 +43,7 @@ export function useToken() {
   }
 
   async function login(username, account_password, navigate = ()=>null) {
-    const url = `${process.env.REACT_APP_ACCOUNTS_HOST}/token`;
+    const url = `${process.env.REACT_APP_PUPPIN_HOST}/token`;
     const form = new FormData();
     form.append('username', username);
     form.append('password', account_password);

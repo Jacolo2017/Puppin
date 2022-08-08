@@ -21,9 +21,9 @@ const AccountUpdate = (props) => {
 
     if (props.token && gotToken == false) {
         
-        fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+        fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
             .then(response => response.json())
-            .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}`)
+            .then(response => fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response.id}`)
                 .then(response => response.json())
                 .then(response => setUserAccount(response)))
 
@@ -35,7 +35,7 @@ const AccountUpdate = (props) => {
         event.preventDefault()
         const data = { ...formData }
         const accountId = UserAccount
-        const accountUrl = `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/update/${accountId.account_id}`
+        const accountUrl = `${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/update/${accountId.account_id}`
         const fetchConfig = {
             method: 'put',
             body: JSON.stringify(data),

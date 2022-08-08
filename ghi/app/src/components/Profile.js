@@ -17,18 +17,18 @@ export default function Profile(props) {
   let [eventsData, setEventsData] = useState();
 
   if (props.token && gotToken == false) {
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => setCurrentUser(response.id))
 
 
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.currentUser}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${props.currentUser}`)
       .then(res => res.json())
       .then(res => setUserData(res))
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.currentUser}/dogs`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${props.currentUser}/dogs`)
       .then(res1 => res1.json())
       .then(res1 => setuserDogData(res1))
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.currentUser}/events`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${props.currentUser}/events`)
       .then(response2 => response2.json())
       .then(response2 => setEventsData(response2))
 

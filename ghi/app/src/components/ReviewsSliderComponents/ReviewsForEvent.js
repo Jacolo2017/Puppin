@@ -19,7 +19,7 @@ export default function ReviewsByEvent(props) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/event/4/reviews/`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/event/4/reviews/`)
       .then(response => response.json())
       .then(response => setEventReviews(response));
 

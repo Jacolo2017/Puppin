@@ -37,7 +37,7 @@ export default function Events(props) {
 
 
   if (props.token && gotToken == false) {
-  fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+  fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
   .then(response => response.json())
   .then(response => setCurrentUser(response.username));
 
@@ -48,7 +48,7 @@ export default function Events(props) {
   function getReviewsFromEvents() {
     return Promise.all(
       eventData.map((eventid) =>
-        fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/event/${eventid.event_id}/reviews`)
+        fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/event/${eventid.event_id}/reviews`)
           .then(response => response.json())
 
       )
@@ -57,7 +57,7 @@ export default function Events(props) {
   function getUsersFromEvents() {
     return Promise.all(
       eventData.map((eventid) =>
-        fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events/${eventid.event_id}/usersdogs`)
+        fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/events/${eventid.event_id}/usersdogs`)
           .then(response => response.json())
 
       )
@@ -66,7 +66,7 @@ export default function Events(props) {
 
   useEffect(() => {
 
-    fetch(`${process.env.REACT_APP_EVENTS_HOST}/api/events`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/events`)
       .then(res => res.json())
       .then(res => setEventData(res))
   }

@@ -26,7 +26,7 @@ export default function CreateEvent(props) {
   const onSubmit = async function (data) {
     
     
-    const createeventURL = `${process.env.REACT_APP_EVENTS_HOST}/api/events/${currentUser}/${userSelectedDog}`
+    const createeventURL = `${process.env.REACT_APP_PUPPIN_HOST}/api/events/${currentUser}/${userSelectedDog}`
     const fetchConfig = {
       method: 'post',
       body: JSON.stringify(data),
@@ -48,17 +48,17 @@ export default function CreateEvent(props) {
 
   if (props.token && gotToken == false) {
     
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
-      .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`))
+      .then(response => fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response.id}/dogs`))
       .then(response => response.json())
       .then(response => setUserDogs(response))
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
       .then(response => setCurrentUser(response.id))
-    fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/currentuser/${props.token}`)
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
       .then(response => response.json())
-      .then(response => fetch(`${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${response.id}/dogs`))
+      .then(response => fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${response.id}/dogs`))
       .then(response => response.json())
       .then(response => setUserSelectedDog(response[0].dog_id))
 

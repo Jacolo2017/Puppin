@@ -14,7 +14,7 @@ export default function PublicProfileEvents(props) {
 
   function eventsAttendedByThisUser() {
     return fetch(
-      `${process.env.REACT_APP_ACCOUNTS_HOST}/api/accounts/${props.userData.account_id}/events/attended`
+      `${process.env.REACT_APP_PUPPIN_HOST}/api/accounts/${props.userData.account_id}/events/attended`
     )
       .then((res) => res.json())
       .then((res) => setAssociatedEvents(res));

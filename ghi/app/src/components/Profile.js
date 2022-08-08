@@ -92,6 +92,6 @@ export default function Profile(props) {
         <PageDisplay />
       </div>
 
-    </div> : <Navigate to='/registration/login'/>
+    </div> : <Navigate to='/profile'/>
   )
 }

@@ -88,7 +88,7 @@ export default function PublicProfile(props) {
                     <PageDisplay />
                 </div>
 
-            </div> : <Navigate to='/registration/login' />
+            </div> : <Navigate to='/user/:username' />
     )
 }
 {/* <ReviewsByAnyUser userData={userData} /> */ }

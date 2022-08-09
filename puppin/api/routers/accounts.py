@@ -22,7 +22,7 @@ from passlib.context import CryptContext
 import os
 
 
-SECRET_KEY = os.getenv["SECRET_KEY"]
+SECRET_KEY = os.environ.get("SECRET_KEY")
 ALGORITHM = "HS256"
 COOKIE_NAME = "fastapi_access_token"
 

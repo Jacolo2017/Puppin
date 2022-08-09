@@ -19,6 +19,7 @@ api-unit-test-job:
   stage: test
   script:
     - cd puppin
+    - cd api
     - pip install -r requirements.txt
     - export DATABASE_URL= "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB" 
     - python -m pytest  # Run unit tests

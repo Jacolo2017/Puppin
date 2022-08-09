@@ -8,7 +8,6 @@ stages:
 #   - postgres: 14.2-bullseye
 
 variables:
-  variables:
   POSTGRES_PASSWORD: puppin
   POSTGRES_USER: puppin
   POSTGRES_DB: puppin

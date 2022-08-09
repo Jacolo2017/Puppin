@@ -100,7 +100,7 @@ def test_get_user_200():
     app.dependency_overrides = {}
 
 def test_create_account_200():
-    app.dependency_overrides[create_fake_account] = create_account
+    app.dependency_overrides[create_account] = create_fake_account
     res = client.post("/api/accounts",
                     json={
                         "first_name": "Paul",

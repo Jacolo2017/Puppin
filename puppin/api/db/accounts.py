@@ -115,7 +115,7 @@ class AccountQueries:
                     gender, 
                     photo_url, 
                     about, 
-                    response: Response):
+                    ):
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 try:

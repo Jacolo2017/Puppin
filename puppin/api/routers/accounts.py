@@ -271,7 +271,7 @@ def create_account(account: AccountIn, response: Response, query=Depends(Account
                         account.state,
                         account.gender,
                         account.photo_url,
-                        account.about, response)
+                        account.about)
     except psycopg.errors.UniqueViolation:
         response.status_code = status.HTTP_409_CONFLICT
         return {"message": f"{account.username} username already exists"}

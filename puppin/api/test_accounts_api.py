@@ -48,7 +48,7 @@ class FakeAccountCreate(TestCase):
 
 
 class FakeAccountQuery(TestCase):
-    def get_fake_user(self, username: str):
+    def get_account_by_username(self, username: str):
         return {
             "id": 1,
             "username": "K",
@@ -56,12 +56,12 @@ class FakeAccountQuery(TestCase):
         }
 
 
-async def get_fake_user(self, username: str):
-    return {
-        "id": 1,
-        "username": "K",
-        "account_password": "e",
-    }
+# async def get_fake_user(self, username: str):
+#     return {
+#         "id": 1,
+#         "username": "K",
+#         "account_password": "e",
+#     }
 
 
 app.dependency_overrides[AccountQueries] = FakeAccountQuery
@@ -89,12 +89,12 @@ client = TestClient(app)
 
 def test_get_user_200():
     app.dependency_overrides[AccountQueries] = FakeAccountQuery
-    app.dependency_overrides[get_account_by_username] = get_fake_user
     print(client)
     res = client.get("/api/accounts/1")
     print("HERE:", res)
     assert res.status_code == 200
     app.dependency_overrides = {}
+
 
 
 def test_create_account_200():

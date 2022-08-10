@@ -99,7 +99,7 @@ client = TestClient(app)
 def test_get_user_200():
     app.dependency_overrides[AccountQueries] = FakeAccountQuery
     print(client)
-    res = client.get("/api/accounts/1")
+    res = client.get("/api/accounts/by_username/rog2er")
     print("HERE:", res)
     assert res.status_code == 200
     app.dependency_overrides = {}

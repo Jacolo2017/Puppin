@@ -8,10 +8,10 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    os.environ.get("CORS_HOST", None),
-    os.environ["CORS_HOST"],
     "https://purely-puptonic.gitlab.io/puppin/",
 ]
+# os.environ.get("CORS_HOST", None),
+# os.environ["CORS_HOST"],
 
 app.add_middleware(
     CORSMiddleware,

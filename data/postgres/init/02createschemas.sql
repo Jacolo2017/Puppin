@@ -51,14 +51,15 @@ DROP TABLE if exists public.reviews;
 CREATE TABLE public.events(
     event_id serial NOT NULL PRIMARY KEY,
     event_name character varying(100) NOT NULL,
-    -- location_id serial,
-    -- FOREIGN KEY (location_id) REFERENCES public.locations(location_id) ON DELETE CASCADE,
+
     event_location character varying(100) NOT NULL,
     event_date_time TIMESTAMPTZ NOT NULL,
     account_id serial,
     FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE
-    -- UNIQUE(location_id)
 );
+   -- location_id serial,
+    -- FOREIGN KEY (location_id) REFERENCES public.locations(location_id) ON DELETE CASCADE,
+    -- UNIQUE(location_id)
 
 CREATE TABLE public.reviews(
     review_id serial NOT NULL PRIMARY KEY,

@@ -50,7 +50,7 @@ class FakeAccountCreate(TestCase):
 
 
 class FakeAccountQuery(TestCase):
-    def get_account_by_username(self, username: str):
+    def get_account_from_username(self, username: str):
         print("savage")
         return {
             "first_name": "rog2er",

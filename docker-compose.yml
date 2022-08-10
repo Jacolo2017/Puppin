@@ -29,7 +29,7 @@ services:
       - postgres
     environment:
       DATABASE_URL: postgres://puppin:puppin@postgres:5432/puppin 
-      SECRET_KEY: e7eb3ee8f8e8045c8497e605849804d14d3979cb4922b476b67e199448b6b00b
+      SIGNING_KEY: e7eb3ee8f8e8045c8497e605849804d14d3979cb4922b476b67e199448b6b00b
       PGHOST: postgres
       PGDATABASE: puppin
       PGUSER: puppin

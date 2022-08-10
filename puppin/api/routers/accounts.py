@@ -22,7 +22,7 @@ from passlib.context import CryptContext
 import os
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SIGNING_KEY = os.environ["SIGNING_KEY"]
 ALGORITHM = "HS256"
 COOKIE_NAME = "fastapi_access_token"
 
@@ -164,7 +164,7 @@ def authenticate_user(repo: AccountQueries, username: str, account_password: str
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, SIGNING_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
@@ -183,7 +183,7 @@ async def get_current_user(
     if not token and cookie_token:
         token = cookie_token
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, SIGNING_KEY, algorithms=[ALGORITHM])
         username = payload.get("sub")
         if username is None:
             raise credentials_exception
@@ -258,75 +258,46 @@ async def logout(request: Request, response: Response):
 
 
 @router.post("/api/accounts")
-def create_account(
-    account: AccountIn, response: Response, query=Depends(AccountQueries)
-):
-    try:
-        hashed_password = pwd_context.hash(account.account_password)
-        record = query.create_account(
-            account.username,
-            account.email,
-            hashed_password,
-            account.first_name,
-            account.last_name,
-            account.date_of_birth,
-            account.city,
-            account.state,
-            account.gender,
-            account.photo_url,
-            account.about,
-        )
-    except psycopg.errors.UniqueViolation:
-        response.status_code = status.HTTP_409_CONFLICT
-        return {"message": f"{account.username} username already exists"}
-    if record is None:
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return {"message": "Account can't be made"}
-    return record
-    # with psycopg.connect() as conn:
-    #     with conn.cursor() as cur:
-    #         try:
-    #             hashed_password = pwd_context.hash(account.account_password)
-    #             cur.execute(
-    #                 """INSERT INTO accounts (first_name, last_name, email, username,
-    #                     account_password, date_of_birth, city, state, gender,
-    #                     photo_url, about)
-    #                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    #                 RETURNING account_id;
-    #                 """,
-    #                 [
-    #                     account.first_name,
-    #                     account.last_name,
-    #                     account.email,
-    #                     account.username,
-    #                     hashed_password,
-    #                     account.date_of_birth,
-    #                     account.city,
-    #                     account.state,
-    #                     account.gender,
-    #                     account.photo_url,
-    #                     account.about,
-    #                 ],
-    #             )
-    #         except psycopg.errors.UniqueViolation:
-    #             # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
-    #             response.status_code = status.HTTP_409_CONFLICT
-    #             return {
-    #                 "message": "That usernames taken dawg",
-    #             }
-    #         row = cur.fetchone()
-    #         record = {}
-    # print(type(record))
-    # print(type(row))
-    record = query.create_account(response)
-    if record is None:
-        response.status_code = status.HTTP_409_CONFLICT
-        return {"message": "bad date"}
-    return record
+def create_account(account: AccountIn, response: Response):
+    with psycopg.connect() as conn:
+        with conn.cursor() as cur:
+            try:
+                hashed_password = pwd_context.hash(account.account_password)
+                cur.execute(
+                    """INSERT INTO accounts (first_name, last_name, email, username,
+                        account_password, date_of_birth, city, state, gender,
+                        photo_url, about)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING account_id;
+                    """,
+                    [
+                        account.first_name,
+                        account.last_name,
+                        account.email,
+                        account.username,
+                        hashed_password,
+                        account.date_of_birth,
+                        account.city,
+                        account.state,
+                        account.gender,
+                        account.photo_url,
+                        account.about,
+                    ],
+                )
+            except psycopg.errors.UniqueViolation:
+                # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
+                response.status_code = status.HTTP_409_CONFLICT
+                return {
+                    "message": "That usernames taken dawg",
+                }
+            row = cur.fetchone()
+            record = {}
+            print(type(record))
+            print(type(row))
 
-    # for i, column in enumerate(cur.description):
-    #     record[column.name] = row[i]
-    # return record
+            for i, column in enumerate(cur.description):
+                record[column.name] = row[i]
+            return record
 
 
 @router.get("/api/accounts/{account_id}")
@@ -359,12 +330,32 @@ def get_account(account_id: int, response: Response):
 
 
 @router.get("/api/accounts/by_username/{username}")
-def get_account_by_username(username: str, response: Response, query=Depends(AccountQueries)):
-    record = query.get_account_by_username
-    if record is None:
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return {"message": "Dog not found"}
-    return record
+def get_account_by_username(username: str, response: Response):
+    try:
+        print("okay we tried")
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                        SELECT first_name, last_name, email, username, 
+                        date_of_birth, city, state, gender, account_id,
+                            photo_url, about
+                        FROM accounts
+                        WHERE username = %s;
+                        """,
+                    [username],
+                )
+                row = cur.fetchone()
+                print("lookhere", (cur.description))
+                if row is None:
+                    response.status_code = status.HTTP_404_NOT_FOUND
+                    return {"message": "Account not found"}
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
+                return record
+    except psycopg.InterfaceError as exc:
+        print(exc.message)
 
 
 @router.put("/api/accounts/update/{account_id}", response_model=AccountUpdate)
@@ -654,3 +645,5 @@ def delete_dog(dog: Dogs, account_id: int, dog_id: int, query=Depends(DogQueries
 
 
 # This is a new line that ends the file.
+
+

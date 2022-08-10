@@ -28,7 +28,7 @@ export default function App() {
   let [gotToken, setGotToken] = useState(false);
 
   useEffect(() => {
-    if (token != null)
+    if (token != false)
       fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${token}`)
         .then((response) => response.json())
         .then((response) => setCurrentUser(response.id));

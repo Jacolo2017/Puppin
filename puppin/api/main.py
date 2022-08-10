@@ -10,6 +10,7 @@ origins = [
     "http://localhost:3000",
     os.environ.get("CORS_HOST", None),
     os.environ["CORS_HOST"],
+    "https://purely-puptonic.gitlab.io/puppin/",
 ]
 
 app.add_middleware(

@@ -16,13 +16,13 @@ services:
         HOST_OS: ${OS}
         NODE_ENV: development
         HOST: "0.0.0.0"
-        REACT_APP_PUPPIN_HOST: http://localhost:8000
+        REACT_APP_PUPPIN_HOST: http://localhost:8001
   puppin:
     build:
       context: ./puppin/api
       dockerfile: ./Dockerfile.dev
     ports: 
-    - "8000:8000"
+    - "8001:8000"
     volumes:
       - ./puppin/api:/app
     depends_on:

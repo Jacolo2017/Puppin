@@ -61,7 +61,6 @@ build-back-end-job:
     - docker:20.10.16-dind
   script:
     - ls
-    - cd puppin
     - cd api
     - docker build -t ${CI_REGISTRY_IMAGE}/puppin:latest .
     - docker tag ${CI_REGISTRY_IMAGE}/api:latest ${CI_REGISTRY_IMAGE}/puppin:$CI_JOB_ID

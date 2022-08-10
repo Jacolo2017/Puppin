@@ -41,7 +41,15 @@ front-end-build-job:
   script:
     - cd ghi
     - npm install
-    - npm run build  # Build the React application
+    - npm install framer-motion
+    - npm install swiper
+    - npm install react-icons
+    - npm install -D tailwindcss
+    - npm install -D postcss 
+    - npm install -D autoprefixer
+    - npm install react-hook-form
+    - npm install react-datepicker --save
+    - npm start  # Build the React application
 
 build-back-end-job:
   rules:

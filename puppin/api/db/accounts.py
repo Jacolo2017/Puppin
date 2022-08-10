@@ -80,24 +80,34 @@ class AccountQueries:
                 except UniqueViolation:
                     raise DuplicateUsername
 
-    def get_account_from_username(self, username: str):
-        with pool.connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    SELECT
-                        a.account_id,
-                        a.username,
-                        a.account_password
-                    FROM accounts AS a
-                    WHERE a.username = %s
-                    """,
-                    [username],
-                )
-                account = cursor.fetchone()
-                return account
+    def get_account_by_username(username: str, response: Response):
+        try:
+            print("okay we tried")
+            with psycopg.connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                            SELECT first_name, last_name, email, username, 
+                            date_of_birth, city, state, gender, account_id,
+                                photo_url, about
+                            FROM accounts
+                            WHERE username = %s;
+                            """,
+                        [username],
+                    )
+                    row = cur.fetchone()
+                    print("lookhere", (cur.description))
+                    if row is None:
+                        response.status_code = status.HTTP_404_NOT_FOUND
+                        return {"message": "Account not found"}
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                    return record
+        except psycopg.InterfaceError as exc:
+            print(exc.message)
 
-    def get_user(self, username:str):
+    def get_user(self, username: str):
         row = self.get_account_from_username(username)
         if not row:
             return None

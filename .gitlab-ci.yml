@@ -11,7 +11,7 @@ variables:
   # POSTGRES_USER: puppin
   # POSTGRES_DB: puppin
   DATABASE_URL: postgres://puppin:puppin@postgres:5432/puppin
-  # REACT_APP_PUPPIN_HOST: https://${puppin}.herokuapp.com
+  REACT_APP_PUPPIN_HOST: https://${puppin}.herokuapp.com
 
 api-unit-test-job:
   image: python:3-bullseye

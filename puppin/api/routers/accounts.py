@@ -22,7 +22,7 @@ from passlib.context import CryptContext
 import os
 
 
-SIGNING_KEY = os.environ["SIGNING_KEY"]
+SIGNING_KEY = os.environ.get("SIGNING_KEY")
 ALGORITHM = "HS256"
 COOKIE_NAME = "fastapi_access_token"
 
@@ -645,5 +645,3 @@ def delete_dog(dog: Dogs, account_id: int, dog_id: int, query=Depends(DogQueries
 
 
 # This is a new line that ends the file.
-
-

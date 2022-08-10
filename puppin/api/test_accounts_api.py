@@ -62,8 +62,8 @@ class FakeAccountQuery(TestCase):
             "state": "roger",
             "gender": "roger",
             "account_id": 1,
-            "photo_url": "",
-            "about": "",
+            "photo_url": "231312312",
+            "about": "gangstuff",
         }
 
 
@@ -122,13 +122,13 @@ def test_create_account_200():
 
 
 # this doesnt work in pipeline CI, commenting out for now
-# def test_get_user_200():
-#     app.dependency_overrides[AccountQueries] = FakeAccountQuery
-#     print(client)
-#     res = client.get("/api/accounts/by_username/K")
-#     print("HERE:", res)
-#     assert res.status_code == 200
-#     app.dependency_overrides = {}
+def test_get_user_200():
+    app.dependency_overrides[AccountQueries] = FakeAccountQuery
+    print(client)
+    res = client.get("/api/accounts/by_username/K")
+    print("HERE:", res)
+    assert res.status_code == 200
+    app.dependency_overrides = {}
 
 
 # create_fake_account(first_name="paul",

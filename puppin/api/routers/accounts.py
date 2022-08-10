@@ -359,32 +359,12 @@ def get_account(account_id: int, response: Response):
 
 
 @router.get("/api/accounts/by_username/{username}")
-def get_account_by_username(username: str, response: Response):
-    try:
-        print("okay we tried")
-        with psycopg.connect() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                        SELECT first_name, last_name, email, username, 
-                        date_of_birth, city, state, gender, account_id,
-                            photo_url, about
-                        FROM accounts
-                        WHERE username = %s;
-                        """,
-                    [username],
-                )
-                row = cur.fetchone()
-                print("lookhere", (cur.description))
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "Account not found"}
-                record = {}
-                for i, column in enumerate(cur.description):
-                    record[column.name] = row[i]
-                return record
-    except psycopg.InterfaceError as exc:
-        print(exc.message)
+def get_account_by_username(username: str, response: Response, query=Depends(AccountQueries)):
+    record = query.get_account_by_username
+    if record is None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"message": "Dog not found"}
+    return record
 
 
 @router.put("/api/accounts/update/{account_id}", response_model=AccountUpdate)

@@ -38,7 +38,7 @@ front-end-build-job:
     # - lint-test-job      # this build-job to run
   script:
     - cd ghi
-    - npm install/app
+    - npm install
     - npm install framer-motion
     - npm install swiper
     - npm install react-icons

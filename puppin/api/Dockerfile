@@ -11,7 +11,7 @@ COPY __init__.py __init__.py
 # code
 COPY models models
 COPY routers routers
-COPY upload upload
+# COPY upload upload
 COPY db db
 
 RUN pip install -r requirements.txt

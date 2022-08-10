@@ -1,5 +1,5 @@
 {
-  "scripts": {
+  "react-scripts": {
     "start": "node ./windows-setup.js && react-scripts start",
     "build": "react-scripts build",
     "test": "jest",

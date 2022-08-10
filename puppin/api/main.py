@@ -8,8 +8,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    "https://purely-puptonic.gitlab.io/puppin/",
-    "https://puppin.herokuapp.com/",
+    "https://purely-puptonic.gitlab.io",
+    "https://puppin.herokuapp.com",
 ]
 # os.environ.get("CORS_HOST", None),
 # os.environ["CORS_HOST"],

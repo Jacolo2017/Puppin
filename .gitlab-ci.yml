@@ -97,8 +97,8 @@ deploy-puppin-job:  # RENAME THIS
 
     # IF THIS IS FOR A BACKGROUND SERVICE LIKE A POLLER,
     # CHANGE /web TO /worker (2 PLACES)
-    - docker pull ${CI_REGISTRY_IMAGE}/fastapi_api:latest
-    - docker tag ${CI_REGISTRY_IMAGE}/fastapi_api:latest registry.heroku.com/$HEROKU_SERVICE_APP/web:latest
+    - docker pull ${CI_REGISTRY_IMAGE}/puppin:latest
+    - docker tag ${CI_REGISTRY_IMAGE}/puppin:latest registry.heroku.com/$HEROKU_SERVICE_APP/web:latest
     - docker push registry.heroku.com/$HEROKU_SERVICE_APP/web:latest
 
 

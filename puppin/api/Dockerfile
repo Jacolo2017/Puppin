@@ -9,10 +9,11 @@ COPY main.py main.py
 
 # Copy all of the directories that contain your application
 # code
-COPY models models
-COPY routers routers
-# COPY upload upload
-COPY db db
+# COPY models models
+# COPY routers routers
+# # COPY upload upload
+# COPY db db
+COPY api api
 
 RUN pip install -r requirements.txt
 CMD uvicorn main:app --reload --host 0.0.0.0 --port $PORT

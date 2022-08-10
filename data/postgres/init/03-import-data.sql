@@ -7,8 +7,8 @@
 
 INSERT INTO public.accounts (username, email, account_password, first_name, last_name, city, state, date_of_birth, photo_url, about, gender)
     VALUES
-    ('aurora','aurora@gmail.com', '$2b$12$XfjF3AFiKdJePpJBuf.RKOqSI2jFxP9WdwUKqSxaHpcPttXmZj9/O', 'Aurora', 'Pio', 'San Diego', 'CA', '07-23-1994', 'https://parade.com/.image/c_limit%2Ccs_srgb%2Cq_auto:good%2Cw_400/MTkwNTgxNDc0NzYzMDI0MjUy/borzoi.webp', 'Obsessed with Plants. When in doubt, touch grass. Firm supporter of camera On culture. Tristen hater', 'female'),
-    ('cooper','cooper@gmail.com', '$2b$12$XfjF3AFiKdJePpJBuf.RKOqSI2jFxP9WdwUKqSxaHpcPttXmZj9/O', 'Cooper', 'Edmondson', 'Savanah', 'GA', '07-21-1994', 'https://media-exp1.licdn.com/dms/image/C4E03AQGy0zsKhTT4Ig/profile-displayphoto-shrink_800_800/0/1654194278503?e=1663804800&v=beta&t=yL5rghfj5qNyLLaYmx6D7TfKHdsRH-dmU4aa_nr8CYk', 'Front end wizard', 'male'),
+    ('aurora','cooper@gmail.com', '$2b$12$XfjF3AFiKdJePpJBuf.RKOqSI2jFxP9WdwUKqSxaHpcPttXmZj9/O', 'Aurora', 'Pio', 'San Diege', 'CA', '07-23-1994', 'https://media-exp1.licdn.com/dms/image/C5603AQEPTlEhreYi5w/profile-displayphoto-shrink_800_800/0/1647993954393?e=1665619200&v=beta&t=IXuMkF_3qn4lPN_lLj7CNkAdzsCFvNJI7OLdkrbqpCg', 'Camera On Culture', 'female'),
+    ('cooper','cooper@gmail.com', '$2b$12$XfjF3AFiKdJePpJBuf.RKOqSI2jFxP9WdwUKqSxaHpcPttXmZj9/O', 'Cooper', 'Edmondson', 'Savanah', 'GA', '07-21-1994', 'https://media-exp1.licdn.com/dms/image/C5603AQFSHJsmcNyHKQ/profile-displayphoto-shrink_800_800/0/1653047500125?e=1665619200&v=beta&t=0gfca3LVxIy6-XlblOl1UnYeVMnOYdXQC2EUTqPOir8', 'Front end wizard', 'male'),
     ('jack', 'jack@gmail.com', '$2b$12$XfjF3AFiKdJePpJBuf.RKOqSI2jFxP9WdwUKqSxaHpcPttXmZj9/O', 'Jack', 'Ramirez', 'Westminster', 'CO', '04-14-1992', 'https://media-exp1.licdn.com/dms/image/C4E03AQGy0zsKhTT4Ig/profile-displayphoto-shrink_800_800/0/1654194278503?e=1663804800&v=beta&t=yL5rghfj5qNyLLaYmx6D7TfKHdsRH-dmU4aa_nr8CYk', 'Coding connoisseur', 'male'),
     ('roger', 'roger@gmail.com', '$2b$12$XfjF3AFiKdJePpJBuf.RKOqSI2jFxP9WdwUKqSxaHpcPttXmZj9/O', 'Roger', 'Wang', 'San Francisco', 'CA', '04-20-1969', 'https://media-exp1.licdn.com/dms/image/C5603AQGR8-zm2zDSFg/profile-displayphoto-shrink_800_800/0/1658786569955?e=1664409600&v=beta&t=0Ee5oFmjYNwkQ6u8Kee_SVg9hHa-ujeU1TfQPo2gYm0', 'Back End Buff', 'male'),
     ('mark', 'mark@gmail.com', '$2b$12$XfjF3AFiKdJePpJBuf.RKOqSI2jFxP9WdwUKqSxaHpcPttXmZj9/O', 'Mark', 'Esposito', 'Austin', 'CO', '04-14-1992', 'https://media-exp1.licdn.com/dms/image/C5603AQETMiOEVjx9Hg/profile-displayphoto-shrink_800_800/0/1626865528939?e=1663804800&v=beta&t=9Jzy-pJZcirCasnNRFutdU5Iyn79bgP0VqXeS8gP5-Y', 'Programming Pro', 'male'),
@@ -20,7 +20,7 @@ INSERT INTO public.accounts (username, email, account_password, first_name, last
 
 INSERT INTO public.dogs(dog_name, dog_breed, dog_age, dog_gender, dog_photo, dog_temperament, dog_about, dog_size, dog_weight, spayed_neutered, vaccination_history, account_id)
     VALUES
-    ('Izzy', 'mixed', '5', 'female', 'https://images.saymedia-content.com/.image/c_limit%2Ccs_srgb%2Cq_auto:eco%2Cw_400/MTc0OTY4ODk3OTMyMzcxMzk2/top-10-ugliest-dog-breeds.webp', 'enjoys other dogs and their humans', 'Izzy is a super smart tripawed who doesnt know her own limits. She cant play rough but thats not her choice. She loves searching games and solving puzzles.', 'Medium', '60', 'true', 'up to date', '1'),
+    ('Izzy', 'mixed', '5', 'female', 'https://i.imgur.com/H9zqIMZ.png', 'enjoys other dogs and their humans', 'Izzy is a super smart tripawed who doesnt know her own limits. She cant play rough but thats not her choice. She loves searching games and solving puzzles.', 'Medium', '60', 'true', 'up to date', '1'),
     ('Snoop Doggie Dog', 'greyhound, italian', '20', 'male', 'https://i.pinimg.com/564x/af/5e/70/af5e70122657909248da2294821c8987.jpg', 'Chill', 'Spits bars and barks fresh flows', 'medium', '62', 'false', 'Hell nah', '2'),
     ('Fresh Prints', 'pitbull', '20', 'male', 'https://laughingsquid.com/wp-content/uploads/freshpup.jpg', 'New money', 'In west county shelter born and raised, in the kennel is where I lived with most of the strays', 'medium', '62', 'false', 'spoonful of sugar', '3'),
     ('Chew Barka', 'briard', '99', 'male', 'https://pbs.twimg.com/media/EzQnczlVEAgoHeS?format=jpg&name=large', 'Friendly to all except the empire', 'Loves his crossbow toy', 'large', '100', 'false', 'Might have rabies', '4'),
@@ -40,7 +40,7 @@ INSERT INTO public.events (event_name, event_location, event_date_time, account_
 
 INSERT INTO public.reviews (reviewer_username, account_id, review_event, event_id, review_description, location_rating)
     VALUES
-    ('aurora', '1', 'The Great Dog Meetup', '1', 'Camera''s were not on, wouldnt recommend', 'My backyard was awesome because I live in SoCal'),
+    ('aurora', '1', 'The Great Dog Meetup', '1', 'As a firm Camera''s on culture supporter, There were too many people with Camera''s off', 'I live in SoCal, so it was phenomenal of course.'),
     ('aurora', '1', 'Dog Costume Party', '2', 'Awesome, everyones dog looked hilarous', 'Traffic was insane'),
     ('melissa', '8', 'Dog Costume Party', '2', 'Inappropaite costumes, the dogs were practically naked', 'Atlanta dog park was cool'),
     ('roger', '4', 'Barks Under the Bridge', '4', 'As a CEO of my lucrative startup, this was a great event for recruiting the best programmers in the world', 'What a view!'),

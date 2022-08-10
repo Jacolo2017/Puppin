@@ -38,6 +38,7 @@ front-end-build-job:
     # - lint-test-job      # this build-job to run
   script:
     - cd ghi
+    - cd app
     - npm install
     - npm install framer-motion
     - npm install swiper

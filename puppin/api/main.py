@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.security import OAuth2PasswordBearer
 from routers import accounts, events, reviews
 from fastapi.middleware.cors import CORSMiddleware
 import os

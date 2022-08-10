@@ -258,27 +258,31 @@ async def logout(request: Request, response: Response):
 
 
 @router.post("/api/accounts")
-def create_account(account: AccountIn, response: Response, query=Depends(AccountQueries)):
+def create_account(
+    account: AccountIn, response: Response, query=Depends(AccountQueries)
+):
     try:
         hashed_password = pwd_context.hash(account.account_password)
-        record = query.create_account(account.username,
-                        account.email,
-                        hashed_password,
-                        account.first_name,
-                        account.last_name,
-                        account.date_of_birth,
-                        account.city,
-                        account.state,
-                        account.gender,
-                        account.photo_url,
-                        account.about)
+        record = query.create_account(
+            account.username,
+            account.email,
+            hashed_password,
+            account.first_name,
+            account.last_name,
+            account.date_of_birth,
+            account.city,
+            account.state,
+            account.gender,
+            account.photo_url,
+            account.about,
+        )
     except psycopg.errors.UniqueViolation:
         response.status_code = status.HTTP_409_CONFLICT
         return {"message": f"{account.username} username already exists"}
     if record is None:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"message": "Account can't be made"}
-    return record        
+    return record
     # with psycopg.connect() as conn:
     #     with conn.cursor() as cur:
     #         try:
@@ -320,9 +324,9 @@ def create_account(account: AccountIn, response: Response, query=Depends(Account
         return {"message": "bad date"}
     return record
 
-        # for i, column in enumerate(cur.description):
-        #     record[column.name] = row[i]
-        # return record
+    # for i, column in enumerate(cur.description):
+    #     record[column.name] = row[i]
+    # return record
 
 
 @router.get("/api/accounts/{account_id}")

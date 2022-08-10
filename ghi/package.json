@@ -1,10 +1,8 @@
 {
-  "react-scripts": {
-    "start": "node ./windows-setup.js && react-scripts start",
-    "build": "react-scripts build",
-    "test": "jest",
-    "eject": "react-scripts eject"
-  },
+  "scripts": {"start": "node ./windows-setup.js && react-scripts start",
+  "build": "react-scripts build",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject"},
 
   "dependencies": {
     "framer-motion": "^6.5.1",

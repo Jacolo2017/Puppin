@@ -98,12 +98,12 @@ deploy-puppin-job:  # RENAME THIS
     # IF THIS IS FOR A BACKGROUND SERVICE LIKE A POLLER,
     # CHANGE /web TO /worker (2 PLACES)
     - docker pull ${CI_REGISTRY_IMAGE}/puppin:latest
-    - docker tag ${CI_REGISTRY_IMAGE}/puppin:latest registry.heroku.com/$HEROKU_SERVICE_APP/web:latest
-    - docker push registry.heroku.com/$HEROKU_SERVICE_APP/web:latest
+    - docker tag ${CI_REGISTRY_IMAGE}/puppin:latest registry.heroku.com/puppin/web:latest
+    - docker push registry.heroku.com/puppin/web:latest
 
 
 
-release-fastapi-api-image-job:  # RENAME THIS
+release-puppin:  # RENAME THIS
   stage: deploy
   image: node:10.17-alpine
   needs:
@@ -121,7 +121,7 @@ release-fastapi-api-image-job:  # RENAME THIS
 
     # IF THIS IS FOR A BACKGROUND SERVICE LIKE A POLLER,
     # CHANGE web TO worker (1 PLACE)
-    - heroku container:release web --app $HEROKU_SERVICE_APP
+    - heroku container:release web --app puppin
 # api-unit-test-job:
 #   image: python:3-bullseye
 #   stage: test

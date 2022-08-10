@@ -49,10 +49,19 @@ class FakeAccountCreate(TestCase):
 
 class FakeAccountQuery(TestCase):
     def get_account_by_username(self, username: str):
+        print("savage")
         return {
+            "first_name": "rog2er",
+            "last_name": "rog2er",
+            "email": "ro",
+            "username": "ro333g2er",
+            "date_of_birth": "2021-08-03",
+            "city": "roger",
+            "state": "roger",
+            "gender": "roger",
             "account_id": 1,
-            "username": "K",
-            "account_password": "e",
+            "photo_url": "",
+            "about": ""
         }
 
 

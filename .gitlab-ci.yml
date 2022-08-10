@@ -37,7 +37,7 @@ front-end-build-job:
   image: node:lts-bullseye
   needs:
     - api-unit-test-job  # These two jobs must succeed for
-    - lint-test-job      # this build-job to run
+    # - lint-test-job      # this build-job to run
   script:
     - cd ghi
     - npm install

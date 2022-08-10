@@ -13,9 +13,8 @@ from fastapi import (
 )
 
 from passlib.context import CryptContext
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 
 
 class DuplicateUsername(RuntimeError):
@@ -35,6 +34,7 @@ class AccountQueries:
         gender: str
         photo_url: str
         about: str
+
     def insert_account(
         first_name,
         last_name,
@@ -113,19 +113,20 @@ class AccountQueries:
             return None
         return {"id": row[0], "username": row[1], "account_password": row[2]}
 
-    def create_account(self,
-                    username,
-                    email, 
-                    account_password, 
-                    first_name, 
-                    last_name,
-                    date_of_birth, 
-                    city, 
-                    state, 
-                    gender, 
-                    photo_url, 
-                    about, 
-                    ):
+    def create_account(
+        self,
+        username,
+        email,
+        account_password,
+        first_name,
+        last_name,
+        date_of_birth,
+        city,
+        state,
+        gender,
+        photo_url,
+        about,
+    ):
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 try:

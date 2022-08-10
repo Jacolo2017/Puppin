@@ -14,23 +14,26 @@ from fastapi import (
 
 
 async def get_fake_account():
-    return {
-        1,
-        "P",
-        "A",
-        "h",
-        "K",
-        "01-15-2001",
-        "A",
-        "A",
-        "Male",
-        "p",
-        "I"
-    }
+    return {1, "P", "A", "h", "K", "01-15-2001", "A", "A", "Male", "p", "I"}
+
 
 class FakeAccountCreate(TestCase):
-    def create_account(self, first_name, last_name, email, username, account_password, date_of_birth, city, state, gender, photo_url, about):
+    def create_account(
+        self,
+        first_name,
+        last_name,
+        email,
+        username,
+        account_password,
+        date_of_birth,
+        city,
+        state,
+        gender,
+        photo_url,
+        about,
+    ):
         return {"account_id": 1}
+
     # return [
     #     "a",
     #     "a",
@@ -60,7 +63,7 @@ class FakeAccountQuery(TestCase):
             "gender": "roger",
             "account_id": 1,
             "photo_url": "",
-            "about": ""
+            "about": "",
         }
 
 
@@ -95,24 +98,24 @@ class FakeAccountQuery(TestCase):
 client = TestClient(app)
 
 
-
-
-
-
 def test_create_account_200():
     app.dependency_overrides[AccountQueries] = FakeAccountCreate
-    res = client.post("/api/accounts", json={
-        "first_name": "P",
-        "last_name": "A",
-        "email": "h",
-        "username": "K",
-        "account_password": "pleaseworkduig",
-        "date_of_birth": "01/15/2001",
-        "city": "A",
-        "state": "A",
-        "gender": "Male",
-        "photo_url": "p",
-        "about": "I"})
+    res = client.post(
+        "/api/accounts",
+        json={
+            "first_name": "P",
+            "last_name": "A",
+            "email": "h",
+            "username": "K",
+            "account_password": "pleaseworkduig",
+            "date_of_birth": "01/15/2001",
+            "city": "A",
+            "state": "A",
+            "gender": "Male",
+            "photo_url": "p",
+            "about": "I",
+        },
+    )
     # print("signifier", res.json())
     assert res.status_code == 200
     app.dependency_overrides = {}
@@ -126,9 +129,6 @@ def test_create_account_200():
 #     print("HERE:", res)
 #     assert res.status_code == 200
 #     app.dependency_overrides = {}
-
-
-
 
 
 # create_fake_account(first_name="paul", last_name="atreides", email="atreides@gmail.com", username="pleaseworkdawg", account_password="Gangsta2", date_of_birth="01/15/2001", city="Atreides", state="AZ", gender="Male", photo_url="photo.url", about="I am some kinda haderech")

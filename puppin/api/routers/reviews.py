@@ -7,7 +7,6 @@ from typing import Union
 import psycopg
 
 
-
 router = APIRouter()
 
 
@@ -37,6 +36,7 @@ class EventReviewUpdateIn(BaseModel):
     review_description: str
     location_rating: int
 
+
 class EventReviewUpdateOut(BaseModel):
     reviewer_username: str
     review_event_id: int
@@ -44,13 +44,16 @@ class EventReviewUpdateOut(BaseModel):
     review_description: str
     location_rating: str
 
+
 class ReviewDelete(BaseModel):
     result: bool
 
 
 # --- Create new event review --- #
 @router.post("/api/event/{event_id}/reviews/create")
-def create_event_review(review: EventReviewIn, response: Response, account_id: int, event_id: int):
+def create_event_review(
+    review: EventReviewIn, response: Response, account_id: int, event_id: int
+):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             try:
@@ -69,17 +72,17 @@ def create_event_review(review: EventReviewIn, response: Response, account_id: i
                     """,
                     [
                         account_id,
-                        event_id, review.reviewer_username, review.review_event,
+                        event_id,
+                        review.reviewer_username,
+                        review.review_event,
                         review.review_description,
-                        review.location_rating
-                    ]
+                        review.location_rating,
+                    ],
                 )
             except psycopg.errors.UniqueViolation:
                 # status values at https://github.com/encode/starlette/blob/master/starlette/status.py
                 response.status_code = status.HTTP_409_CONFLICT
-                return {
-                    "message": "Already reviewed"
-                }
+                return {"message": "Already reviewed"}
             row = cur.fetchone()
             record = {}
 
@@ -100,7 +103,7 @@ def get_review(review_id: int, response: Response):
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                        """
+                    """
                         SELECT
                             review_id,
                             reviewer_username,
@@ -111,8 +114,9 @@ def get_review(review_id: int, response: Response):
                             location_rating
                         FROM reviews
                         WHERE review_id = %s;
-                        """, [review_id],
-                    )
+                        """,
+                    [review_id],
+                )
                 row = cur.fetchone()
                 if row is None:
                     response.status_code = status.HTTP_404_NOT_FOUND
@@ -132,7 +136,7 @@ def get_event_reviews(event_id: int, response: Response):
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                        """
+                    """
                         SELECT
                             review_id,
                             reviewer_username,
@@ -143,8 +147,9 @@ def get_event_reviews(event_id: int, response: Response):
                             location_rating
                         FROM reviews
                         WHERE event_id= %s;
-                        """, [event_id],
-                    )
+                        """,
+                    [event_id],
+                )
                 results = []
                 print("do you see me?")
                 for row in cur.fetchall():
@@ -173,7 +178,7 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                        """
+                    """
                         SELECT
                             review_id,
                             reviewer_username,
@@ -184,8 +189,9 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
                             location_rating
                         FROM reviews
                         WHERE account_id = %s AND event_id= %s;
-                        """, [account_id, event_id]
-                    )
+                        """,
+                    [account_id, event_id],
+                )
                 row = cur.fetchone()
                 record = {}
 
@@ -194,6 +200,7 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
                 return record
     except psycopg.InterfaceError as exc:
         print(exc.message)
+
 
 # @router.get("/api/event/{event_id}/reviews/")
 # def get_reviews_for_event(event_id: int, response: Response):
@@ -226,12 +233,12 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
 # --- Get all event reviews by account ID --- #
 @router.get("/api/event/reviews/account={account_id}")
 def get_event_reviews_for_account(account_id: int, response: Response):
-    print('get_event_reviews_for_account pinged')
+    print("get_event_reviews_for_account pinged")
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                        """
+                    """
                         SELECT
                             review_id,
                             reviewer_username,
@@ -242,8 +249,9 @@ def get_event_reviews_for_account(account_id: int, response: Response):
                             location_rating
                         FROM reviews
                         WHERE account_id= %s;
-                        """, [account_id],
-                    )
+                        """,
+                    [account_id],
+                )
                 results = []
                 print("do you see me?")
                 for row in cur.fetchall():
@@ -262,34 +270,32 @@ def get_event_reviews_for_account(account_id: int, response: Response):
 
 # --- Delete review by review ID --- #
 @router.delete("/api/event/reviews/{review_id}")
+def update_review(review_id: int, account_id: int, response_model: ReviewDelete):
+    try:
+        with psycopg.connect() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                        DELETE FROM reviews
+                        WHERE review_id = %s
+                        """,
+                    [review_id],
+                )
+        return {f"Review {review_id} deleted": True}
+    except Exception:
+        return {f"Review {review_id} deleted": False}
+
+
+# --- Update a specific review by review ID --- #
+@router.put("/api/event/reviews/{review_id}")
 def update_review(
-    review_id: int, 
-    account_id: int, 
-    response_model: ReviewDelete
+    review: EventReviewUpdateIn, review_id: int, account_id: int, response: Response
 ):
     try:
         with psycopg.connect() as conn:
             with conn.cursor() as cur:
                 cur.execute(
-                        """
-                        DELETE FROM reviews
-                        WHERE review_id = %s
-                        """,
-                        [review_id],
-                    )
-        return {f"Review {review_id} deleted": True}
-    except Exception:
-        return {f"Review {review_id} deleted": False}          
-
-
-# --- Update a specific review by review ID --- #
-@router.put("/api/event/reviews/{review_id}")
-def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, response: Response):
-    try:
-        with psycopg.connect() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                        """
+                    """
                         UPDATE reviews
                         SET review_event = %s,
                             review_description = %s,
@@ -298,10 +304,14 @@ def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, 
                         RETURNING review_id, reviewer_username, account_id,
                         event_id, review_event, review_description,
                         location_zip, location_rating;
-                        """, [review.review_event, 
-                        review.review_description, 
-                        review.location_rating, review_id]
-                    )
+                        """,
+                    [
+                        review.review_event,
+                        review.review_description,
+                        review.location_rating,
+                        review_id,
+                    ],
+                )
                 row = cur.fetchone()
                 if row is None:
                     response.status_code = status.HTTP_404_NOT_FOUND
@@ -315,21 +325,37 @@ def update_review(review: EventReviewUpdateIn, review_id: int, account_id: int, 
 
 
 @router.post("/api/event/{event_id}/reviews/{reviewed_id}/{reviewer_id}")
-def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response):
+def rate_person_in_attended_event(
+    reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response
+):
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             # print(any(reviewed_id == reviewer_id for reviewed_id in get_all_users_from_event(event_id, response)))
-            # if any(x == reviewer_id for x in get_all_users_from_event(event_id, response)) and any(x == reviewed_id for x in 
+            # if any(x == reviewer_id for x in get_all_users_from_event(event_id, response)) and any(x == reviewed_id for x in
             #                 get_all_users_from_event(event_id, response)):
-            list_of_all_values = [value for elem in get_all_users_and_dogs_from_event(event_id, response) for value in elem.values()]
-            list_of_all_reviewers = [d['reviewer_id'] for d in get_all_ratings_from_specific_event(event_id, response) if 'reviewer_id' in d]
-            if reviewer_id in list_of_all_values and reviewed_id in list_of_all_values and reviewer_id not in list_of_all_reviewers:
+            list_of_all_values = [
+                value
+                for elem in get_all_users_and_dogs_from_event(event_id, response)
+                for value in elem.values()
+            ]
+            list_of_all_reviewers = [
+                d["reviewer_id"]
+                for d in get_all_ratings_from_specific_event(event_id, response)
+                if "reviewer_id" in d
+            ]
+            if (
+                reviewer_id in list_of_all_values
+                and reviewed_id in list_of_all_values
+                and reviewer_id not in list_of_all_reviewers
+            ):
                 cur.execute(
-                """
+                    """
                 INSERT INTO ratingaccountsinevents (reviewer_id, reviewed_id, event_id, rating)
                     VALUES(%s, %s, %s, %s)
                     RETURNING event_id, reviewer_id, reviewed_id, rating
-                """,[reviewer_id, reviewed_id, event_id, rating])
+                """,
+                    [reviewer_id, reviewed_id, event_id, rating],
+                )
                 row = cur.fetchone()
                 print(cur.description)
                 if row is None:
@@ -345,7 +371,7 @@ def rate_person_in_attended_event(reviewer_id: int, reviewed_id: int, event_id: 
 
 @router.get("/api/events/{event_id}/ratings")
 def get_all_ratings_from_specific_event(event_id: int, response: Response):
-    
+
     with psycopg.connect() as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -354,7 +380,9 @@ def get_all_ratings_from_specific_event(event_id: int, response: Response):
                 WHERE
                 event_id = %s
 
-            """, [event_id])
+            """,
+                [event_id],
+            )
             results = []
             for row in cur.fetchall():
                 record = {}
@@ -367,5 +395,4 @@ def get_all_ratings_from_specific_event(event_id: int, response: Response):
             return results
 
 
-
-#end of file
+# end of file

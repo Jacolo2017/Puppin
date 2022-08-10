@@ -3,7 +3,6 @@ stages:
   - build # Run build after tests
   - deploy
 
-
 # services:
 #   - postgres: 14.2-bullseye
 
@@ -11,8 +10,7 @@ variables:
   POSTGRES_PASSWORD: puppin
   POSTGRES_USER: puppin
   POSTGRES_DB: puppin
-  DATABASE_URL: postgres://puppin:puppin@postgres:5432/puppin 
-
+  DATABASE_URL: postgres://puppin:puppin@postgres:5432/puppin
 
 api-unit-test-job:
   image: python:3-bullseye
@@ -21,8 +19,8 @@ api-unit-test-job:
     - cd puppin
     - cd api
     - pip install -r requirements.txt
-    - export DATABASE_URL 
-    - python -m pytest  # Run unit tests
+    - export DATABASE_URL
+    - python -m pytest # Run unit tests
 
 # lint-test-job:
 #   image: python:3-bullseye
@@ -30,26 +28,30 @@ api-unit-test-job:
 #   script:
 #     - pip install flake8
 #     - flake8 puppin  # Run flake8 on Python project to check
-                  # for code quality
+# for code quality
 
 front-end-build-job:
   stage: build
   image: node:lts-bullseye
   needs:
-    - api-unit-test-job  # These two jobs must succeed for
+    - api-unit-test-job # These two jobs must succeed for
     # - lint-test-job      # this build-job to run
   script:
     - cd ghi
-    - npm install
+    - npm install/app
     - npm install framer-motion
     - npm install swiper
     - npm install react-icons
     - npm install -D tailwindcss
-    - npm install -D postcss 
+    - npm install -D postcss
     - npm install -D autoprefixer
     - npm install react-hook-form
     - npm install react-datepicker --save
-    - npm start  # Build the React application
+    - npm run build
+    - cp build/index.html build/404.html # Build the React application
+  artifacts:
+    paths:
+      - ghi/app/build/ # Save all of the files in the build path
 
 build-back-end-job:
   rules:
@@ -61,13 +63,13 @@ build-back-end-job:
     - docker:20.10.16-dind
   script:
     - ls
+    - cd puppin
     - cd api
     - docker build -t ${CI_REGISTRY_IMAGE}/puppin:latest .
     - docker tag ${CI_REGISTRY_IMAGE}/api:latest ${CI_REGISTRY_IMAGE}/puppin:$CI_JOB_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker push ${CI_REGISTRY_IMAGE}/api:$CI_JOB_ID
     - docker push ${CI_REGISTRY_IMAGE}/api:latest
-
 # api-unit-test-job:
 #   image: python:3-bullseye
 #   stage: test
@@ -117,5 +119,4 @@ build-back-end-job:
 #     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
 #     - docker push ${CI_REGISTRY_IMAGE}/api:$CI_JOB_ID
 #     - docker push ${CI_REGISTRY_IMAGE}/api:latest
-
 

@@ -27,11 +27,11 @@ export default function App() {
   let [currentUser, setCurrentUser] = useState();
   let [gotToken, setGotToken] = useState(false);
 
-  fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${token}`)
-    .then((response) => response.json())
-    .then((response) => setCurrentUser(response.id));
-
-  
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${token}`)
+      .then((response) => response.json())
+      .then((response) => setCurrentUser(response.id));
+  }, [token]);
 
   return (
     <>

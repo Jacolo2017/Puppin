@@ -33,6 +33,8 @@ api-unit-test-job:
 front-end-build-job:
   stage: build
   image: node:lts-bullseye
+  variables:
+    PUBLIC_URL: https://purely-puptonic.gitlab.io/puppin
   needs:
     - api-unit-test-job # These two jobs must succeed for
     # - lint-test-job      # this build-job to run
@@ -54,7 +56,7 @@ front-end-build-job:
     paths:
       - ghi/app/build/ # Save all of the files in the build path
 
-build-back-end-job:
+build-puppin-job:
   rules:
     # Only run if the commit is on the main branch
     - if: ($CI_COMMIT_BRANCH == "deploy" || $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
@@ -71,6 +73,55 @@ build-back-end-job:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker push ${CI_REGISTRY_IMAGE}/puppin:$CI_JOB_ID
     - docker push ${CI_REGISTRY_IMAGE}/puppin:latest
+  
+  deploy-puppin-job:  # RENAME THIS
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  stage: deploy
+  image: docker:20.10.16
+  needs:
+    # CHANGE THIS TO THE JOB NAME FROM THE LAST STEP
+    - build-puppin-job
+  services:
+    - docker:20.10.16-dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+
+    # EVERYWHERE IT SHOWS fastapi_api BELOW, CHANGE THOSE
+    # TO THE NAME YOU CHOSE FOR THE BUILD STEP (2 PLACES)
+
+    # EVERYWHERE IT SHOWS HEROKU_SERVICE_APP BELOW, CHANGE
+    # THOSE TO THE VARIABLE NAME YOU CREATED FOR THE CI/CD
+    # SETTINGS (2 PLACES)
+
+    # IF THIS IS FOR A BACKGROUND SERVICE LIKE A POLLER,
+    # CHANGE /web TO /worker (2 PLACES)
+    - docker pull ${CI_REGISTRY_IMAGE}/fastapi_api:latest
+    - docker tag ${CI_REGISTRY_IMAGE}/fastapi_api:latest registry.heroku.com/$HEROKU_SERVICE_APP/web:latest
+    - docker push registry.heroku.com/$HEROKU_SERVICE_APP/web:latest
+
+
+
+  release-fastapi-api-image-job:  # RENAME THIS
+    stage: deploy
+    image: node:10.17-alpine
+    needs:
+      # CHANGE THIS TO THE JOB NAME FROM THE LAST STEP
+      - deploy-puppin-job
+    rules:
+      - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    before_script:
+      - apk add curl bash
+      - curl https://cli-assets.heroku.com/install.sh | sh
+    script:
+      # EVERYWHERE IT SHOWS HEROKU_SERVICE_APP BELOW, CHANGE
+      # THOSE TO THE VARIABLE NAME YOU CREATED FOR THE CI/CD
+      # SETTINGS (1 PLACE)
+
+      # IF THIS IS FOR A BACKGROUND SERVICE LIKE A POLLER,
+      # CHANGE web TO worker (1 PLACE)
+      - heroku container:release web --app $HEROKU_SERVICE_APP
 # api-unit-test-job:
 #   image: python:3-bullseye
 #   stage: test

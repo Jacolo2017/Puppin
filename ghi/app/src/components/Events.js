@@ -7,7 +7,7 @@ import 'swiper/css/free-mode';
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link, Navigate } from 'react-router-dom';
 import PublicProfile from './PublicProfile';
-
+import { GoPlus } from 'react-icons/go'
 
 export default function Events(props) {
 
@@ -28,6 +28,10 @@ export default function Events(props) {
     e.preventDefault();
     setMyIndex(index);
     setIsOpen(!isOpen);
+  };
+  const handleClick = (e) => {
+    e.preventDefault();
+    <Navigate to='/event/create'/>
   };
 
 
@@ -144,16 +148,18 @@ export default function Events(props) {
     }
   }
 
+
+ 
+
   return ( 
     props.token?
-    <div className='w-screen py-20 flex' id="about">
+    <div className='w-screen py-12 flex bg-gray-50 bg-[url(https://img.freepik.com/free-vector/pattern-with-dog-faces_1191-1246.jpg?w=1060&t=st=1660085147~exp=1660085747~hmac=79ce5d0086c401372f61c64b38f84fd1b2fa2c8e65be0a81acc1aafa9256ba2d)]' id="about">
       <div className='max-w-[1400px] mx-auto py-10 mt-1'>
-        <div className='text-center'>
-          <h2 className='text-2xl font-bold uppercase'>Events</h2>
-          <h3 className='text-xl font-semibold text-zinc-700'> swipe to see more <span className='text-red-500 text-md'>or..</span> <Link to='/event/create' className='font-bold text-blue-700'>create an event?</Link></h3>
+        <div className=" bg-[#a0d0f2] border border-gray-100 h-[130px] shadow-2xl">
+          <h2 className='text-3xl font-bold uppercase text-center mt-8'>Events</h2>
+          <h3 className='text-xl font-semibold text-[#495867] text-center'> swipe to see more</h3>
         </div>
-        <div className='border border-gray-800 mt-6 border-opacity-30' />
-        <div className='flex py-10'>
+        <div className='flex py-10 px-10 items-center justify-center bg-white h-[600px] shadow-xl'>
           <Swiper
             ref={sliderRef}
             freeMode={true}
@@ -173,7 +179,7 @@ export default function Events(props) {
                   style={{
                     borderRadius: "1rem",
                   }}
-                  className='border rounded-xl shadow-md text-center p-6 bg-gray-100'
+                  className='border rounded-xl shadow-lg text-center p-6 bg-gray-50'
                 >
                   <motion.h1 className='font-bold text-xl'>{item.event_name} </motion.h1>
                   <motion.h2>{item.event_date_time}</motion.h2>
@@ -191,7 +197,6 @@ export default function Events(props) {
                       <motion.div><b>Attendees:</b>{item["users"] != null ? item.users.map(user => <motion.div>{user.username}</motion.div>) : ""}</motion.div>
                       {item["review"] != null ? item.review.map(review => <motion.div className='font-semibold'><span className='font-bold text-green-700'>
                         {review.reviewer_username}</span> went! They said "<span className='text-purple-700'>{review.review_description}</span>"</motion.div>) : ""}
-
                     </motion.div>
                   )}
                   {joinEventOpen && (<motion.div
@@ -203,7 +208,18 @@ export default function Events(props) {
                 </motion.div>
               </SwiperSlide>
             ))}
+            <SwiperSlide className='pt-4 rounded-sm mb-6 h-[400px]'>
+                    <div className='bg-gray-50 h-[130px] rounded-lg shadow-lg border border-gray-200'>
 
+                      <div className='grid grid-cols-4'>
+                        <div className='bg-gray-300 border border-gray-200 w-14 h-14  rounded-full ml-2 mt-2'/>
+                        <div className=' col-span-3'>
+                            <h1 className='bg-gray-300 border border-gray-200 w-40 h-8  rounded-md mt-6 ml-10'/>
+                            <h2 className='bg-gray-300 border border-gray-200 w-64 h-8  rounded-md mt-4'/>
+                        </div>
+                      </div>
+                    </div>
+            </SwiperSlide>
           </Swiper>
         </div>
       </div>

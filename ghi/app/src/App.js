@@ -33,10 +33,11 @@ export default function App() {
         .then((response) => response.json())
         .then((response) => setCurrentUser(response.id));
   }, [token]);
-
+  const domain = /https:\/\/[^/]+/;
+  const basename = process.env.PUBLIC_URL.replace(domain, "");
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <Routes>
           <Route
             path=""

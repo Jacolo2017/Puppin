@@ -27,13 +27,12 @@ export default function App() {
   let [currentUser, setCurrentUser] = useState();
   let [gotToken, setGotToken] = useState(false);
 
-  if (token && gotToken == false) {
-    fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${props.token}`)
-      .then((response) => response.json())
-      .then((response) => setCurrentUser(response.id));
+  fetch(`${process.env.REACT_APP_PUPPIN_HOST}/api/currentuser/${token}`)
+    .then((response) => response.json())
+    .then((response) => setCurrentUser(response.id));
 
-    setGotToken(true);
-  }
+  
+
   return (
     <>
       <BrowserRouter>

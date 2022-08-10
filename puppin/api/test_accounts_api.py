@@ -98,37 +98,37 @@ class FakeAccountQuery(TestCase):
 client = TestClient(app)
 
 
-# def test_create_account_200():
-#     app.dependency_overrides[AccountQueries] = FakeAccountCreate
-#     res = client.post(
-#         "/api/accounts",
-#         json={
-#             "first_name": "P",
-#             "last_name": "A",
-#             "email": "h",
-#             "username": "K",
-#             "account_password": "pleaseworkduig",
-#             "date_of_birth": "01/15/2001",
-#             "city": "A",
-#             "state": "A",
-#             "gender": "Male",
-#             "photo_url": "p",
-#             "about": "I",
-#         },
-#     )
-#     # print("signifier", res.json())
-#     assert res.status_code == 200
-#     app.dependency_overrides = {}
+def test_create_account_200():
+    app.dependency_overrides[AccountQueries] = FakeAccountCreate
+    res = client.post(
+        "/api/accounts",
+        json={
+            "first_name": "P",
+            "last_name": "A",
+            "email": "h",
+            "username": "K",
+            "account_password": "pleaseworkduig",
+            "date_of_birth": "01/15/2001",
+            "city": "A",
+            "state": "A",
+            "gender": "Male",
+            "photo_url": "p",
+            "about": "I",
+        },
+    )
+    # print("signifier", res.json())
+    assert res.status_code == 200
+    app.dependency_overrides = {}
 
 
-# # this doesnt work in pipeline CI, commenting out for now
-# def test_get_user_200():
-#     app.dependency_overrides[AccountQueries] = FakeAccountQuery
-#     print(client)
-#     res = client.get("/api/accounts/by_username/K")
-#     print("HERE:", res)
-#     assert res.status_code == 200
-#     app.dependency_overrides = {}
+# this doesnt work in pipeline CI, commenting out for now
+def test_get_user_200():
+    app.dependency_overrides[AccountQueries] = FakeAccountQuery
+    print(client)
+    res = client.get("/api/accounts/by_username/K")
+    print("HERE:", res)
+    assert res.status_code == 200
+    app.dependency_overrides = {}
 
 
 # create_fake_account(first_name="paul",

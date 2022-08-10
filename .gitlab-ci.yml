@@ -75,10 +75,9 @@ build-puppin-job:
     - docker push ${CI_REGISTRY_IMAGE}/puppin:latest
   artifacts:
     paths:
-      - ghi/build/  # Save all of the files in the build path
-  
-  
-deploy-puppin-job:  # RENAME THIS
+      - ghi/build/ # Save all of the files in the build path
+
+deploy-puppin-job: # RENAME THIS
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   stage: deploy
@@ -105,7 +104,7 @@ deploy-puppin-job:  # RENAME THIS
     - docker tag ${CI_REGISTRY_IMAGE}/puppin:latest registry.heroku.com/puppin/web:latest
     - docker push registry.heroku.com/puppin/web:latest
 
-pages:  # THIS STEP MUST BE NAME PAGES
+pages: # THIS STEP MUST BE NAME PAGES
   stage: deploy
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -114,15 +113,15 @@ pages:  # THIS STEP MUST BE NAME PAGES
   needs:
     - build-front-end-build-job
   script:
-     # THE FIRST PART OF THIS COMMAND MUST BE THE DIRECTORY
-     # THAT YOU cd INTO TO BUILD IT PLUS THE build/ AT THE
-     # END
-    - mv ghi/build/ public
+    # THE FIRST PART OF THIS COMMAND MUST BE THE DIRECTORY
+    # THAT YOU cd INTO TO BUILD IT PLUS THE build/ AT THE
+    # END
+    - mv ghi/app/build/ public
   artifacts:
     paths:
       - public
 
-release-puppin:  # RENAME THIS
+release-puppin: # RENAME THIS
   stage: deploy
   image: node:10.17-alpine
   needs:

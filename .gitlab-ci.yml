@@ -10,7 +10,7 @@ variables:
   # POSTGRES_PASSWORD: puppin
   # POSTGRES_USER: puppin
   # POSTGRES_DB: puppin
-  REACT_APP_PUPPIN_HOST: https://${puppin}.herokuapp.com
+  REACT_APP_PUPPIN_HOST: http://${puppin}.herokuapp.com
   SIGNING_KEY: e7eb3ee8f8e8045c8497e605849804d14d3979cb4922b476b67e199448b6b00b
   DATABASE_URL: postgres://xgunbwlbtulcby:1669a5363eaf05122bf2592160ce948fe07c65789be8cf62156da063490d67da@ec2-54-85-56-210.compute-1.amazonaws.com:5432/d8l572lafpo1r1
 api-unit-test-job:

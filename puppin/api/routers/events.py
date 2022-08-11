@@ -50,7 +50,7 @@ def events_list(page: int = 0):
 @router.post("/api/events/{leader_id}/{dog_id}")
 def create_event(event: EventIn, response: Response, leader_id: int, dog_id: int):
     print("at least we started")
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         print("we got to psyco connect")
         with conn.cursor() as cur:
             list_of_all_dogvalues = [
@@ -103,7 +103,7 @@ def create_event(event: EventIn, response: Response, leader_id: int, dog_id: int
 @router.get("/api/events/{event_id}")
 def get_event(event_id: int, response: Response):
     try:
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -127,7 +127,7 @@ def get_event(event_id: int, response: Response):
 
 @router.get("/api/events/{event_id}/usersdogs")
 def get_all_users_and_dogs_from_event(event_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -171,7 +171,7 @@ def get_all_users_and_dogs_from_event(event_id: int, response: Response):
 # do we need this?
 @router.get("/api/events/myevents={account_id}/")
 def get_all_events_by_user(response: Response, account_id: int):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -214,7 +214,7 @@ def get_all_events_by_user(response: Response, account_id: int):
 
 @router.post("/api/events/{event_id}/")
 def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             list_of_all_dogs_user_has = [
                 value
@@ -282,7 +282,7 @@ def join_event(event_id: int, account_id: int, response: Response, dog_id: int):
 
 @router.get("/api/events/{event_id}/dogs")
 def dogs_from_events(event_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -306,7 +306,7 @@ def dogs_from_events(event_id: int, response: Response):
 
 @router.get("/api/events/{event_id}/attendees")
 def accounts_in_events(event_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -330,7 +330,7 @@ def accounts_in_events(event_id: int, response: Response):
 
 @router.post("/api/events/{event_id}/dogs")
 def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             list_of_all_dogvalues = [
                 value
@@ -356,7 +356,7 @@ def add_dog_to_event(event_id: int, account_id, dog_id: int, response: Response)
 
 
 def get_account_dogs(account_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as curr:
             curr.execute(
                 """

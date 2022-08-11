@@ -3,6 +3,7 @@ from routers import accounts, events, reviews
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
+
 app = FastAPI()
 
 
@@ -11,6 +12,8 @@ origins = [
     "http://purely-puptonic.gitlab.io",
     "http://puppin.herokuapp.com",
     "https://puppin.herokuapp.com",
+    os.environ.REACT_APP_PUPPIN_HOST,
+    os.environ.CORS_HOST,
     os.environ.get("CORS_HOST", None),
     os.environ.get("PUBLIC_URL", None),
 ]

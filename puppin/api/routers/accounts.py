@@ -10,7 +10,7 @@ from fastapi import (
     Request,
 )
 from pydantic import BaseModel
-from ..db.pool import pool
+from db.pool import pool
 
 # from models.common import ErrorMessage
 from typing import Union, Optional
@@ -646,5 +646,3 @@ def delete_dog(dog: Dogs, account_id: int, dog_id: int, query=Depends(DogQueries
 
 
 # This is a new line that ends the file.
-
-

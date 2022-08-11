@@ -3,7 +3,7 @@ from xmlrpc.client import DateTime
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 import psycopg
-from ..db.pool import pool
+from db.pool import pool
 router = APIRouter()
 
 

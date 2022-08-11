@@ -3,7 +3,7 @@ from xmlrpc.client import DateTime
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 import psycopg
-
+from ..db.pool import pool
 router = APIRouter()
 
 
@@ -15,7 +15,7 @@ class EventIn(BaseModel):
 
 @router.get("/api/events")
 def events_list(page: int = 0):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """

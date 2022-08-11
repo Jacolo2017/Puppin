@@ -10,6 +10,7 @@ from fastapi import (
     Request,
 )
 from pydantic import BaseModel
+from ..db.pool import pool
 
 # from models.common import ErrorMessage
 from typing import Union, Optional
@@ -259,7 +260,7 @@ async def logout(request: Request, response: Response):
 
 @router.post("/api/accounts")
 def create_account(account: AccountIn, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             try:
                 hashed_password = pwd_context.hash(account.account_password)
@@ -304,7 +305,7 @@ def create_account(account: AccountIn, response: Response):
 def get_account(account_id: int, response: Response):
     try:
         print("okay we tried")
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -333,7 +334,7 @@ def get_account(account_id: int, response: Response):
 def get_account_by_username(username: str, response: Response):
     try:
         print("okay we tried")
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """

@@ -361,7 +361,7 @@ def get_account_by_username(username: str, response: Response):
 
 @router.put("/api/accounts/update/{account_id}", response_model=AccountUpdate)
 def update_account(account_id: str, account: AccountUpdate):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as curr:
             hashed_password = pwd_context.hash(account.account_password)
             curr.execute(
@@ -416,7 +416,7 @@ def accounts_list(page: int = 0):
     # Uses the environment variables to connect
     # In development, see the docker-compose.yml file for
     #   the PG settings in the "environment" section
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -449,7 +449,7 @@ def accounts_list(page: int = 0):
 
 @router.get("/api/accounts/{account_id}/events/attended")
 def get_attended_events_of_user(account_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -479,7 +479,7 @@ def get_attended_events_of_user(account_id: int, response: Response):
 
 @router.get("/api/accounts/{account_id}/events")
 def get_hosted_events_of_user(account_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -506,7 +506,7 @@ def get_hosted_events_of_user(account_id: int, response: Response):
 @router.post("/api/dog/create")
 def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
     print("create_dog ping")
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as curr:
             curr.execute(
                 """
@@ -552,7 +552,7 @@ def get_dog(dog_id: int, response: Response, query=Depends(DogQueries)):
 @router.put("/api/dog/{dog_id}", response_model=DogUpdate)
 def update_dog(dog_id: str, dog: DogUpdate):
     print("ping")
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as curr:
             curr.execute(
                 """
@@ -607,7 +607,7 @@ def update_dog(dog_id: str, dog: DogUpdate):
 
 @router.get("/api/accounts/{account_id}/dogs")
 def get_account_dogs(account_id: int, response: Response):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as curr:
             curr.execute(
                 """

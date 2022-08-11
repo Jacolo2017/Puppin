@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from psycopg.errors import UniqueViolation
 from typing import Union
 import psycopg
-
+from db.pool import pool
 
 router = APIRouter()
 
@@ -54,7 +54,7 @@ class ReviewDelete(BaseModel):
 def create_event_review(
     review: EventReviewIn, response: Response, account_id: int, event_id: int
 ):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute(
@@ -100,7 +100,7 @@ def create_event_review(
 @router.get("/api/event/reviews/review={review_id}")
 def get_review(review_id: int, response: Response):
     try:
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -133,7 +133,7 @@ def get_review(review_id: int, response: Response):
 @router.get("/api/event/{event_id}/reviews/")
 def get_event_reviews(event_id: int, response: Response):
     try:
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -175,7 +175,7 @@ def get_event_reviews(event_id: int, response: Response):
 @router.get("/api/event/{event_id}/reviews/account={account_id}")
 def get_account_reviews_per_event(account_id: int, event_id: int, response: Response):
     try:
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -235,7 +235,7 @@ def get_account_reviews_per_event(account_id: int, event_id: int, response: Resp
 def get_event_reviews_for_account(account_id: int, response: Response):
     print("get_event_reviews_for_account pinged")
     try:
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -272,7 +272,7 @@ def get_event_reviews_for_account(account_id: int, response: Response):
 @router.delete("/api/event/reviews/{review_id}")
 def update_review(review_id: int, account_id: int, response_model: ReviewDelete):
     try:
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -292,7 +292,7 @@ def update_review(
     review: EventReviewUpdateIn, review_id: int, account_id: int, response: Response
 ):
     try:
-        with psycopg.connect() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -328,7 +328,7 @@ def update_review(
 def rate_person_in_attended_event(
     reviewer_id: int, reviewed_id: int, event_id: int, rating: bool, response: Response
 ):
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             # print(any(reviewed_id == reviewer_id for reviewed_id in get_all_users_from_event(event_id, response)))
             # if any(x == reviewer_id for x in get_all_users_from_event(event_id, response)) and any(x == reviewed_id for x in
@@ -372,7 +372,7 @@ def rate_person_in_attended_event(
 @router.get("/api/events/{event_id}/ratings")
 def get_all_ratings_from_specific_event(event_id: int, response: Response):
 
-    with psycopg.connect() as conn:
+    with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """

@@ -6,10 +6,19 @@ import os
 
 app = FastAPI()
 
+
 origins = [
     "http://localhost:3000",
-    os.environ.get("CORS_HOST"),
+    "http://purely-puptonic.gitlab.io",
+    "http://puppin.herokuapp.com",
+    "https://puppin.herokuapp.com",
+    os.environ.get("REACT_APP_PUPPIN_HOST", None),
+    os.environ.CORS_HOST,
+    os.environ.get("CORS_HOST", None),
+    os.environ.get("PUBLIC_URL", None),
 ]
+# os.environ.get("CORS_HOST", None),
+# os.environ["CORS_HOST"],
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,27 +27,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# origins = [
-#     "http://localhost:3000",
-#     "http://purely-puptonic.gitlab.io",
-#     "http://puppin.herokuapp.com",
-#     "https://puppin.herokuapp.com",
-#     os.environ.get("REACT_APP_PUPPIN_HOST", None),
-
-#     os.environ.get("CORS_HOST", None),
-#     os.environ.get("PUBLIC_URL", None),
-# ]
-# # os.environ.get("CORS_HOST", None),
-# # os.environ["CORS_HOST"],
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
 
 
 app.include_router(accounts.router)

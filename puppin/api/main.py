@@ -10,6 +10,7 @@ origins = [
     "http://localhost:3000",
     "http://purely-puptonic.gitlab.io",
     "http://puppin.herokuapp.com",
+    "https://${puppin}.herokuapp.com",
     os.environ.get("CORS_HOST", None),
     os.environ.get("PUBLIC_URL", None),
 ]

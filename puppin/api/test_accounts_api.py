@@ -50,7 +50,7 @@ class FakeAccountCreate(TestCase):
     #     "a",
     # ]
 
-async def common_parameters_acc(first_name: str, last_name: str, email: str, username: str, date_of_birth: str, city: str, state: str, gender: str, account_id: int, photo_url: str, about: str)
+async def common_parameters_acc(first_name: str, last_name: str, email: str, username: str, date_of_birth: str, city: str, state: str, gender: str, account_id: int, photo_url: str, about: str):
     return {"first_name": first_name, "last_name": last_name, "email": email, "username": username, "date_of_birth": date_of_birth, "city": city, "state": state, "gender": gender, "account_id": account_id, "photo_url": photo_url, "about": about}
 
 async def get_account_from_username(self, username: str):

@@ -74,7 +74,7 @@ class DogQueries:
     # Quick query to retrieve basic dog information
     def get_dog(self, dog_id: str):
         try:
-            with psycopg.connect() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as curr:
                     curr.execute(
                         """SELECT 

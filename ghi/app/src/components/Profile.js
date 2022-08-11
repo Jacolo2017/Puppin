@@ -3,7 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import ProfileAbout from './profile page components/ProfileAbout'
 import ProfileDogs from './profile page components/ProfileDogs'
 import ProfileEvents from './profile page components/ProfileEvents'
-import ProfileReviews from './profile page components/ProfileReviews'
+import ProfileReviews from './ReviewsSliderComponents/ProfileReviews';
 import ReviewsByCurrentUser from './ReviewsSliderComponents/ReviewsByCurrentUser';
 
 
@@ -42,7 +42,7 @@ export default function Profile(props) {
 
   const PageDisplay = () => {
     if (page === 0) {
-      return <ReviewsByCurrentUser token={props.token} />
+      return <ProfileReviews token={props.token} />
     } else if (page === 1) {
       return <ProfileEvents currentUser={currentUser} eventsData={eventsData} token={props.token} />
     } else if (page === 2) {

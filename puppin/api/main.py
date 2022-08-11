@@ -12,7 +12,7 @@ origins = [
     "http://purely-puptonic.gitlab.io",
     "http://puppin.herokuapp.com",
     "https://puppin.herokuapp.com",
-    os.environ.REACT_APP_PUPPIN_HOST,
+    os.environ.get("REACT_APP_PUPPIN_HOST", None),
     os.environ.CORS_HOST,
     os.environ.get("CORS_HOST", None),
     os.environ.get("PUBLIC_URL", None),

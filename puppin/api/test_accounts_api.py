@@ -13,8 +13,6 @@ from fastapi import (
 )
 
 
-
-
 async def get_fake_account():
     return {1, "P", "A", "h", "K", "01-15-2001", "A", "A", "Male", "p", "I"}
 
@@ -50,8 +48,34 @@ class FakeAccountCreate(TestCase):
     #     "a",
     # ]
 
-async def common_parameters_acc(first_name: str, last_name: str, email: str, username: str, date_of_birth: str, city: str, state: str, gender: str, account_id: int, photo_url: str, about: str):
-    return {"first_name": first_name, "last_name": last_name, "email": email, "username": username, "date_of_birth": date_of_birth, "city": city, "state": state, "gender": gender, "account_id": account_id, "photo_url": photo_url, "about": about}
+
+async def common_parameters_acc(
+    first_name: str,
+    last_name: str,
+    email: str,
+    username: str,
+    date_of_birth: str,
+    city: str,
+    state: str,
+    gender: str,
+    account_id: int,
+    photo_url: str,
+    about: str,
+):
+    return {
+        "first_name": first_name,
+        "last_name": last_name,
+        "email": email,
+        "username": username,
+        "date_of_birth": date_of_birth,
+        "city": city,
+        "state": state,
+        "gender": gender,
+        "account_id": account_id,
+        "photo_url": photo_url,
+        "about": about,
+    }
+
 
 async def get_account_from_username(self, username: str):
     return {
@@ -68,7 +92,8 @@ async def get_account_from_username(self, username: str):
         "about": "gangstuff",
     }
 
-app.dependency_overrides[common_parameter_acc] = get_account_from_username
+
+app.dependency_overrides[common_parameters_acc] = get_account_from_username
 # async def get_fake_user(self, username: str):
 #     return {
 #         "id": 1,
@@ -78,6 +103,7 @@ app.dependency_overrides[common_parameter_acc] = get_account_from_username
 
 
 # app.dependency_overrides[AccountQueries] = FakeAccountQuery
+
 
 async def get_fake_account():
     return {
@@ -91,8 +117,9 @@ async def get_fake_account():
         "state": "A",
         "gender": "Male",
         "photo_url": "p",
-        "about": "I"
+        "about": "I",
     }
+
 
 # app.dependency_overrides[AccountQueries] = get_fake_account()
 # app.dependency_overrides[create_account] = create_fake_account

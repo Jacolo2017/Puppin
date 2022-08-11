@@ -13,7 +13,6 @@ origins = [
     "http://puppin.herokuapp.com",
     "https://puppin.herokuapp.com",
     os.environ.get("REACT_APP_PUPPIN_HOST", None),
-    os.environ.CORS_HOST,
     os.environ.get("CORS_HOST", None),
     os.environ.get("PUBLIC_URL", None),
 ]
@@ -22,7 +21,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

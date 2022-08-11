@@ -10,6 +10,7 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "http://purely-puptonic.gitlab.io",
+    "https://purely-puptonic.gitlab.io",
     "http://puppin.herokuapp.com",
     "https://puppin.herokuapp.com",
     os.environ.get("REACT_APP_PUPPIN_HOST", None),

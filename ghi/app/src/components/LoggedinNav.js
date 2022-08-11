@@ -17,6 +17,7 @@ class LoggedinNav extends React.Component {
 
                     <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/event/home'>Events</Link>
                     <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/profile'>Profile</Link>
+                    <Link className="text-gray-600 hover:text-gray-800 hover:underline" to='/event/create'>Host an Event!</Link>
                     <Link to="https://gitlab.com/purely-puptonic/puppin" className="text-gray-600 hover:text-gray-800 hover:underline"><img src='https://cdn-icons-png.flaticon.com/512/25/25231.png' className='h-[20px]'></img></Link>
                 </div>
 

@@ -148,12 +148,12 @@ export default function Events(props) {
     }
   }
 
-
+  console.log(eventData)
  
 
   return ( 
     props.token?
-    <div className='w-screen py-12 flex bg-gray-50 bg-[url(https://img.freepik.com/free-vector/pattern-with-dog-faces_1191-1246.jpg?w=1060&t=st=1660085147~exp=1660085747~hmac=79ce5d0086c401372f61c64b38f84fd1b2fa2c8e65be0a81acc1aafa9256ba2d)]' id="about">
+    <div className='w-screen py-12 flex bg-gray-50 bg-[url(https://img.freepik.com/free-vector/polka-dot-pattern-background-aesthetic-design-vector_53876-143523.jpg?w=1480&t=st=1660173718~exp=1660174318~hmac=c039bf958188c7480a929d7014fbc3085325b22340d6c66268928d70c101bb3b)]' id="about">
       <div className='max-w-[1400px] mx-auto py-10 mt-1'>
         <div className=" bg-[#a0d0f2] border border-gray-100 h-[130px] shadow-2xl">
           <h2 className='text-3xl font-bold uppercase text-center mt-8'>Events</h2>

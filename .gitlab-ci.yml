@@ -69,11 +69,11 @@ build-puppin-job:
   script:
     - cd puppin
     - cd api
-    - docker build -t ${CI_REGISTRY_IMAGE}/puppin/api:latest .
-    - docker tag ${CI_REGISTRY_IMAGE}/puppin/api:latest ${CI_REGISTRY_IMAGE}/puppin:$CI_JOB_ID
+    - docker build -t ${CI_REGISTRY_IMAGE}/puppin:latest .
+    - docker tag ${CI_REGISTRY_IMAGE}/puppin:latest ${CI_REGISTRY_IMAGE}/puppin:$CI_JOB_ID
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker push ${CI_REGISTRY_IMAGE}/puppin/api:$CI_JOB_ID
-    - docker push ${CI_REGISTRY_IMAGE}/puppin/api:latest
+    - docker push ${CI_REGISTRY_IMAGE}/puppin:$CI_JOB_ID
+    - docker push ${CI_REGISTRY_IMAGE}/puppin:latest
 
 deploy-puppin-job: # RENAME THIS
   rules:

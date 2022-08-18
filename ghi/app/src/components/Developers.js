@@ -18,12 +18,9 @@ const Developers = () => {
                             className='rounded-full w-20 mt-[-4rem]' />
                         <h3 className='uppercase font-bold text-center text-2xl py-4'>Mark Esposito</h3>
                         <p className='text-center'>
-                            Hands-on mechanical engineer with 6+ years of experience bringing concepts to life.
-                            Identified 900+ issues while testing next generation to military logistics truck.
-                            Cut production costs by $400,000 for Chrysler’s premier luxury sedan. Designed high-profile,
-                            commercial building infrastructure at Arup. Demonstrates unbending work ethic grounded
-                            in military experience and proficient in collaborating with global, cross-disciplinary teams.
-                            Committed to looking for a solution, no matter how small the problem. Lately I have been entranced by
+                            Recent Software Engineering Bootcamp Grad with 6+ years of experience in the mechanical engineering field. 
+                            I am seeking to pivot into the mechatronics, robotics, and automation fields by applying my experience in 
+                            mechanical engineering and my new skills in software engineering. Lately I have been entranced by
                             working with data structures and algorithms.
                         </p>
 

@@ -35,7 +35,6 @@ build-front-end-build-job:
   stage: build
   image: node:lts-bullseye
   variables:
-    REACT_APP_PUPPIN_HOST: https://${puppin}.herokuapp.com
     PUBLIC_URL: https://purely-puptonic.gitlab.io/puppin
   needs:
     - api-unit-test-job # These two jobs must succeed for

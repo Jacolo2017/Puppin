@@ -14,5 +14,5 @@ COPY routers routers
 # COPY upload upload
 COPY db db
 
-RUN python -m pip install -r requirements.txt
+RUN pip install -r requirements.txt
 CMD uvicorn main:app --reload --host 0.0.0.0 --port $PORT

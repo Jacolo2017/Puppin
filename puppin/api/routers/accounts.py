@@ -10,7 +10,7 @@ from fastapi import (
     Request,
 )
 from pydantic import BaseModel
-from db.pool import pool
+from db.pool import connect_to_db, pool
 
 # from models.common import ErrorMessage
 from typing import Union, Optional
@@ -21,6 +21,7 @@ from db.dogs import DogQueries
 from jose import JWTError, jwt, jws, JWSError
 from passlib.context import CryptContext
 import os
+
 
 
 SIGNING_KEY = os.environ.get("SIGNING_KEY")
@@ -416,7 +417,9 @@ def accounts_list(page: int = 0):
     # Uses the environment variables to connect
     # In development, see the docker-compose.yml file for
     #   the PG settings in the "environment" section
-    with pool.connection() as conn:
+    print(type(pool.connection))
+    pooler = connect_to_db()
+    with pooler.connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 """

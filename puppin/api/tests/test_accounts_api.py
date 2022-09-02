@@ -2,6 +2,7 @@ from db.accounts import AccountQueries
 from unittest import TestCase
 from main import app
 from fastapi.testclient import TestClient
+import pytest
 from fastapi import (
     APIRouter,
     Response,
@@ -11,6 +12,11 @@ from fastapi import (
     Cookie,
     Request,
 )
+
+from unittest import mock
+
+from routers.accounts import accounts_list
+from unittest.mock import MagicMock
 
 
 async def get_fake_account():
@@ -177,3 +183,72 @@ client = TestClient(app)
 #     photo_url,
 #     about,
 # ):
+# class Tests(TestCase):
+#     @mock.patch("tests.test_accounts_api.accounts_list", return_value=[
+#         {
+#             "account_id": 1,
+#             "first_name": "roger",
+#             "last_name": "roger",
+#             "email": "ro",
+#             "username": "roger"
+#         },
+#         {
+#             "account_id": 2,
+#             "first_name": "22",
+#             "last_name": "22",
+#             "email": "2",
+#             "username": "22"
+#         }])
+#     def test_accounts_list(self, mockresults):
+#         result = [
+#         {
+#             "account_id": 1,
+#             "first_name": "roger",
+#             "last_name": "roger",
+#             "email": "ro",
+#             "username": "roger"
+#         },
+#         {
+#             "account_id": 2,
+#             "first_name": "22",
+#             "last_name": "22",
+#             "email": "2",
+#             "username": "22"
+#         }]
+        
+#         # mock_con = mock_connect.return_value  # result of psycopg2.connect(**connection_stuff)
+#         # mock_cur = mock_con.cursor.return_value  # result of con.cursor(cursor_factory=DictCursor)
+#         # mock_cur.fetchall.return_value = expected  # return this when calling cur.fetchall()
+
+#         expected = [
+#         {
+#             "account_id": 1,
+#             "first_name": "roger",
+#             "last_name": "roger",
+#             "email": "ro",
+#             "username": "roger"
+#         },
+#         {
+#             "account_id": 2,
+#             "first_name": "22",
+#             "last_name": "22",
+#             "email": "2",
+#             "username": "22"
+#         }]
+#         print("result", result)
+#         print("expected", expected)
+#         self.assertEqual(expected, result)
+class Tests(TestCase):  
+    @mock.patch('routers.accounts.connect_to_db')
+    def test_empty_accounts_list_test(self, mock_connect):
+        expected = []
+        mock_con_cm = mock_connect.return_value 
+        mock_con = mock_con_cm.__enter__.return_value
+        mock_cur_cm = mock_con.cursor.return_value
+        mock_cur = mock_cur_cm.__enter__.return_value
+        mock_cur.fetchall.return_value = expected
+
+        self.assertEqual(accounts_list(), expected)
+
+            
+

@@ -246,7 +246,7 @@ class Tests(TestCase):
         mock_con = mock_con_cm.__enter__.return_value
         mock_cur_cm = mock_con.cursor.return_value
         mock_cur = mock_cur_cm.__enter__.return_value
-        mock_cur.fetchall.return_value = expected
+        mock_cur.fetchallpytho.return_value = expected
 
         self.assertEqual(accounts_list(), expected)
 

@@ -443,8 +443,8 @@ def accounts_list(page: int = 0):
                 SELECT COUNT(*) FROM accounts;
             """
             )
-            raw_count = cur.fetchone()[0]
-            page_count = (raw_count // 100) + 1
+            # raw_count = cur.fetchone()[0]
+            # page_count = (raw_count // 100) + 1
             print("goated")
             # return Accounts(page_count=page_count, accounts=results)
             return results

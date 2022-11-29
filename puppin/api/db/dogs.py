@@ -4,7 +4,7 @@ from psycopg.errors import UniqueViolation
 
 
 class DogQueries:
-    def insert_dog(
+    def insert_dog(self,
         dog_name,
         dog_breed,
         dog_age,
@@ -26,11 +26,11 @@ class DogQueries:
                         dog_gender, dog_photo, dog_temperament, dog_about,
                         dog_size, dog_weight, spayed_neutered,
                         vaccination_history, account_id)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %b, %s, %s)
                     RETURNING dog_name, dog_breed, dog_age,
                         dog_gender, dog_photo, dog_temperament, dog_about,
                         dog_size, dog_weight, spayed_neutered,
-                        vaccination_history, account_id
+                        vaccination_history, account_id;
                     """,
                     [
                         dog_name,
@@ -47,7 +47,7 @@ class DogQueries:
                         account_id,
                     ],
                 )
-                return cur.fetchall()
+                return cur.fetchone()
 
     # Query to retrieve all dog information for larger queries related to profile
     def get_dogs_from_account_id(self, account_id: str):

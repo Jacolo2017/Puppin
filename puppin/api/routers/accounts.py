@@ -137,6 +137,24 @@ class DogUpdate(BaseModel):
     spayed_neutered: Optional[bool] = None
     vaccination_history: Optional[str] = None
 
+def row_to_dog_detail(row):
+    dog = {
+        "dog_name": row[0],
+        "dog_breed": row[1],
+        "dog_age": row[2],
+        "dog_gender": row[3],
+        "dog_photo": row[4],
+        "dog_temperament": row[5],
+        "dog_about": row[6],
+        "dog_size": row[7],
+        "dog_weight": row[8],
+        "spayed_neutered": row[9],
+        "vaccination_history": row[10],
+        "account_id": row[11]
+
+    }
+    return dog
+
 
 class Dogs(BaseModel):
     dog_name: str
@@ -303,32 +321,8 @@ def create_account(account: AccountIn, response: Response):
 
 
 @router.get("/api/accounts/{account_id}")
-def get_account(account_id: int, response: Response):
-    try:
-        print("okay we tried")
-        with pool.connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                        SELECT account_id, first_name, last_name, email, username,
-                        date_of_birth, city, state, gender,
-                            photo_url, about
-                        FROM accounts
-                        WHERE account_id = %s;
-                        """,
-                    [account_id],
-                )
-                row = cur.fetchone()
-                print("lookhere", (cur.description))
-                if row is None:
-                    response.status_code = status.HTTP_404_NOT_FOUND
-                    return {"message": "Account not found"}
-                record = {}
-                for i, column in enumerate(cur.description):
-                    record[column.name] = row[i]
-                return record
-    except psycopg.InterfaceError as exc:
-        print(exc.message)
+def get_account(account_id: int, response: Response, query=Depends(AccountQueries)):
+    return query.get_account(account_id, response)
 
 
 @router.get("/api/accounts/by_username/{username}")
@@ -413,41 +407,8 @@ def update_account(account_id: str, account: AccountUpdate):
 
 
 @router.get("/api/accounts")
-def accounts_list(page: int = 0):
-    # Uses the environment variables to connect
-    # In development, see the docker-compose.yml file for
-    #   the PG settings in the "environment" section
-    print(type(pool.connection))
-    pooler = connect_to_db()
-    with pooler.connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT account_id, first_name, last_name, email, username
-                FROM accounts
-                ORDER BY account_id
-                LIMIT 100 OFFSET %s;
-            """,
-                [page * 100],
-            )
-
-            results = []
-            for row in cur.fetchall():
-                record = {}
-                for i, column in enumerate(cur.description):
-                    record[column.name] = row[i]
-                results.append(record)
-
-            cur.execute(
-                """
-                SELECT COUNT(*) FROM accounts;
-            """
-            )
-            # raw_count = cur.fetchone()[0]
-            # page_count = (raw_count // 100) + 1
-            print("goated")
-            # return Accounts(page_count=page_count, accounts=results)
-            return results
+def accounts_list(page: int = 0, query=Depends(AccountQueries)):
+    return query.get_list_of_accounts()
 
 
 @router.get("/api/accounts/{account_id}/events/attended")
@@ -507,8 +468,21 @@ def get_hosted_events_of_user(account_id: int, response: Response):
 
 
 @router.post("/api/dog/create")
-def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user)):
+def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user), query=Depends(DogQueries)):
     print("create_dog ping")
+    # record = query.insert_dog(dog.dog_name,
+    #                 dog.dog_breed,
+    #                 dog.dog_age,
+    #                 dog.dog_gender,
+    #                 dog.dog_photo,
+    #                 dog.dog_temperament,
+    #                 dog.dog_about,
+    #                 dog.dog_size,
+    #                 dog.dog_weight,
+    #                 dog.spayed_neutered,
+    #                 dog.vaccination_history,
+    #                 user["id"])
+    # return row_to_dog_detail(record)
     with pool.connection() as conn:
         with conn.cursor() as curr:
             curr.execute(

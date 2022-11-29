@@ -13,6 +13,17 @@ from fastapi import (
     Request,
 )
 
+#use fastapi testing. step by step
+
+# this allows us to override current user with our user
+# make a fake queries class, with function(s)  that force a specific return value
+# override the app with what we want app.dependency_overrides[get_current_user] = override_get_fake_user
+# we want to do two things: 1. cut off any dependencies this function has to our database by using our own. 2. make sure that impossible arguments (impossible in testing) such as "get current user" are overriden with our data
+# get a response with client.post(/url/something, json={"Example": 0})
+#now that we have overriden bad default dependencies, we can test our endpoint and see if it gives us the result we want, such as a 200. 
+#we can even see if our return value is the same as the value we expect, given the json logic we give it
+#we do this with assert response.json() == "something"
+
 from unittest import mock
 
 from routers.accounts import accounts_list
@@ -22,6 +33,28 @@ from unittest.mock import MagicMock
 async def get_fake_account():
     return {1, "P", "A", "h", "K", "01-15-2001", "A", "A", "Male", "p", "I"}
 
+fake_db = [
+  {
+    "account_id": 1,
+    "first_name": "Amy",
+    "last_name": "Amish",
+    "email": "Ams@gmail.com",
+    "username": "aurora"
+  },
+  {
+    "account_id": 2,
+    "first_name": "Cooper",
+    "last_name": "Edgason",
+    "email": "coopergg@gmail.com",
+    "username": "cooper"
+  },
+  {
+    "account_id": 3,
+    "first_name": "Zoom",
+    "last_name": "Hatrez",
+    "email": "Zoomite3@gmail.com",
+    "username": "jZoomirez"
+  }]
 
 class FakeAccountCreate(TestCase):
     def create_account(

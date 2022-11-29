@@ -9,6 +9,10 @@ from db.dogs import DogQueries
 
 print("look at me!")
 
+fake_db = {
+    "foo": {"id": "foo", "title": "Foo", "description": "There goes my hero"},
+    "bar": {"id": "bar", "title": "Bar", "description": "The bartenders"},
+}
 
 class EmptyDogQueries(TestCase):
     def get_dog(self, dog_id):

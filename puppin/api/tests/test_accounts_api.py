@@ -1,6 +1,6 @@
-from db.accounts import AccountQueries
+from ..db.accounts import AccountQueries
 from unittest import TestCase
-from main import app
+from ..main import app
 from fastapi.testclient import TestClient
 import pytest
 from fastapi import (
@@ -12,6 +12,10 @@ from fastapi import (
     Cookie,
     Request,
 )
+from ..routers.accounts import get_current_user, create_dog
+from ..db.dogs import DogQueries
+from fastapi import FastAPI
+from ..routers import accounts
 
 #use fastapi testing. step by step
 
@@ -24,14 +28,106 @@ from fastapi import (
 #we can even see if our return value is the same as the value we expect, given the json logic we give it
 #we do this with assert response.json() == "something"
 
+
+#if you're overriding a function. write a fake function
+#if you're overriding a function in a class, write a fake class with a fake function
 from unittest import mock
 
-from routers.accounts import accounts_list
+
 from unittest.mock import MagicMock
 
+def override_get_fake_user():
+    return {
+        "id": 2,
+        "username": "user2",
+        "account_password": "somehashedthing"
+    }
+    #python -m pytest tests/
+class TestDogQueries:
+    def insert_dog(self,
+        dog_name,
+        dog_breed,
+        dog_age,
+        dog_gender,
+        dog_photo,
+        dog_temperament,
+        dog_about,
+        dog_size,
+        dog_weight,
+        spayed_neutered,
+        vaccination_history,
+        account_id,
+    ):
+        return {
+            "dog_name": "Silly",
+            "dog_breed": "Martese",
+            "dog_age": 3,
+            "dog_gender": "Make",
+            "dog_photo": "TINYURL.com/dog2",
+            "dog_temperament": "Happy",
+            "dog_about": "Relaxed",
+            "dog_size": "big",
+            "dog_weight": 60,
+            "spayed_neutered": "true",
+            "vaccination_history": "Up to date"
+            }
+
+def override_create_dog():
+    return {"dog_name": "Silly",
+            "dog_breed": "Martese",
+            "dog_age": 3,
+            "dog_gender": "Make",
+            "dog_photo": "TINYURL.com/dog2",
+            "dog_temperament": "Happy",
+            "dog_about": "Relaxed",
+            "dog_size": "big",
+            "dog_weight": 60,
+            "spayed_neutered": True,
+            "vaccination_history": "Up to date", "account_id": 2}
 
 async def get_fake_account():
     return {1, "P", "A", "h", "K", "01-15-2001", "A", "A", "Male", "p", "I"}
+
+
+app = FastAPI()
+app.include_router(accounts.router)
+app.dependency_overrides[get_current_user] = override_get_fake_user
+# app.dependency_overrides[create_dog] = override_create_dog
+app.dependency_overrides[DogQueries] = TestDogQueries
+client = TestClient(app)
+
+def test_create_dog_with_fake_curr_user():
+    # app.dependency_overrides[get_current_user] = override_get_fake_user
+    # app.dependency_overrides[DogQueries] = TestDogQueries
+    r = client.post("/api/dog/create", json={"dog_name": "Silly",
+            "dog_breed": "Martese",
+            "dog_age": 3,
+            "dog_gender": "Make",
+            "dog_photo": "TINYURL.com/dog2",
+            "dog_temperament": "Happy",
+            "dog_about": "Relaxed",
+            "dog_size": "big",
+            "dog_weight": 60,
+            "spayed_neutered": True,
+            "vaccination_history": "Up to date"})
+    replybody = r.json()
+    print(replybody)
+    assert r.status_code == 200
+    assert replybody == {"dog_name": "Silly",
+            "dog_breed": "Martese",
+            "dog_age": 3,
+            "dog_gender": "Make",
+            "dog_photo": "TINYURL.com/dog2",
+            "dog_temperament": "Happy",
+            "dog_about": "Relaxed",
+            "dog_size": "big",
+            "dog_weight": 60,
+            "spayed_neutered": True,
+            "vaccination_history": "Up to date", "account_id": 2}
+
+
+
+
 
 fake_db = [
   {
@@ -160,23 +256,5 @@ async def get_fake_account():
     }
 
 
-# app.dependency_overrides[AccountQueries] = get_fake_account()
-# app.dependency_overrides[create_account] = create_fake_account
 
-client = TestClient(app)
-
-
-class Tests(TestCase):  
-    @mock.patch('routers.accounts.connect_to_db')
-    def test_empty_accounts_list_test(self, mock_connect):
-        expected = []
-        mock_con_cm = mock_connect.return_value 
-        mock_con = mock_con_cm.__enter__.return_value
-        mock_cur_cm = mock_con.cursor.return_value
-        mock_cur = mock_cur_cm.__enter__.return_value
-        mock_cur.fetchallpytho.return_value = expected
-
-        self.assertEqual(accounts_list(), expected)
-
-            
 

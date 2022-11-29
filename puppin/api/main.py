@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from routers import accounts, events, reviews
+from routers.accounts import router as a
+from routers.events import  router as e
+from routers.reviews import router as r
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
@@ -29,6 +31,6 @@ app.add_middleware(
 )
 
 
-app.include_router(accounts.router)
-app.include_router(events.router)
-app.include_router(reviews.router)
+app.include_router(a)
+app.include_router(e)
+app.include_router(r)

@@ -2,17 +2,14 @@ from django.test import TestCase
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from ..main import app
-from db.dogs import DogQueries
-
+from ..db.dogs import DogQueries
+from ..routers import accounts
 # from routers.accounts import router
 
 
 print("look at me!")
 
-fake_db = {
-    "foo": {"id": "foo", "title": "Foo", "description": "There goes my hero"},
-    "bar": {"id": "bar", "title": "Bar", "description": "The bartenders"},
-}
+
 
 class EmptyDogQueries(TestCase):
     def get_dog(self, dog_id):
@@ -37,7 +34,8 @@ class FakeDogQueries(TestCase):
             "account_id": 1,
         }
 
-
+app = FastAPI()
+app.include_router(accounts.router)
 client = TestClient(app)
 
 

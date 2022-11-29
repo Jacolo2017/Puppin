@@ -470,32 +470,7 @@ def get_hosted_events_of_user(account_id: int, response: Response):
 @router.post("/api/dog/create")
 def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user), query=Depends(DogQueries)):
     print("create_dog ping")
-    # record = query.insert_dog(dog.dog_name,
-    #                 dog.dog_breed,
-    #                 dog.dog_age,
-    #                 dog.dog_gender,
-    #                 dog.dog_photo,
-    #                 dog.dog_temperament,
-    #                 dog.dog_about,
-    #                 dog.dog_size,
-    #                 dog.dog_weight,
-    #                 dog.spayed_neutered,
-    #                 dog.vaccination_history,
-    #                 user["id"])
-    # return row_to_dog_detail(record)
-    with pool.connection() as conn:
-        with conn.cursor() as curr:
-            curr.execute(
-                """
-                    INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
-                    dog_gender, dog_photo, dog_temperament, dog_about,
-                    dog_size, dog_weight, spayed_neutered,
-                    vaccination_history, account_id)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %b, %s, %s)
-                    RETURNING dog_id;
-                """,
-                [
-                    dog.dog_name,
+    record = query.insert_dog(dog.dog_name,
                     dog.dog_breed,
                     dog.dog_age,
                     dog.dog_gender,
@@ -506,14 +481,39 @@ def create_dog(dog: DogIn, user: Accounts = Depends(get_current_user), query=Dep
                     dog.dog_weight,
                     dog.spayed_neutered,
                     dog.vaccination_history,
-                    user["id"],
-                ],
-            )
-            row = curr.fetchone()
-            record = {}
-            for i, column in enumerate(curr.description):
-                record[column.name] = row[i]
-            return record
+                    user["id"])
+    return row_to_dog_detail(record)
+    # with pool.connection() as conn:
+    #     with conn.cursor() as curr:
+    #         curr.execute(
+    #             """
+    #                 INSERT INTO public.dogs (dog_name, dog_breed, dog_age,
+    #                 dog_gender, dog_photo, dog_temperament, dog_about,
+    #                 dog_size, dog_weight, spayed_neutered,
+    #                 vaccination_history, account_id)
+    #                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %b, %s, %s)
+    #                 RETURNING dog_id;
+    #             """,
+    #             [
+    #                 dog.dog_name,
+    #                 dog.dog_breed,
+    #                 dog.dog_age,
+    #                 dog.dog_gender,
+    #                 dog.dog_photo,
+    #                 dog.dog_temperament,
+    #                 dog.dog_about,
+    #                 dog.dog_size,
+    #                 dog.dog_weight,
+    #                 dog.spayed_neutered,
+    #                 dog.vaccination_history,
+    #                 user["id"],
+    #             ],
+    #         )
+    #         row = curr.fetchone()
+    #         record = {}
+    #         for i, column in enumerate(curr.description):
+    #             record[column.name] = row[i]
+    #         return record
 
 
 @router.get("/api/dog/{dog_id}")

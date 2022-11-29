@@ -1,5 +1,5 @@
-from .events import join_event
-from .events import get_all_users_and_dogs_from_event
+from routers.events import join_event
+from routers.events import get_all_users_and_dogs_from_event
 from fastapi import APIRouter, Response, status, Depends
 from pydantic import BaseModel
 from psycopg.errors import UniqueViolation

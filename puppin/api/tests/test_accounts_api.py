@@ -20,7 +20,8 @@ from ..routers import accounts
 #use fastapi testing. step by step
 
 # this allows us to override current user with our user
-# make a fake queries class, with function(s)  that force a specific return value
+#if you're overriding a function. write a fake function
+#if you're overriding a function in a class, write a fake class with a fake function
 # override the app with what we want app.dependency_overrides[get_current_user] = override_get_fake_user
 # we want to do two things: 1. cut off any dependencies this function has to our database by using our own. 2. make sure that impossible arguments (impossible in testing) such as "get current user" are overriden with our data
 # get a response with client.post(/url/something, json={"Example": 0})
@@ -28,9 +29,10 @@ from ..routers import accounts
 #we can even see if our return value is the same as the value we expect, given the json logic we give it
 #we do this with assert response.json() == "something"
 
+#if we want to make a dependency only last within a function, put it in the function. if we want it globally set put it outside.
 
-#if you're overriding a function. write a fake function
-#if you're overriding a function in a class, write a fake class with a fake function
+
+
 from unittest import mock
 
 
@@ -72,18 +74,18 @@ class TestDogQueries:
             "vaccination_history": "Up to date"
             }
 
-def override_create_dog():
-    return {"dog_name": "Silly",
-            "dog_breed": "Martese",
-            "dog_age": 3,
-            "dog_gender": "Make",
-            "dog_photo": "TINYURL.com/dog2",
-            "dog_temperament": "Happy",
-            "dog_about": "Relaxed",
-            "dog_size": "big",
-            "dog_weight": 60,
-            "spayed_neutered": True,
-            "vaccination_history": "Up to date", "account_id": 2}
+# def override_create_dog():
+#     return {"dog_name": "Silly",
+#             "dog_breed": "Martese",
+#             "dog_age": 3,
+#             "dog_gender": "Make",
+#             "dog_photo": "TINYURL.com/dog2",
+#             "dog_temperament": "Happy",
+#             "dog_about": "Relaxed",
+#             "dog_size": "big",
+#             "dog_weight": 60,
+#             "spayed_neutered": True,
+#             "vaccination_history": "Up to date", "account_id": 2}
 
 async def get_fake_account():
     return {1, "P", "A", "h", "K", "01-15-2001", "A", "A", "Male", "p", "I"}
